@@ -52,6 +52,8 @@
       <input id="national_id" type="text" maxlength="13" required />
       <label>เบอร์โทร</label>
       <input id="phone" type="tel" maxlength="15" required />
+      <label>อีเมล</label>
+      <input id="email" type="email" placeholder="example@mail.com" required />
       <label>รุ่นอายุ / เพศ</label>
       <select id="category" required>
         <option value="">-- เลือกรุ่นอายุและเพศ --</option>
@@ -108,6 +110,7 @@ form.addEventListener("submit", async e=>{
   const last_name = document.getElementById("last_name").value.trim();
   const national_id = document.getElementById("national_id").value.trim();
   const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
   const category = document.getElementById("category").value;
   const slipFile = document.getElementById("slip").files[0];
 
@@ -119,7 +122,7 @@ form.addEventListener("submit", async e=>{
     if(checkError) throw checkError;
     if(existing && existing.length>0){ showMessage("❌ เลขบัตรประชาชนนี้ได้ลงทะเบียนแล้ว","error"); loadingEl.style.display="none"; return; }
 
-    // upload
+    // upload slip
     const fileName=`slip_${Date.now()}_${slipFile.name}`;
     const { error: uploadError } = await client.storage.from("slips").upload(fileName, slipFile);
     if(uploadError) throw uploadError;
@@ -128,12 +131,14 @@ form.addEventListener("submit", async e=>{
 
     // insert พร้อม status pending
     const { error: insertError } = await client.from("kaimukandaman")
-      .insert([{ first_name,last_name,national_id,phone,category,slip_url,status:"pending" }]);
+      .insert([{ first_name,last_name,national_id,phone,email,category,slip_url,status:"pending" }]);
     if(insertError) throw insertError;
 
+    // แสดงใน Modal
     modalText.innerHTML = `<strong>ชื่อ:</strong> ${first_name} ${last_name}<br>
       <strong>เลขบัตร:</strong> ${national_id}<br>
       <strong>เบอร์:</strong> ${phone}<br>
+      <strong>อีเมล:</strong> ${email}<br>
       <strong>รุ่น/เพศ:</strong> ${category}<br>
       <strong>สถานะ:</strong> pending`;
     modalImg.src = slip_url;
