@@ -42,8 +42,9 @@ const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ---------------- Resend API ----------------
-const RESEND_API_KEY = "re_DhgQeqUt_CeDDhHhyrc8J3H8YLozDKKPW";
+// ---------------- Brevo API ----------------
+const BREVO_API_KEY = "9KCMFn0vzhfLBY6E";
+const BREVO_SENDER_EMAIL = "oresearcho@gmail.com"; // ต้อง Verified ใน Brevo
 
 // โหลดผู้สมัคร
 async function loadApplicants(){
@@ -71,25 +72,27 @@ async function loadApplicants(){
   });
 }
 
-// ส่งอีเมลผ่าน Resend API
+// ส่งอีเมลผ่าน Brevo
 async function sendApprovalEmail(to_email, fullName, category){
   try {
-    await fetch('https://api.resend.com/emails', {
-      method: 'POST',
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
       headers: {
-        'Authorization': 'Bearer ' + RESEND_API_KEY,
-        'Content-Type': 'application/json'
+        "api-key": BREVO_API_KEY,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: 'no-reply@yourdomain.com',
-        to: [to_email],
-        subject: 'ผลการสมัครวิ่ง',
-        html: `<p>สวัสดี ${fullName},</p>
-               <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${category}</strong></p>
-               <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`
+        sender: { name: "วิ่งมาราธอน", email: BREVO_SENDER_EMAIL },
+        to: [{ email: to_email }],
+        subject: "ผลการสมัครวิ่ง",
+        htmlContent: `<p>สวัสดี ${fullName},</p>
+                      <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${category}</strong></p>
+                      <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`
       })
     });
-    console.log("ส่งอีเมลสำเร็จ");
+    const data = await res.json();
+    console.log("Response Brevo:", data);
+    if(!res.ok) console.error("ส่งอีเมลไม่สำเร็จ", res.status);
   } catch(err){
     console.error("ส่งอีเมลไม่สำเร็จ:", err);
   }
