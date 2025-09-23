@@ -107,7 +107,7 @@
 <script>
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";   // 👉 ใส่ของคุณ
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";                // 👉 ใส่ของคุณ
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
 const messageEl = document.getElementById("message");
@@ -127,17 +127,6 @@ form.addEventListener("submit", async (e)=>{
   const category = document.getElementById("category").value;
   const slipFile = document.getElementById("slip").files[0];
 
-  form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  messageEl.innerHTML = "";
-
-  const first_name = document.getElementById("first_name").value.trim();
-  const last_name = document.getElementById("last_name").value.trim();
-  const national_id = document.getElementById("national_id").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const category = document.getElementById("category").value;
-  const slipFile = document.getElementById("slip").files[0];
-
   if(!slipFile){
     showMessage("กรุณาอัปโหลดสลิป", "error");
     return;
@@ -146,7 +135,7 @@ form.addEventListener("submit", async (e)=>{
   try {
     // 📂 Upload Slip
     const fileName = `slip_${Date.now()}_${slipFile.name}`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await client.storage
       .from("slips")
       .upload(fileName, slipFile);
 
@@ -158,12 +147,12 @@ form.addEventListener("submit", async (e)=>{
     console.log("Upload success:", uploadData);
 
     // 📌 Get Public URL
-    const { data } = supabase.storage.from("slips").getPublicUrl(fileName);
+    const { data } = client.storage.from("slips").getPublicUrl(fileName);
     const slip_url = data.publicUrl;
     console.log("Public URL:", slip_url);
 
     // 📝 Insert into kaimukandaman
-    const { error: insertError } = await supabase
+    const { error: insertError } = await client
       .from("kaimukandaman")
       .insert([{ first_name, last_name, national_id, phone, category, slip_url }]);
 
@@ -180,8 +169,6 @@ form.addEventListener("submit", async (e)=>{
     showMessage("❌ เกิดข้อผิดพลาด: " + err.message, "error");
   }
 });
-
-
 </script>
 </body>
 </html>
