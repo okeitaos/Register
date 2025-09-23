@@ -20,7 +20,6 @@ img { max-width:80px; border-radius:6px; }
 </head>
 <body>
 <h1>Admin Dashboard - สมัครวิ่ง</h1>
-
 <table>
 <thead>
 <tr>
@@ -66,10 +65,9 @@ async function loadApplicants(){
   });
 }
 
-// เรียก Backend เพื่ออัปเดตสถานะ + ส่งอีเมล
 async function updateStatus(id,status){
   try {
-    const res = await fetch("http://localhost:3000/approve", {
+    const res = await fetch("/approve", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({id,status})
