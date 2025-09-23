@@ -7,13 +7,14 @@ import { createClient } from "@supabase/supabase-js";
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static("public")); // serve admin.html
 
-// Supabase
+// ---------------- Supabase ----------------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Nodemailer SMTP (Brevo)
+// ---------------- SMTP Brevo ----------------
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
@@ -24,11 +25,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// อัปเดตสถานะ + ส่งอีเมล
+// API: อัปเดตสถานะ + ส่งอีเมล
 app.post("/approve", async (req,res)=>{
   const { id, status } = req.body;
 
-  // ดึงผู้สมัครจาก Supabase
   const { data: applicant, error: fetchError } = await supabase
     .from("kaimukandaman")
     .select("*")
@@ -37,7 +37,6 @@ app.post("/approve", async (req,res)=>{
 
   if(fetchError) return res.status(500).json({ error: fetchError.message });
 
-  // อัปเดตสถานะ
   const { error } = await supabase
     .from("kaimukandaman")
     .update({ status })
@@ -45,7 +44,6 @@ app.post("/approve", async (req,res)=>{
 
   if(error) return res.status(500).json({ error: error.message });
 
-  // ส่งอีเมลถ้าอนุมัติ
   if(status === "approved"){
     try{
       await transporter.sendMail({
@@ -56,7 +54,7 @@ app.post("/approve", async (req,res)=>{
                <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${applicant.category}</strong></p>
                <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`,
         attachments: [
-          { filename: "slip.jpg", path: applicant.slip_url } // แนบสลิป
+          { filename: "slip.jpg", path: applicant.slip_url }
         ]
       });
     } catch(err){
@@ -67,4 +65,6 @@ app.post("/approve", async (req,res)=>{
   res.json({ message: "อัปเดตสถานะสำเร็จ" });
 });
 
-app.listen(3000, ()=> console.log("Server running on http://localhost:3000"));
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, ()=> console.log(`Server running on port ${PORT}`));
