@@ -54,16 +54,10 @@
       <input id="phone" type="tel" maxlength="15" required />
       <label>อีเมล</label>
       <input id="email" type="email" placeholder="example@mail.com" required />
-      <label>รุ่นอายุ / เพศ</label>
+      <label>รุ่นอายุ/เพศ</label>
       <select id="category" required>
-        <option value="">-- เลือกรุ่นอายุและเพศ --</option>
-        <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
-        <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
-        <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
-        <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
-        <option value="male_open">ชาย - รุ่นทั่วไป</option>
-        <option value="female_open">หญิง - รุ่นทั่วไป</option>
-      </select>
+      <option value="">-- เลือกรุ่นการแข่งขัน --</option>
+    </select>
       <label>สลิปการโอน</label>
       <input id="slip" type="file" accept="image/*,.pdf" required />
       <button type="submit">ส่งข้อมูล</button>
@@ -147,6 +141,25 @@ form.addEventListener("submit", async e=>{
   }catch(err){ showMessage("❌ เกิดข้อผิดพลาด: "+err.message,"error"); }
   finally{ loadingEl.style.display="none"; }
 });
+
+   // โหลด categories จากฐานข้อมูล
+    async function loadCategories() {
+      const { data, error } = await supabaseClient.from("categories").select("*").order("id", { ascending: true });
+      if (error) {
+        console.error("โหลด categories ไม่ได้:", error);
+        return;
+      }
+
+      const select = document.getElementById("category");
+      data.forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat.name;
+        opt.textContent = cat.name;
+        select.appendChild(opt);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCategories);
 </script>
 </body>
 </html>
