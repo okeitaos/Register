@@ -37,16 +37,10 @@ img { max-width:80px; border-radius:6px; }
 </table>
 
 <script>
-// ---------------- Supabase ----------------
-const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ---------------- Brevo API ----------------
-const BREVO_API_KEY = "9KCMFn0vzhfLBY6E";
-const BREVO_SENDER_EMAIL = "97ad4d001@smtp-brevo.com"; // ต้อง Verified ใน Brevo
-
-// โหลดผู้สมัคร
 async function loadApplicants(){
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
   if(error){ console.error(error); return; }
@@ -72,48 +66,22 @@ async function loadApplicants(){
   });
 }
 
-// ส่งอีเมลผ่าน Brevo
-async function sendApprovalEmail(to_email, fullName, category){
+// เรียก Backend เพื่ออัปเดตสถานะ + ส่งอีเมล
+async function updateStatus(id,status){
   try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    const res = await fetch("http://localhost:3000/approve", {
       method: "POST",
-      headers: {
-        "api-key": BREVO_API_KEY,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        sender: { name: "วิ่งมาราธอน", email: BREVO_SENDER_EMAIL },
-        to: [{ email: to_email }],
-        subject: "ผลการสมัครวิ่ง",
-        htmlContent: `<p>สวัสดี ${fullName},</p>
-                      <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${category}</strong></p>
-                      <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`
-      })
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({id,status})
     });
     const data = await res.json();
-    console.log("Response Brevo:", data);
-    if(!res.ok) console.error("ส่งอีเมลไม่สำเร็จ", res.status);
+    console.log(data);
+    loadApplicants();
   } catch(err){
-    console.error("ส่งอีเมลไม่สำเร็จ:", err);
+    console.error(err);
   }
 }
 
-// อัปเดตสถานะ
-async function updateStatus(id,status){
-  const { data: applicant, error: fetchError } = await client.from("kaimukandaman").select("*").eq("id",id).single();
-  if(fetchError){ alert("เกิดข้อผิดพลาด: "+fetchError.message); return; }
-
-  const { error } = await client.from("kaimukandaman").update({status}).eq("id",id);
-  if(error){ alert("เกิดข้อผิดพลาด: "+error.message); return; }
-
-  if(status === "approved"){
-    await sendApprovalEmail(applicant.email, applicant.first_name + " " + applicant.last_name, applicant.category);
-  }
-
-  loadApplicants();
-}
-
-// โหลดตอนเปิดหน้า
 loadApplicants();
 </script>
 </body>
