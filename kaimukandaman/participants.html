@@ -7,7 +7,8 @@
 <style>
 body{font-family:Segoe UI,sans-serif;background:#000;color:#f3f4f6;padding:20px;}
 h1{text-align:center;color:#60a5fa;margin-bottom:20px;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
+select{padding:10px;border-radius:6px;border:1px solid #4b5563;margin-bottom:15px;background:#1f2937;color:#f3f4f6;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
 th,td{padding:12px;border:1px solid #4b5563;text-align:center;}
 th{background:#1e40af;color:white;}
 tr:nth-child(even){background:#1f2937;}
@@ -17,6 +18,18 @@ tr:nth-child(even){background:#1f2937;}
 <body>
 
 <h1>รายชื่อผู้มีสิทธิ์เข้าแข่งขัน</h1>
+
+<label>กรองรุ่นการแข่งขัน:</label>
+<select id="categoryFilter">
+  <option value="">-- แสดงทั้งหมด --</option>
+  <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
+  <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
+  <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
+  <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
+  <option value="male_open">ชาย - รุ่นทั่วไป</option>
+  <option value="female_open">หญิง - รุ่นทั่วไป</option>
+</select>
+
 <table id="participantsTable">
   <thead>
     <tr>
@@ -34,12 +47,15 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 const tbody = document.querySelector("#participantsTable tbody");
+const categoryFilter = document.getElementById("categoryFilter");
 
 async function loadParticipants(){
-  const { data, error } = await client.from("kaimukandaman")
-    .select("*")
-    .eq("status","approved")
-    .order("id",{ascending:true});
+  let query = client.from("kaimukandaman").select("*").eq("status","approved").order("id",{ascending:true});
+  
+  const selectedCategory = categoryFilter.value;
+  if(selectedCategory) query = query.eq("category", selectedCategory);
+
+  const { data, error } = await query;
   if(error){ console.error(error); return; }
 
   tbody.innerHTML = "";
@@ -59,6 +75,9 @@ loadParticipants();
 
 // รีเฟรชทุก 5 วินาที
 setInterval(loadParticipants, 5000);
+
+// รีโหลดเมื่อเปลี่ยนค่า filter
+categoryFilter.addEventListener("change", loadParticipants);
 </script>
 
 </body>
