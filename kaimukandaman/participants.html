@@ -63,6 +63,9 @@ async function loadParticipants(){
 
 // โหลดข้อมูลเมื่อเปิดหน้า
 loadParticipants();
+
+  // รีเฟรชทุก 5 วินาที
+setInterval(loadParticipants, 5000);
 </script>
 
 </body>
