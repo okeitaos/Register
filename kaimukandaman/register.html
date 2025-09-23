@@ -7,55 +7,50 @@
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #e0f2fe, #f9fafb);
+      background: #000; /* พื้นหลังสีดำถาวร */
       margin: 0;
       padding: 40px 20px;
       min-height: 100vh;
-      transition: background 0.3s;
+      color: #f3f4f6;
     }
     .container {
       max-width: 650px;
       margin: auto;
     }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    h1 {
+      font-size: 26px;
+      color: #60a5fa;
+      text-align: center;
       margin-bottom: 20px;
     }
-    h1 {
-      font-size: 24px;
-      color: #1e40af;
-      margin: 0;
-    }
     .card {
-      background: #fff;
+      background: #1f2937;
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       animation: fadeIn 0.6s ease;
     }
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      color: #374151;
+      color: #e5e7eb;
     }
     input, select {
       width: 100%;
       padding: 12px;
-      border: 1px solid #d1d5db;
+      border: 1px solid #4b5563;
       border-radius: 8px;
       font-size: 15px;
       transition: border-color 0.2s, box-shadow 0.2s;
-      background: #fff;
-      color: #111827;
+      background: #374151;
+      color: #f9fafb;
       margin-bottom: 15px;
     }
     input:focus, select:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.3);
     }
     .row {
       display: flex;
@@ -66,7 +61,7 @@
     }
     button {
       width: 100%;
-      background: #2563eb;
+      background: #3b82f6;
       color: white;
       border: none;
       padding: 14px;
@@ -77,7 +72,7 @@
       transition: background 0.2s;
     }
     button:hover {
-      background: #1e3a8a;
+      background: #1e40af;
     }
     .alert {
       margin-top: 18px;
@@ -86,68 +81,14 @@
       font-size: 14px;
     }
     .success {
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
+      background: #065f46;
+      color: #d1fae5;
+      border: 1px solid #059669;
     }
     .error {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-    .toggle-btn {
-      background: transparent;
-      border: 2px solid #2563eb;
-      color: #2563eb;
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .toggle-btn:hover {
-      background: #2563eb;
-      color: white;
-    }
-    /* Dark mode */
-    body.dark {
-      background: linear-gradient(135deg, #111827, #1f2937);
-      color: #f3f4f6;
-    }
-    body.dark .card {
-      background: #1f2937;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    body.dark h1 {
-      color: #60a5fa;
-    }
-    body.dark label {
-      color: #e5e7eb;
-    }
-    body.dark input,
-    body.dark select {
-      background: #374151;
-      border: 1px solid #4b5563;
-      color: #f9fafb;
-    }
-    body.dark input:focus,
-    body.dark select:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96,165,250,0.3);
-    }
-    body.dark button {
-      background: #3b82f6;
-    }
-    body.dark button:hover {
-      background: #1e40af;
-    }
-    body.dark .toggle-btn {
-      border-color: #60a5fa;
-      color: #60a5fa;
-    }
-    body.dark .toggle-btn:hover {
-      background: #60a5fa;
-      color: #111827;
+      background: #991b1b;
+      color: #fee2e2;
+      border: 1px solid #ef4444;
     }
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(10px);}
@@ -158,10 +99,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>สมัครเข้าร่วมงานวิ่ง</h1>
-      <button type="button" class="toggle-btn" id="toggleMode">🌙 Dark</button>
-    </div>
+    <h1>สมัครเข้าร่วมงานวิ่ง</h1>
     <div class="card">
       <form id="regForm">
         <div class="row">
@@ -208,12 +146,6 @@ const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
 const messageEl = document.getElementById("message");
-const toggleBtn = document.getElementById("toggleMode");
-
-toggleBtn.addEventListener("click", ()=>{
-  document.body.classList.toggle("dark");
-  toggleBtn.textContent = document.body.classList.contains("dark") ? "☀️ Light" : "🌙 Dark";
-});
 
 function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
