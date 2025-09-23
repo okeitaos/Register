@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Admin</title>
+<style>
+body{font-family:Segoe UI,sans-serif;background:#000;color:#f3f4f6;padding:20px;}
+h1{text-align:center;color:#60a5fa;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th,td{padding:12px;border:1px solid #4b5563;text-align:center;}
+th{background:#1e40af;color:white;}
+button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;color:#fff;margin:0 2px;}
+.approve{background:#10b981;} .reject{background:#ef4444;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+<h1>Dashboard Admin</h1>
+<table id="adminTable">
+  <thead>
+    <tr><th>ชื่อ</th><th>เลขบัตร</th><th>เบอร์</th><th>รุ่น/เพศ</th><th>สถานะ</th><th>จัดการ</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+async function loadApplicants(){
+  const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
+  if(error) return console.error(error);
+  const tbody = document.querySelector("#adminTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(app=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${app.first_name} ${app.last_name}</td>
+      <td>${app.national_id}</td>
+      <td>${app.phone}</td>
+      <td>${app.category}</td>
+      <td>${app.status}</td>
+      <td>
+        <button class="approve" onclick="updateStatus('${app.id}','approved')">Approve</button>
+        <button class="reject" onclick="updateStatus('${app.id}','rejected')">Reject</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function updateStatus(id,status){
+  const { error } = await client.from("kaimukandaman").update({status}).eq("id",id);
+  if(error) return alert("เกิดข้อผิดพลาด: "+error.message);
+  loadApplicants();
+}
+
+loadApplicants();
+</script>
+</body>
+</html>
