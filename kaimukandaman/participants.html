@@ -22,9 +22,7 @@ tr:nth-child(even){background:#1f2937;}
     <tr>
       <th>ลำดับ</th>
       <th>ชื่อ - นามสกุล</th>
-      <th>เลขบัตร</th>
-      <th>เบอร์โทร</th>
-      <th>รุ่น/เพศ</th>
+      <th>รุ่นการแข่งขัน</th>
     </tr>
   </thead>
   <tbody></tbody>
@@ -35,36 +33,31 @@ const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co"; // ใส่ UR
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // ใส่ ANON KEY ของคุณ
 const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
+const tbody = document.querySelector("#participantsTable tbody");
+
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman")
     .select("*")
     .eq("status","approved")
     .order("id",{ascending:true});
+  if(error){ console.error(error); return; }
 
-  if(error){
-    console.error("เกิดข้อผิดพลาด:",error);
-    return;
-  }
-
-  const tbody = document.querySelector("#participantsTable tbody");
   tbody.innerHTML = "";
   data.forEach((app,index)=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${index+1}</td>
       <td>${app.first_name} ${app.last_name}</td>
-      <td>${app.national_id}</td>
-      <td>${app.phone}</td>
       <td>${app.category}</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// โหลดข้อมูลเมื่อเปิดหน้า
+// โหลดครั้งแรก
 loadParticipants();
 
-  // รีเฟรชทุก 5 วินาที
+// รีเฟรชทุก 5 วินาที
 setInterval(loadParticipants, 5000);
 </script>
 
