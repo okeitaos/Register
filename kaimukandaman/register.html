@@ -5,17 +5,94 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>สมัครวิ่ง</title>
   <style>
-    body{font-family:sans-serif;background:#f6f7fb;margin:0;padding:20px}
-    .card{max-width:700px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
-    h1{margin-bottom:14px;font-size:22px}
-    label{display:block;margin:10px 0 6px;font-weight:600}
-    input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px}
-    .row{display:flex;gap:12px}
-    .col{flex:1}
-    button{background:#2563eb;color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;margin-top:14px}
-    .alert{margin-top:14px;padding:10px;border-radius:8px}
-    .success{background:#ecfdf5;color:#065f46}
-    .error{background:#fff1f2;color:#7f1d1d}
+    /* Reset เล็กน้อย */
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f2fe, #f9fafb);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      width: 100%;
+      max-width: 600px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 0.6s ease;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #1e40af;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #374151;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+    }
+    .row {
+      display: flex;
+      gap: 16px;
+    }
+    .col {
+      flex: 1;
+    }
+    button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1e3a8a;
+    }
+    .alert {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
