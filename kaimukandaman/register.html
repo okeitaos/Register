@@ -30,7 +30,7 @@
     <input type="text" id="lastName" required>
 
     <label>เลขบัตรประชาชน</label>
-    <input type="text" id="citizenId" required>
+    <input type="text" id="nationalId" required>
 
     <label>เบอร์โทรศัพท์</label>
     <input type="tel" id="phone" required>
@@ -95,17 +95,17 @@
 
       const firstName = document.getElementById("firstName").value;
       const lastName = document.getElementById("lastName").value;
-      const citizenId = document.getElementById("citizenId").value;
+      const nationalId = document.getElementById("nationalId").value;
       const phone = document.getElementById("phone").value;
       const email = document.getElementById("email").value;
       const category = document.getElementById("category").value;
       const slipFile = document.getElementById("slip").files[0];
 
-      // ตรวจสอบบัตรประชาชนซ้ำ
+      // ตรวจสอบเลขบัตรประชาชนซ้ำ
       const { data: existing, error: checkError } = await supabaseClient
         .from("kaimukandaman")
-        .select("citizen_id")
-        .eq("citizen_id", citizenId);
+        .select("national_id")
+        .eq("national_id", nationalId);
 
       if (existing && existing.length > 0) {
         alert("เลขบัตรประชาชนนี้ลงทะเบียนแล้ว ❌");
@@ -115,7 +115,7 @@
 
       // upload slip
       const fileName = `slip_${Date.now()}_${slipFile.name}`;
-      const { data: uploadData, error: uploadError } = await supabaseClient.storage
+      const { error: uploadError } = await supabaseClient.storage
         .from("slips")
         .upload(fileName, slipFile);
 
@@ -129,11 +129,11 @@
       const slipUrl = `${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
 
       // insert ข้อมูล
-      const { data, error } = await supabaseClient.from("kaimukandaman").insert([
+      const { error } = await supabaseClient.from("kaimukandaman").insert([
         {
           first_name: firstName,
           last_name: lastName,
-          citizen_id: citizenId,
+          national_id: nationalId,
           phone: phone,
           email: email,
           category: category,
