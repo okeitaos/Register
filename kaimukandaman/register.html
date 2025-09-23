@@ -5,33 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>สมัครวิ่ง</title>
   <style>
-    * { box-sizing: border-box; }
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #e0f2fe, #f9fafb);
       margin: 0;
-      padding: 0;
+      padding: 40px 20px;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       transition: background 0.3s;
     }
+    .container {
+      max-width: 650px;
+      margin: auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      color: #1e40af;
+      margin: 0;
+    }
     .card {
-      width: 100%;
-      max-width: 600px;
       background: #fff;
       padding: 30px;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       animation: fadeIn 0.6s ease;
-      position: relative;
-    }
-    h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: #1e40af;
-      text-align: center;
     }
     label {
       display: block;
@@ -48,6 +50,7 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       background: #fff;
       color: #111827;
+      margin-bottom: 15px;
     }
     input:focus, select:focus {
       outline: none;
@@ -70,7 +73,7 @@
       font-size: 16px;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 5px;
       transition: background 0.2s;
     }
     button:hover {
@@ -92,21 +95,13 @@
       color: #991b1b;
       border: 1px solid #fecaca;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-    /* Toggle Dark Mode button */
     .toggle-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
       background: transparent;
       border: 2px solid #2563eb;
       color: #2563eb;
       border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 13px;
+      padding: 6px 12px;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.3s;
     }
@@ -114,7 +109,7 @@
       background: #2563eb;
       color: white;
     }
-    /* Dark mode styles */
+    /* Dark mode */
     body.dark {
       background: linear-gradient(135deg, #111827, #1f2937);
       color: #f3f4f6;
@@ -154,54 +149,62 @@
       background: #60a5fa;
       color: #111827;
     }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-  <div class="card">
-    <button type="button" class="toggle-btn" id="toggleMode">🌙 Dark</button>
-    <h1>สมัครเข้าร่วมงานวิ่ง</h1>
-    <form id="regForm">
-      <div class="row">
-        <div class="col">
-          <label>ชื่อ</label>
-          <input id="first_name" type="text" required />
+  <div class="container">
+    <div class="header">
+      <h1>สมัครเข้าร่วมงานวิ่ง</h1>
+      <button type="button" class="toggle-btn" id="toggleMode">🌙 Dark</button>
+    </div>
+    <div class="card">
+      <form id="regForm">
+        <div class="row">
+          <div class="col">
+            <label>ชื่อ</label>
+            <input id="first_name" type="text" required />
+          </div>
+          <div class="col">
+            <label>นามสกุล</label>
+            <input id="last_name" type="text" required />
+          </div>
         </div>
-        <div class="col">
-          <label>นามสกุล</label>
-          <input id="last_name" type="text" required />
-        </div>
-      </div>
 
-      <label>เลขบัตรประชาชน (13 หลัก)</label>
-      <input id="national_id" type="text" maxlength="13" required />
+        <label>เลขบัตรประชาชน (13 หลัก)</label>
+        <input id="national_id" type="text" maxlength="13" required />
 
-      <label>เบอร์โทร</label>
-      <input id="phone" type="tel" maxlength="15" required />
+        <label>เบอร์โทร</label>
+        <input id="phone" type="tel" maxlength="15" required />
 
-      <label>รุ่นอายุ / เพศ</label>
-      <select id="category" required>
-        <option value="">-- เลือกรุ่นอายุและเพศ --</option>
-        <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
-        <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
-        <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
-        <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
-        <option value="male_open">ชาย - รุ่นทั่วไป</option>
-        <option value="female_open">หญิง - รุ่นทั่วไป</option>
-      </select>
+        <label>รุ่นอายุ / เพศ</label>
+        <select id="category" required>
+          <option value="">-- เลือกรุ่นอายุและเพศ --</option>
+          <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
+          <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
+          <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
+          <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
+          <option value="male_open">ชาย - รุ่นทั่วไป</option>
+          <option value="female_open">หญิง - รุ่นทั่วไป</option>
+        </select>
 
-      <label>สลิปการโอน</label>
-      <input id="slip" type="file" accept="image/*,.pdf" required />
+        <label>สลิปการโอน</label>
+        <input id="slip" type="file" accept="image/*,.pdf" required />
 
-      <button type="submit">ส่งข้อมูล</button>
-    </form>
-    <div id="message"></div>
+        <button type="submit">ส่งข้อมูล</button>
+      </form>
+      <div id="message"></div>
+    </div>
   </div>
 
 <script>
 const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
-const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
 const messageEl = document.getElementById("message");
@@ -215,54 +218,6 @@ toggleBtn.addEventListener("click", ()=>{
 function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
 }
-
-function validateThaiID(id){
-  if(!/^\\d{13}$/.test(id)) return false;
-  let sum=0;
-  for(let i=0;i<12;i++) sum += Number(id[i])*(13-i);
-  return (11 - (sum % 11)) % 10 === Number(id[12]);
-}
-
-form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  messageEl.innerHTML = "";
-
-  const first_name = document.getElementById("first_name").value.trim();
-  const last_name = document.getElementById("last_name").value.trim();
-  const national_id = document.getElementById("national_id").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const category = document.getElementById("category").value;
-  const slipFile = document.getElementById("slip").files[0];
-
-  if(!validateThaiID(national_id)){
-    showMessage("เลขบัตรประชาชนไม่ถูกต้อง", "error");
-    return;
-  }
-
-  try {
-    const fileName = `slip_${Date.now()}.${slipFile.name.split(".").pop()}`;
-    const { error: uploadError } = await supabase.storage
-      .from("slips")
-      .upload(fileName, slipFile);
-
-    if(uploadError) throw uploadError;
-
-    const { data: { publicUrl } } = supabase.storage
-      .from("slips")
-      .getPublicUrl(fileName);
-
-    const { error: insertError } = await supabase
-      .from("registrations")
-      .insert([{ first_name,last_name,national_id,phone,category,slip_path: publicUrl }]);
-
-    if(insertError) throw insertError;
-
-    showMessage("บันทึกข้อมูลเรียบร้อยแล้ว ขอบคุณค่ะ");
-    form.reset();
-  } catch(err){
-    showMessage("เกิดข้อผิดพลาด: " + err.message, "error");
-  }
-});
 </script>
 </body>
 </html>
