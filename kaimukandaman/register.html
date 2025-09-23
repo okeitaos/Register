@@ -54,13 +54,35 @@
   @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
 
   /* Modal */
-  .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.7);}
+  .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.7); animation: fadeIn 0.3s;}
   .modal-content {
-    background: #1f2937; margin: 10% auto; padding: 20px; border-radius: 16px; max-width: 500px; color: #f3f4f6; text-align: center;
+    background: #1f2937;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 16px;
+    max-width: 500px;
+    color: #f3f4f6;
+    text-align: center;
+    transform: translateY(-50px);
+    opacity: 0;
+    animation: slideDown 0.4s forwards;
   }
   .modal-content img { max-width: 100%; margin-top: 10px; border-radius: 12px; }
-  .close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 20px; margin-top: 15px; border-radius: 8px; cursor: pointer; }
+  .close-btn {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
   .close-btn:hover { background: #b91c1c; }
+
+  @keyframes fadeIn { from { background: rgba(0,0,0,0); } to { background: rgba(0,0,0,0.7); } }
+  @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-50px); opacity: 0; } }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -130,6 +152,20 @@ function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
 }
 
+function openModal(){
+  modal.style.display = "block";
+  modal.querySelector(".modal-content").style.animation = "slideDown 0.4s forwards";
+}
+
+function closeModal(){
+  const content = modal.querySelector(".modal-content");
+  content.style.animation = "slideUp 0.3s forwards";
+  setTimeout(()=>{ modal.style.display = "none"; }, 300);
+}
+
+closeModalBtn.addEventListener("click", closeModal);
+window.addEventListener("click", e => { if(e.target == modal) closeModal(); });
+
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
   messageEl.innerHTML = "";
@@ -149,7 +185,6 @@ form.addEventListener("submit", async (e)=>{
   }
 
   try {
-    // Upload
     const fileName = `slip_${Date.now()}_${slipFile.name}`;
     const { error: uploadError } = await client.storage.from("slips").upload(fileName, slipFile);
     if(uploadError) throw uploadError;
@@ -157,12 +192,10 @@ form.addEventListener("submit", async (e)=>{
     const { data } = client.storage.from("slips").getPublicUrl(fileName);
     const slip_url = data.publicUrl;
 
-    // Insert
     const { error: insertError } = await client.from("kaimukandaman")
       .insert([{ first_name, last_name, national_id, phone, category, slip_url }]);
     if(insertError) throw insertError;
 
-    // แสดง modal
     modalText.innerHTML = `
       <strong>ชื่อ:</strong> ${first_name} ${last_name}<br>
       <strong>เลขบัตรประชาชน:</strong> ${national_id}<br>
@@ -170,8 +203,8 @@ form.addEventListener("submit", async (e)=>{
       <strong>รุ่น/เพศ:</strong> ${category}
     `;
     modalImg.src = slip_url;
-    modal.style.display = "block";
 
+    openModal();
     form.reset();
   } catch(err){
     showMessage("❌ เกิดข้อผิดพลาด: " + err.message, "error");
@@ -179,9 +212,6 @@ form.addEventListener("submit", async (e)=>{
     loadingEl.style.display = "none";
   }
 });
-
-closeModalBtn.addEventListener("click", ()=> modal.style.display = "none");
-window.addEventListener("click", e => { if(e.target == modal) modal.style.display = "none"; });
 </script>
 </body>
 </html>
