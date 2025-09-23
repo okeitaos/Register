@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>สมัครวิ่ง</title>
+  <style>
+    body{font-family:sans-serif;background:#f6f7fb;margin:0;padding:20px}
+    .card{max-width:700px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+    h1{margin-bottom:14px;font-size:22px}
+    label{display:block;margin:10px 0 6px;font-weight:600}
+    input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+    button{background:#2563eb;color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;margin-top:14px}
+    .alert{margin-top:14px;padding:10px;border-radius:8px}
+    .success{background:#ecfdf5;color:#065f46}
+    .error{background:#fff1f2;color:#7f1d1d}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>สมัครเข้าร่วมงานวิ่ง</h1>
+    <form id="regForm">
+      <div class="row">
+        <div class="col">
+          <label>ชื่อ</label>
+          <input id="first_name" type="text" required />
+        </div>
+        <div class="col">
+          <label>นามสกุล</label>
+          <input id="last_name" type="text" required />
+        </div>
+      </div>
+
+      <label>เลขบัตรประชาชน (13 หลัก)</label>
+      <input id="national_id" type="text" maxlength="13" required />
+
+      <label>เบอร์โทร</label>
+      <input id="phone" type="tel" maxlength="15" required />
+
+      <label>รุ่นอายุ / เพศ</label>
+      <select id="category" required>
+        <option value="">-- เลือกรุ่นอายุและเพศ --</option>
+        <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
+        <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
+        <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
+        <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
+        <option value="male_open">ชาย - รุ่นทั่วไป</option>
+        <option value="female_open">หญิง - รุ่นทั่วไป</option>
+      </select>
+
+      <label>สลิปการโอน</label>
+      <input id="slip" type="file" accept="image/*,.pdf" required />
+
+      <button type="submit">ส่งข้อมูล</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+<script>
+const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const form = document.getElementById("regForm");
+const messageEl = document.getElementById("message");
+
+function showMessage(text, type="success"){
+  messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
+}
+
+function validateThaiID(id){
+  if(!/^\\d{13}$/.test(id)) return false;
+  let sum=0;
+  for(let i=0;i<12;i++) sum += Number(id[i])*(13-i);
+  return (11 - (sum % 11)) % 10 === Number(id[12]);
+}
+
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  messageEl.innerHTML = "";
+
+  const first_name = document.getElementById("first_name").value.trim();
+  const last_name = document.getElementById("last_name").value.trim();
+  const national_id = document.getElementById("national_id").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const category = document.getElementById("category").value;
+  const slipFile = document.getElementById("slip").files[0];
+
+  if(!validateThaiID(national_id)){
+    showMessage("เลขบัตรประชาชนไม่ถูกต้อง", "error");
+    return;
+  }
+
+  try {
+    const fileName = `slip_${Date.now()}.${slipFile.name.split(".").pop()}`;
+    const { error: uploadError } = await supabase.storage
+      .from("slips")
+      .upload(fileName, slipFile);
+
+    if(uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from("slips")
+      .getPublicUrl(fileName);
+
+    const { error: insertError } = await supabase
+      .from("registrations")
+      .insert([{ first_name,last_name,national_id,phone,category,slip_path: publicUrl }]);
+
+    if(insertError) throw insertError;
+
+    showMessage("บันทึกข้อมูลเรียบร้อยแล้ว ขอบคุณค่ะ");
+    form.reset();
+  } catch(err){
+    showMessage("เกิดข้อผิดพลาด: " + err.message, "error");
+  }
+});
+</script>
+</body>
+</html>
