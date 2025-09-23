@@ -9,8 +9,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Supabase
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Nodemailer SMTP (Brevo)
@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: "97ad4d001@smtp-brevo.com",
-    pass: "YOUR_SMTP_KEY"
+    pass: "9KCMFn0vzhfLBY6E"
   }
 });
 
