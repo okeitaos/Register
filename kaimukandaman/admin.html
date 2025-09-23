@@ -1,17 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard - สมัครวิ่ง</title>
 <style>
-body { font-family: "Segoe UI", sans-serif; background:#000; color:#f3f4f6; padding:20px; }
+body { font-family: Arial,sans-serif; background:#000; color:#f3f4f6; padding:20px; }
 h1 { text-align:center; color:#60a5fa; margin-bottom:20px; }
 table { width:100%; border-collapse: collapse; }
 th, td { padding:12px; border:1px solid #4b5563; text-align:center; }
 th { background:#1e40af; color:white; }
 tr:nth-child(even){ background:#1f2937; }
-button { padding:6px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
+button { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; color:white; }
 .approve { background:#16a34a; }
 .reject { background:#dc2626; }
 img { max-width:80px; border-radius:6px; }
@@ -37,14 +37,15 @@ img { max-width:80px; border-radius:6px; }
 </table>
 
 <script>
+// ---------------- Supabase ----------------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ใส่ API Key ของคุณตรงนี้
-const EMAIL_API_KEY = "re_XNjHN9Qs_EAjGyzKbZcR7knVqD6RNWkkA";
+// ---------------- Resend API ----------------
+const RESEND_API_KEY = "re_DhgQeqUt_CeDDhHhyrc8J3H8YLozDKKPW";
 
-// โหลดข้อมูลผู้สมัคร
+// โหลดผู้สมัคร
 async function loadApplicants(){
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
   if(error){ console.error(error); return; }
@@ -70,26 +71,31 @@ async function loadApplicants(){
   });
 }
 
-// ส่งอีเมลแจ้งผู้สมัคร
+// ส่งอีเมลผ่าน Resend API
 async function sendApprovalEmail(to_email, fullName, category){
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + EMAIL_API_KEY,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      from: 'no-reply@yourdomain.com',
-      to: [to_email],
-      subject: 'ผลการสมัครวิ่ง',
-      html: `<p>สวัสดี ${fullName},</p>
-             <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${category}</strong></p>
-             <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`
-    })
-  });
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + RESEND_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'no-reply@yourdomain.com',
+        to: [to_email],
+        subject: 'ผลการสมัครวิ่ง',
+        html: `<p>สวัสดี ${fullName},</p>
+               <p>คุณได้รับอนุมัติให้เข้าร่วมการแข่งขันรุ่น: <strong>${category}</strong></p>
+               <p>ขอบคุณที่สมัครเข้าร่วมกิจกรรม</p>`
+      })
+    });
+    console.log("ส่งอีเมลสำเร็จ");
+  } catch(err){
+    console.error("ส่งอีเมลไม่สำเร็จ:", err);
+  }
 }
 
-// อัปเดตสถานะและส่งอีเมล
+// อัปเดตสถานะ
 async function updateStatus(id,status){
   const { data: applicant, error: fetchError } = await client.from("kaimukandaman").select("*").eq("id",id).single();
   if(fetchError){ alert("เกิดข้อผิดพลาด: "+fetchError.message); return; }
@@ -98,18 +104,13 @@ async function updateStatus(id,status){
   if(error){ alert("เกิดข้อผิดพลาด: "+error.message); return; }
 
   if(status === "approved"){
-    try {
-      await sendApprovalEmail(applicant.email, applicant.first_name + " " + applicant.last_name, applicant.category);
-      console.log("ส่งอีเมลสำเร็จ");
-    } catch(err){
-      console.error("ส่งอีเมลไม่สำเร็จ:", err);
-    }
+    await sendApprovalEmail(applicant.email, applicant.first_name + " " + applicant.last_name, applicant.category);
   }
 
   loadApplicants();
 }
 
-// โหลดข้อมูลตอนเปิดหน้า
+// โหลดตอนเปิดหน้า
 loadApplicants();
 </script>
 </body>
