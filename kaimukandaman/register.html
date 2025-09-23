@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>สมัครวิ่ง</title>
   <style>
-    /* Reset เล็กน้อย */
     * { box-sizing: border-box; }
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +15,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.3s;
     }
     .card {
       width: 100%;
@@ -25,6 +25,7 @@
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       animation: fadeIn 0.6s ease;
+      position: relative;
     }
     h1 {
       font-size: 24px;
@@ -45,6 +46,8 @@
       border-radius: 8px;
       font-size: 15px;
       transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+      color: #111827;
     }
     input:focus, select:focus {
       outline: none;
@@ -93,11 +96,70 @@
       from {opacity: 0; transform: translateY(10px);}
       to {opacity: 1; transform: translateY(0);}
     }
+    /* Toggle Dark Mode button */
+    .toggle-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: 2px solid #2563eb;
+      color: #2563eb;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .toggle-btn:hover {
+      background: #2563eb;
+      color: white;
+    }
+    /* Dark mode styles */
+    body.dark {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      color: #f3f4f6;
+    }
+    body.dark .card {
+      background: #1f2937;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    body.dark h1 {
+      color: #60a5fa;
+    }
+    body.dark label {
+      color: #e5e7eb;
+    }
+    body.dark input,
+    body.dark select {
+      background: #374151;
+      border: 1px solid #4b5563;
+      color: #f9fafb;
+    }
+    body.dark input:focus,
+    body.dark select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.3);
+    }
+    body.dark button {
+      background: #3b82f6;
+    }
+    body.dark button:hover {
+      background: #1e40af;
+    }
+    body.dark .toggle-btn {
+      border-color: #60a5fa;
+      color: #60a5fa;
+    }
+    body.dark .toggle-btn:hover {
+      background: #60a5fa;
+      color: #111827;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
   <div class="card">
+    <button type="button" class="toggle-btn" id="toggleMode">🌙 Dark</button>
     <h1>สมัครเข้าร่วมงานวิ่ง</h1>
     <form id="regForm">
       <div class="row">
@@ -143,6 +205,12 @@ const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
 const messageEl = document.getElementById("message");
+const toggleBtn = document.getElementById("toggleMode");
+
+toggleBtn.addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  toggleBtn.textContent = document.body.classList.contains("dark") ? "☀️ Light" : "🌙 Dark";
+});
 
 function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
