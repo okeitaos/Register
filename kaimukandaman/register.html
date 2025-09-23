@@ -1,116 +1,130 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>สมัครวิ่ง</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #000;
-      margin: 0;
-      padding: 40px 20px;
-      min-height: 100vh;
-      color: #f3f4f6;
-    }
-    .container { max-width: 650px; margin: auto; }
-    h1 { font-size: 26px; color: #60a5fa; text-align: center; margin-bottom: 20px; }
-    .card {
-      background: #1f2937;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    label { display: block; margin-bottom: 6px; font-weight: 600; color: #e5e7eb; }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #4b5563;
-      border-radius: 8px;
-      font-size: 15px;
-      margin-bottom: 15px;
-      background: #374151;
-      color: #f9fafb;
-    }
-    input:focus, select:focus {
-      outline: none;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 3px rgba(96,165,250,0.3);
-    }
-    .row { display: flex; gap: 16px; }
-    .col { flex: 1; }
-    button {
-      width: 100%;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover { background: #1e40af; }
-    .alert {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    .success { background: #065f46; color: #d1fae5; border: 1px solid #059669; }
-    .error { background: #991b1b; color: #fee2e2; border: 1px solid #ef4444; }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>สมัครวิ่ง</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #000;
+    margin: 0;
+    padding: 40px 20px;
+    color: #f3f4f6;
+  }
+  .container { max-width: 650px; margin: auto; }
+  h1 { text-align: center; color: #60a5fa; margin-bottom: 20px; }
+  .card {
+    background: #1f2937;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+  label { display: block; margin-bottom: 6px; font-weight: 600; color: #e5e7eb; }
+  input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #4b5563; margin-bottom: 15px; background: #374151; color: #f9fafb; }
+  input:focus, select:focus { outline: none; border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(96,165,250,0.3); }
+  .row { display: flex; gap: 16px; }
+  .col { flex: 1; }
+  button {
+    width: 100%;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  button:hover { background: #1e40af; }
+  .alert { margin-top: 18px; padding: 12px; border-radius: 8px; font-size: 14px; }
+  .success { background: #065f46; color: #d1fae5; border: 1px solid #059669; }
+  .error { background: #991b1b; color: #fee2e2; border: 1px solid #ef4444; }
+
+  /* Loading Spinner */
+  #loading { display: none; text-align: center; margin: 15px 0; }
+  #loading div {
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+
+  /* Modal */
+  .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background: rgba(0,0,0,0.7);}
+  .modal-content {
+    background: #1f2937; margin: 10% auto; padding: 20px; border-radius: 16px; max-width: 500px; color: #f3f4f6; text-align: center;
+  }
+  .modal-content img { max-width: 100%; margin-top: 10px; border-radius: 12px; }
+  .close-btn { background: #ef4444; color: #fff; border: none; padding: 10px 20px; margin-top: 15px; border-radius: 8px; cursor: pointer; }
+  .close-btn:hover { background: #b91c1c; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>สมัครเข้าร่วมงานวิ่ง</h1>
-    <div class="card">
-      <form id="regForm">
-        <div class="row">
-          <div class="col">
-            <label>ชื่อ</label>
-            <input id="first_name" type="text" required />
-          </div>
-          <div class="col">
-            <label>นามสกุล</label>
-            <input id="last_name" type="text" required />
-          </div>
+
+<div class="container">
+  <h1>สมัครเข้าร่วมงานวิ่ง</h1>
+  <div class="card">
+    <form id="regForm">
+      <div class="row">
+        <div class="col">
+          <label>ชื่อ</label>
+          <input id="first_name" type="text" required />
         </div>
-
-        <label>เลขบัตรประชาชน (13 หลัก)</label>
-        <input id="national_id" type="text" maxlength="13" required />
-
-        <label>เบอร์โทร</label>
-        <input id="phone" type="tel" maxlength="15" required />
-
-        <label>รุ่นอายุ / เพศ</label>
-        <select id="category" required>
-          <option value="">-- เลือกรุ่นอายุและเพศ --</option>
-          <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
-          <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
-          <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
-          <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
-          <option value="male_open">ชาย - รุ่นทั่วไป</option>
-          <option value="female_open">หญิง - รุ่นทั่วไป</option>
-        </select>
-
-        <label>สลิปการโอน</label>
-        <input id="slip" type="file" accept="image/*,.pdf" required />
-
-        <button type="submit">ส่งข้อมูล</button>
-      </form>
-      <div id="message"></div>
-    </div>
+        <div class="col">
+          <label>นามสกุล</label>
+          <input id="last_name" type="text" required />
+        </div>
+      </div>
+      <label>เลขบัตรประชาชน (13 หลัก)</label>
+      <input id="national_id" type="text" maxlength="13" required />
+      <label>เบอร์โทร</label>
+      <input id="phone" type="tel" maxlength="15" required />
+      <label>รุ่นอายุ / เพศ</label>
+      <select id="category" required>
+        <option value="">-- เลือกรุ่นอายุและเพศ --</option>
+        <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
+        <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
+        <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
+        <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
+        <option value="male_open">ชาย - รุ่นทั่วไป</option>
+        <option value="female_open">หญิง - รุ่นทั่วไป</option>
+      </select>
+      <label>สลิปการโอน</label>
+      <input id="slip" type="file" accept="image/*,.pdf" required />
+      <button type="submit">ส่งข้อมูล</button>
+    </form>
+    <div id="loading"><div></div></div>
+    <div id="message"></div>
   </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <h2>สมัครเรียบร้อย</h2>
+    <p id="modal-text"></p>
+    <img id="modal-img" src="" alt="Slip Image"/>
+    <button class="close-btn" id="closeModal">ปิด</button>
+  </div>
+</div>
 
 <script>
-const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";   // 👉 ใส่ของคุณ
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";                // 👉 ใส่ของคุณ
+const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co"; // ใส่ของคุณ
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // ใส่ของคุณ
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
 const messageEl = document.getElementById("message");
+const loadingEl = document.getElementById("loading");
+const modal = document.getElementById("modal");
+const modalText = document.getElementById("modal-text");
+const modalImg = document.getElementById("modal-img");
+const closeModalBtn = document.getElementById("closeModal");
 
 function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
@@ -119,6 +133,7 @@ function showMessage(text, type="success"){
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
   messageEl.innerHTML = "";
+  loadingEl.style.display = "block";
 
   const first_name = document.getElementById("first_name").value.trim();
   const last_name = document.getElementById("last_name").value.trim();
@@ -129,46 +144,44 @@ form.addEventListener("submit", async (e)=>{
 
   if(!slipFile){
     showMessage("กรุณาอัปโหลดสลิป", "error");
+    loadingEl.style.display = "none";
     return;
   }
 
   try {
-    // 📂 Upload Slip
+    // Upload
     const fileName = `slip_${Date.now()}_${slipFile.name}`;
-    const { data: uploadData, error: uploadError } = await client.storage
-      .from("slips")
-      .upload(fileName, slipFile);
+    const { error: uploadError } = await client.storage.from("slips").upload(fileName, slipFile);
+    if(uploadError) throw uploadError;
 
-    if(uploadError) {
-      console.error("Upload error:", uploadError);
-      throw uploadError;
-    }
-
-    console.log("Upload success:", uploadData);
-
-    // 📌 Get Public URL
     const { data } = client.storage.from("slips").getPublicUrl(fileName);
     const slip_url = data.publicUrl;
-    console.log("Public URL:", slip_url);
 
-    // 📝 Insert into kaimukandaman
-    const { error: insertError } = await client
-      .from("kaimukandaman")
+    // Insert
+    const { error: insertError } = await client.from("kaimukandaman")
       .insert([{ first_name, last_name, national_id, phone, category, slip_url }]);
+    if(insertError) throw insertError;
 
-    if(insertError) {
-      console.error("Insert error:", insertError);
-      throw insertError;
-    }
+    // แสดง modal
+    modalText.innerHTML = `
+      <strong>ชื่อ:</strong> ${first_name} ${last_name}<br>
+      <strong>เลขบัตรประชาชน:</strong> ${national_id}<br>
+      <strong>เบอร์โทร:</strong> ${phone}<br>
+      <strong>รุ่น/เพศ:</strong> ${category}
+    `;
+    modalImg.src = slip_url;
+    modal.style.display = "block";
 
-    showMessage("✅ บันทึกข้อมูลเรียบร้อยแล้ว", "success");
     form.reset();
-
   } catch(err){
-    console.error("Catch error:", err);
     showMessage("❌ เกิดข้อผิดพลาด: " + err.message, "error");
+  } finally {
+    loadingEl.style.display = "none";
   }
 });
+
+closeModalBtn.addEventListener("click", ()=> modal.style.display = "none");
+window.addEventListener("click", e => { if(e.target == modal) modal.style.display = "none"; });
 </script>
 </body>
 </html>
