@@ -7,58 +7,38 @@
   <style>
     body {
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #000; /* พื้นหลังสีดำถาวร */
+      background: #000;
       margin: 0;
       padding: 40px 20px;
       min-height: 100vh;
       color: #f3f4f6;
     }
-    .container {
-      max-width: 650px;
-      margin: auto;
-    }
-    h1 {
-      font-size: 26px;
-      color: #60a5fa;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    .container { max-width: 650px; margin: auto; }
+    h1 { font-size: 26px; color: #60a5fa; text-align: center; margin-bottom: 20px; }
     .card {
       background: #1f2937;
       padding: 30px;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      animation: fadeIn 0.6s ease;
     }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #e5e7eb; }
     input, select {
       width: 100%;
       padding: 12px;
       border: 1px solid #4b5563;
       border-radius: 8px;
       font-size: 15px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 15px;
       background: #374151;
       color: #f9fafb;
-      margin-bottom: 15px;
     }
     input:focus, select:focus {
       outline: none;
       border-color: #60a5fa;
       box-shadow: 0 0 0 3px rgba(96,165,250,0.3);
     }
-    .row {
-      display: flex;
-      gap: 16px;
-    }
-    .col {
-      flex: 1;
-    }
+    .row { display: flex; gap: 16px; }
+    .col { flex: 1; }
     button {
       width: 100%;
       background: #3b82f6;
@@ -68,32 +48,17 @@
       font-size: 16px;
       border-radius: 10px;
       cursor: pointer;
-      margin-top: 5px;
       transition: background 0.2s;
     }
-    button:hover {
-      background: #1e40af;
-    }
+    button:hover { background: #1e40af; }
     .alert {
       margin-top: 18px;
       padding: 12px;
       border-radius: 8px;
       font-size: 14px;
     }
-    .success {
-      background: #065f46;
-      color: #d1fae5;
-      border: 1px solid #059669;
-    }
-    .error {
-      background: #991b1b;
-      color: #fee2e2;
-      border: 1px solid #ef4444;
-    }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
+    .success { background: #065f46; color: #d1fae5; border: 1px solid #059669; }
+    .error { background: #991b1b; color: #fee2e2; border: 1px solid #ef4444; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
@@ -140,8 +105,8 @@
   </div>
 
 <script>
-const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";   // 👉 ใส่ของคุณ
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";                // 👉 ใส่ของคุณ
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById("regForm");
@@ -150,6 +115,48 @@ const messageEl = document.getElementById("message");
 function showMessage(text, type="success"){
   messageEl.innerHTML = `<div class="alert ${type}">${text}</div>`;
 }
+
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  messageEl.innerHTML = "";
+
+  const first_name = document.getElementById("first_name").value.trim();
+  const last_name = document.getElementById("last_name").value.trim();
+  const national_id = document.getElementById("national_id").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const category = document.getElementById("category").value;
+  const slipFile = document.getElementById("slip").files[0];
+
+  if(!slipFile){
+    showMessage("กรุณาอัปโหลดสลิป", "error");
+    return;
+  }
+
+  try {
+    // 📂 อัปโหลดสลิปไปยัง storage
+    const fileName = `slip_${Date.now()}_${slipFile.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from("slips")
+      .upload(fileName, slipFile);
+
+    if(uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from("slips").getPublicUrl(fileName);
+    const slip_url = data.publicUrl;
+
+    // 📝 บันทึกข้อมูลลงตาราง kaimukandaman
+    const { error: insertError } = await supabase
+      .from("kaimukandaman")
+      .insert([{ first_name, last_name, national_id, phone, category, slip_url }]);
+
+    if(insertError) throw insertError;
+
+    showMessage("✅ บันทึกข้อมูลเรียบร้อยแล้ว", "success");
+    form.reset();
+  } catch(err){
+    showMessage("❌ เกิดข้อผิดพลาด: " + err.message, "error");
+  }
+});
 </script>
 </body>
 </html>
