@@ -185,6 +185,22 @@ form.addEventListener("submit", async (e)=>{
   }
 
   try {
+    // ตรวจสอบเลขบัตรประชาชนซ้ำ
+    const { data: existing, error: checkError } = await client
+      .from("kaimukandaman")
+      .select("id")
+      .eq("national_id", national_id)
+      .limit(1);
+
+    if(checkError) throw checkError;
+
+    if(existing && existing.length > 0){
+      showMessage("❌ เลขบัตรประชาชนนี้ได้ลงทะเบียนแล้ว", "error");
+      loadingEl.style.display = "none";
+      return;
+    }
+
+    // Upload สลิป
     const fileName = `slip_${Date.now()}_${slipFile.name}`;
     const { error: uploadError } = await client.storage.from("slips").upload(fileName, slipFile);
     if(uploadError) throw uploadError;
@@ -192,6 +208,7 @@ form.addEventListener("submit", async (e)=>{
     const { data } = client.storage.from("slips").getPublicUrl(fileName);
     const slip_url = data.publicUrl;
 
+    // Insert ข้อมูล
     const { error: insertError } = await client.from("kaimukandaman")
       .insert([{ first_name, last_name, national_id, phone, category, slip_url }]);
     if(insertError) throw insertError;
@@ -206,6 +223,7 @@ form.addEventListener("submit", async (e)=>{
 
     openModal();
     form.reset();
+
   } catch(err){
     showMessage("❌ เกิดข้อผิดพลาด: " + err.message, "error");
   } finally {
