@@ -126,7 +126,11 @@ tr:hover {background: rgba(255,255,255,0.15);}
 <!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ฟอนต์ THSarabunBase64.js ต้องใส่ด้วย -->
+<script src="THSarabunNormal.js"></script>
+
 <script>
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
@@ -136,6 +140,7 @@ let allParticipants = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 
+// โหลดข้อมูล
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman")
     .select("first_name,last_name,category")
@@ -147,6 +152,7 @@ async function loadParticipants(){
   displayParticipants();
 }
 
+// สร้าง Filter
 function populateFilter(){
   const select = document.getElementById("filterCategory");
   const categories = [...new Set(allParticipants.map(p=>p.category).filter(c=>c))];
@@ -154,11 +160,11 @@ function populateFilter(){
   select.onchange = () => { currentPage=1; displayParticipants(); };
 }
 
+// แสดงข้อมูล
 function displayParticipants(){
   const tbody = document.querySelector("#participantsTable tbody");
   const filter = document.getElementById("filterCategory").value;
   const search = document.getElementById("searchInput").value.toLowerCase();
-
   const filtered = allParticipants.filter(p=>{
     const fullName = `${p.first_name} ${p.last_name}`.toLowerCase();
     return (fullName.includes(search)) && (filter ? p.category===filter : true);
@@ -196,7 +202,7 @@ function displayParticipants(){
 
 document.getElementById("searchInput").addEventListener("input", () => { currentPage=1; displayParticipants(); });
 
-// Export CSV (UTF-8 + BOM)
+// Export CSV
 document.getElementById("exportCSV").addEventListener("click", () => {
   const filter = document.getElementById("filterCategory").value;
   const search = document.getElementById("searchInput").value.toLowerCase();
@@ -214,11 +220,15 @@ document.getElementById("exportCSV").addEventListener("click", () => {
   link.click();
 });
 
-// Export PDF (jsPDF + autoTable + Unicode)
+// Export PDF
 document.getElementById("exportPDF").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.setFont("Helvetica", "normal"); // ถ้าต้องการฟอนต์ไทยแท้ ต้องโหลด TTF
+  doc.addFileToVFS("THSarabunNew.ttf", THSarabunNormalBase64);
+  doc.addFont("THSarabunNew.ttf", "THSarabun", "normal");
+  doc.setFont("THSarabun", "normal");
+  doc.setFontSize(14);
+  doc.text("รายชื่อผู้เข้าร่วมการแข่งขัน / Approved Participants", 105, 10, null, null, "center");
 
   const filter = document.getElementById("filterCategory").value;
   const search = document.getElementById("searchInput").value.toLowerCase();
@@ -234,7 +244,7 @@ document.getElementById("exportPDF").addEventListener("click", () => {
     startY: 20,
     theme: 'grid',
     headStyles: { fillColor: [255,126,95] },
-    styles: { fontSize: 12 }
+    styles: { font: "THSarabun", fontStyle: "normal", fontSize: 12 }
   });
   doc.save("participants.pdf");
 });
