@@ -131,7 +131,7 @@
         message: `Dear ${fullname},\n\nYour registration has been approved. ✅\n\nThank you for joining the competition!`
       };
 
-      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
+      emailjs.send("service_moqi7ru", "template_0u4zsi1", templateParams)
         .then(() => {
           alert("✅ Approved and email sent to " + fullname);
           loadParticipants();
