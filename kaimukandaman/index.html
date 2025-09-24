@@ -16,11 +16,42 @@
       justify-content: flex-start;
       align-items: center;
       text-align: center;
-      padding: 20px;
+    }
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: #facc15;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: color 0.3s, transform 0.2s;
+    }
+    nav ul li a:hover {
+      color: #fbbf24;
+      transform: scale(1.05);
     }
 
     header {
-      margin: 40px 0 20px 0;
+      margin: 40px 20px 20px 20px;
     }
 
     header img {
@@ -50,6 +81,15 @@
       font-size: 1.05rem;
       margin-bottom: 15px;
       line-height: 1.6;
+    }
+
+    ul {
+      text-align: left;
+      color: #e2e8f0;
+      font-size: 1rem;
+      line-height: 1.8;
+      margin: 0 auto 20px auto;
+      max-width: 600px;
     }
 
     .btn {
@@ -82,14 +122,28 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     }
 
+    section h2 {
+      text-align: center;
+    }
+
     footer {
-      margin-top: 50px;
+      margin: 40px 0 20px 0;
       font-size: 0.9rem;
       color: #94a3b8;
     }
   </style>
 </head>
 <body>
+  <!-- Navbar -->
+  <nav>
+    <ul>
+      <li><a href="index.html">🏠 หน้าหลัก</a></li>
+      <li><a href="register.html">📝 ลงทะเบียน</a></li>
+      <li><a href="participants.html">👥 ผู้เข้าร่วม</a></li>
+      <li><a href="#contact">📞 ติดต่อเรา</a></li>
+    </ul>
+  </nav>
+
   <header>
     <img src="https://cdn-icons-png.flaticon.com/512/1041/1041883.png" alt="Running Logo">
     <h1>Kaimuk Andaman Run 2025</h1>
@@ -114,8 +168,8 @@
     </div>
   </section>
 
-  <footer>
-    © 2025 KEITA PHOTO CAMERA | Powered by Supabase
+  <footer id="contact">
+    © 2025 Kaimuk Andaman Run | ติดต่อ: kaimukrun@email.com | โทร: 080-123-4567
   </footer>
 </body>
 </html>
