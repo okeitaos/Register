@@ -131,7 +131,7 @@
         message: `Dear ${fullname},\n\nYour registration has been approved. ✅\n\nThank you for joining the competition!`
       };
 
-      emailjs.send("service_moqi7ru", "template_0u4zsi1", templateParams)
+      emailjs.send("service_moqi7ru", "template_ghijgse", templateParams)
         .then(() => {
           alert("✅ Approved and email sent to " + fullname);
           loadParticipants();
@@ -142,7 +142,12 @@
         });
     }
 
-    loadParticipants();
+    loadParticipants()
+
+    emailjs.send("service_xxx", "template_xxx", templateParams)
+  .then((res) => console.log("SUCCESS:", res))
+  .catch((err) => console.error("FAILED:", err));
+
   </script>
 </body>
 </html>
