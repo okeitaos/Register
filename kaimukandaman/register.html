@@ -124,24 +124,41 @@ const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Load categories
+let categoriesData = [];
+
 async function loadCategories(){
-  const { data, error } = await supabaseClient.from("categories").select("*").order("id",{ascending:true});
+  const { data, error } = await supabaseClient.from("categories")
+    .select("*")
+    .eq("is_open",true)
+    .order("id",{ascending:true});
   if(!error){
-    const select = document.getElementById("category");
-    data.forEach(cat=>{
-      const opt = document.createElement("option");
-      opt.value = cat.name;
-      opt.textContent = cat.name;
-      select.appendChild(opt);
-    });
+    categoriesData = data;
+    renderCategories();
   }
 }
-document.addEventListener("DOMContentLoaded",loadCategories);
+
+function renderCategories(){
+  const select = document.getElementById("category");
+  select.innerHTML = '<option value="">-- เลือกรุ่นการแข่งขัน --</option>';
+  categoriesData.forEach(cat => {
+    const opt = document.createElement("option");
+    if(currentLang === "TH") {
+      opt.value = cat.value;
+      opt.textContent = cat.name_th;
+      opt.title = cat.name_en;
+    } else {
+      opt.value = cat.value;
+      opt.textContent = cat.name_en;
+      opt.title = cat.name_th;
+    }
+    select.appendChild(opt);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", loadCategories);
 
 function closeModal(){ document.getElementById("resultModal").style.display="none"; }
 
-// Language toggle
 let currentLang="TH";
 function toggleLang(){
   if(currentLang==="TH"){
@@ -177,42 +194,45 @@ function toggleLang(){
     document.getElementById("langFlag").innerText="🇬🇧";
     currentLang="TH";
   }
+  renderCategories(); // อัพเดท dropdown ทุกครั้ง
 }
 
 // Submit form
-document.getElementById("registerForm").addEventListener("submit",async(e)=>{
+document.getElementById("registerForm").addEventListener("submit", async(e)=>{
   e.preventDefault();
   document.getElementById("loading").style.display="block";
 
-  const firstName=document.getElementById("firstName").value;
-  const lastName=document.getElementById("lastName").value;
-  const nationalId=document.getElementById("nationalId").value;
-  const phone=document.getElementById("phone").value;
-  const email=document.getElementById("email").value;
-  const age=document.getElementById("age").value;
-  const category=document.getElementById("category").value;
-  const slipFile=document.getElementById("slip").files[0];
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const nationalId = document.getElementById("nationalId").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const age = document.getElementById("age").value;
+  const category = document.getElementById("category").value;
+  const slipFile = document.getElementById("slip").files[0];
 
-  // Check duplicate
-  const { data: existing } = await supabaseClient.from("kaimukandaman").select("national_id").eq("national_id",nationalId);
+  // ตรวจสอบซ้ำ
+  const { data: existing } = await supabaseClient.from("kaimukandaman")
+    .select("national_id").eq("national_id",nationalId);
   if(existing && existing.length>0){
     alert("เลขบัตรประชาชนนี้ลงทะเบียนแล้ว ❌");
     document.getElementById("loading").style.display="none";
     return;
   }
 
-  const fileName=`slip_${Date.now()}_${slipFile.name}`;
-  const { error: uploadError } = await supabaseClient.storage.from("slips").upload(fileName,slipFile);
+  const fileName = `slip_${Date.now()}_${slipFile.name}`;
+  const { error: uploadError } = await supabaseClient.storage.from("slips").upload(fileName, slipFile);
   if(uploadError){
     alert("อัพโหลดสลิปไม่สำเร็จ ❌");
     console.error(uploadError);
     document.getElementById("loading").style.display="none";
     return;
   }
-  const slipUrl=`${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
+  const slipUrl = `${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
 
   const { error } = await supabaseClient.from("kaimukandaman").insert([{
-    first_name:firstName,last_name:lastName,national_id:nationalId,phone,email,age,category,slip_url:slipUrl,status:"pending"
+    first_name:firstName,last_name:lastName,national_id:nationalId,
+    phone,email,age,category,slip_url:slipUrl,status:"pending"
   }]);
 
   document.getElementById("loading").style.display="none";
@@ -225,7 +245,7 @@ document.getElementById("registerForm").addEventListener("submit",async(e)=>{
 
   document.getElementById("resultText").innerText=
     `ชื่อ: ${firstName} ${lastName}\nอายุ: ${age}\nรุ่น: ${category}\nเบอร์: ${phone}\nEmail: ${email}`;
-  document.getElementById("slipPreview").src=slipUrl;
+  document.getElementById("slipPreview").src = slipUrl;
   document.getElementById("resultModal").style.display="flex";
 
   document.getElementById("registerForm").reset();
