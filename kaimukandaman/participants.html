@@ -16,7 +16,6 @@ h1 {
   text-align: center;
   margin-bottom: 20px;
   font-size: 2rem;
-  letter-spacing: 1px;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 }
 .container {
@@ -28,27 +27,26 @@ h1 {
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
-label {
-  font-weight: 600;
-  margin-right: 10px;
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
 }
-select {
+input, select {
   padding: 8px 12px;
   border-radius: 8px;
   border: none;
   background: rgba(255,255,255,0.2);
   color: #fff;
   font-weight: 600;
-  cursor: pointer;
   transition: background 0.3s;
 }
-select:hover {
-  background: rgba(255,255,255,0.3);
-}
+input::placeholder { color: #ddd; }
+input:hover, select:hover { background: rgba(255,255,255,0.3); cursor:pointer; }
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
   border-radius: 12px;
   overflow: hidden;
   background: rgba(255,255,255,0.1);
@@ -77,10 +75,12 @@ tr:hover {background: rgba(255,255,255,0.15);}
 <body>
 <h1>Approved Participants</h1>
 <div class="container">
-  <label for="filterCategory">Filter by Category:</label>
-  <select id="filterCategory">
-    <option value="">All Categories</option>
-  </select>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search by name...">
+    <select id="filterCategory">
+      <option value="">All Categories</option>
+    </select>
+  </div>
 
   <table id="participantsTable">
     <thead>
@@ -124,7 +124,12 @@ function populateFilter(){
 function displayParticipants(){
   const tbody = document.querySelector("#participantsTable tbody");
   const filter = document.getElementById("filterCategory").value;
-  const filtered = filter ? allParticipants.filter(p=>p.category===filter) : allParticipants;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
+  const filtered = allParticipants.filter(p=>{
+    const fullName = `${p.first_name} ${p.last_name}`.toLowerCase();
+    return (fullName.includes(search)) && (filter ? p.category===filter : true);
+  });
 
   tbody.innerHTML = "";
   filtered.forEach((p,i)=>{
@@ -141,6 +146,9 @@ function displayParticipants(){
     tbody.innerHTML = `<tr><td colspan="3">No participants found</td></tr>`;
   }
 }
+
+// ฟังก์ชันค้นหาเรียลไทม์
+document.getElementById("searchInput").addEventListener("input", displayParticipants);
 
 loadParticipants();
 setInterval(loadParticipants,5000);
