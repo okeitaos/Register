@@ -48,10 +48,7 @@ input {
 input::placeholder { color: #ddd; }
 input:hover, select:hover, button:hover { cursor:pointer; }
 select { background: rgba(255,255,255,0.2); color: #fff; }
-button {
-  background: linear-gradient(90deg, #ff7e5f, #feb47b);
-  color: #fff;
-}
+button { background: linear-gradient(90deg, #ff7e5f, #feb47b); color: #fff; }
 table {
   width: 100%;
   border-collapse: collapse;
@@ -126,8 +123,9 @@ tr:hover {background: rgba(255,255,255,0.15);}
   <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- jsPDF สำหรับ PDF export -->
+<!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
@@ -143,7 +141,6 @@ async function loadParticipants(){
     .select("first_name,last_name,category")
     .eq("status","Approved")
     .order("id",{ascending:true});
-
   if(error){ console.error(error); return;}
   allParticipants = data || [];
   populateFilter();
@@ -186,7 +183,6 @@ function displayParticipants(){
     tbody.innerHTML = `<tr><td colspan="3">No participants found</td></tr>`;
   }
 
-  // Pagination
   const paginationDiv = document.getElementById("pagination");
   paginationDiv.innerHTML = "";
   for(let i=1;i<=totalPages;i++){
@@ -198,10 +194,9 @@ function displayParticipants(){
   }
 }
 
-// Search real-time
 document.getElementById("searchInput").addEventListener("input", () => { currentPage=1; displayParticipants(); });
 
-// Export CSV
+// Export CSV (UTF-8 + BOM)
 document.getElementById("exportCSV").addEventListener("click", () => {
   const filter = document.getElementById("filterCategory").value;
   const search = document.getElementById("searchInput").value.toLowerCase();
@@ -210,10 +205,8 @@ document.getElementById("exportCSV").addEventListener("click", () => {
     return (fullName.includes(search)) && (filter ? p.category===filter : true);
   });
   let csv = "No,Full Name,Category\n";
-  filtered.forEach((p,i)=> {
-    csv += `${i+1},"${p.first_name} ${p.last_name}","${p.category || ''}"\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  filtered.forEach((p,i)=> csv += `${i+1},"${p.first_name} ${p.last_name}","${p.category || ''}"\n`);
+  const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -221,12 +214,11 @@ document.getElementById("exportCSV").addEventListener("click", () => {
   link.click();
 });
 
-// Export PDF
+// Export PDF (jsPDF + autoTable + Unicode)
 document.getElementById("exportPDF").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  doc.setFontSize(14);
-  doc.text("Approved Participants", 105, 10, null, null, "center");
+  doc.setFont("Helvetica", "normal"); // ถ้าต้องการฟอนต์ไทยแท้ ต้องโหลด TTF
 
   const filter = document.getElementById("filterCategory").value;
   const search = document.getElementById("searchInput").value.toLowerCase();
@@ -235,12 +227,14 @@ document.getElementById("exportPDF").addEventListener("click", () => {
     return (fullName.includes(search)) && (filter ? p.category===filter : true);
   });
 
-  let y = 20;
-  doc.text("No | Full Name | Category", 10, y);
-  y += 8;
-  filtered.forEach((p,i) => {
-    doc.text(`${i+1} | ${p.first_name} ${p.last_name} | ${p.category || ""}`, 10, y);
-    y += 8;
+  const rows = filtered.map((p,i)=> [i+1, `${p.first_name} ${p.last_name}`, p.category || ""]);
+  doc.autoTable({
+    head: [["ลำดับ / No","ชื่อ-นามสกุล / Full Name","รุ่นการแข่งขัน / Category"]],
+    body: rows,
+    startY: 20,
+    theme: 'grid',
+    headStyles: { fillColor: [255,126,95] },
+    styles: { fontSize: 12 }
   });
   doc.save("participants.pdf");
 });
