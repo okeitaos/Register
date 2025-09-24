@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ลงทะเบียนวิ่ง</title>
+  <title>ลงทะเบียนวิ่ง | Running Registration</title>
   <style>
     body { 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -16,162 +16,186 @@
       justify-content:center;
       align-items:center;
     }
-    h1 { 
-      text-align:center; 
-      color:#facc15; 
-      margin-bottom:10px; 
-      font-size:2rem;
-      text-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
-    }
-    h2 { 
-      text-align:center;
-      margin-bottom:20px;
-      font-size:1rem;
-      font-weight:normal;
-      color:#cbd5e1;
-    }
-    form { 
+
+    form.container {
       position: relative;
-      width:100%; 
-      max-width:500px; 
+      width:100%;
+      max-width:500px;
       background: rgba(255,255,255,0.05); 
-      border-radius:20px; 
-      padding:30px; 
-      backdrop-filter: blur(15px); 
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      border:1px solid rgba(255,255,255,0.1);
+      border-radius:25px; 
+      padding:35px 25px 50px 25px; 
+      backdrop-filter: blur(20px); 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.15);
+      text-align:left;
     }
-    label { 
-      display:block; 
-      margin:10px 0 5px; 
-      font-weight:500; 
+
+    .logo {
+      display:block;
+      margin: 0 auto 15px auto;
+      width:80px;
+      height:80px;
     }
-    input, select { 
-      width:100%; 
-      padding:12px; 
-      margin-bottom:15px; 
-      border-radius:10px; 
-      border:1px solid rgba(255,255,255,0.2); 
-      background: rgba(255,255,255,0.1); 
-      color:#fff; 
-      outline:none; 
+
+    h1 {
+      text-align:center;
+      font-size:1.9rem;
+      color:#facc15;
+      margin-bottom:5px;
+      text-shadow: 0 0 15px rgba(250, 204, 21,0.7);
+    }
+
+    h2 {
+      text-align:center;
       font-size:1rem;
+      color:#cbd5e1;
+      margin-bottom:20px;
+    }
+
+    label {
+      display:block;
+      font-weight:500;
+      margin-bottom:6px;
+      margin-top:12px;
+    }
+
+    input, select {
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color:#fff;
+      font-size:1rem;
+      outline:none;
       transition: all 0.3s ease;
+      box-sizing:border-box;
     }
-    input:focus, select:focus { 
-      border-color:#facc15; 
-      box-shadow: 0 0 8px #facc15; 
+
+    input:focus, select:focus {
+      border-color:#facc15;
+      box-shadow:0 0 10px #facc15;
     }
-    button { 
-      background: linear-gradient(90deg,#facc15,#f59e0b); 
-      color:#000; 
-      border:none; 
-      padding:14px; 
-      border-radius:12px; 
-      cursor:pointer; 
-      width:100%; 
-      font-weight:bold; 
+
+    button#submitBtn {
+      display:block;
+      width:100%;
+      padding:14px;
+      margin-top:20px;
+      background: linear-gradient(90deg,#facc15,#f59e0b);
+      border:none;
+      border-radius:14px;
+      cursor:pointer;
       font-size:1.1rem;
+      font-weight:bold;
       transition: transform 0.2s ease, box-shadow 0.3s ease;
     }
-    button:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 20px rgba(250,204,21,0.5); 
+
+    button#submitBtn:hover {
+      transform: translateY(-2px);
+      box-shadow:0 6px 20px rgba(250,204,21,0.5);
     }
-    #loading { 
-      display:none; 
-      text-align:center; 
-      margin-top:10px; 
-      font-style:italic; 
+
+    #loading {
+      display:none;
+      text-align:center;
+      margin-top:12px;
+      font-style:italic;
     }
+
     /* ปุ่มเปลี่ยนภาษา */
     .lang-switch {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: #facc15;
-      color: #000;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 0.75rem;
-      line-height: 1.2;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      position:absolute;
+      top:15px;
+      right:15px;
+      background:#facc15;
+      color:#000;
+      border:none;
+      padding:5px 12px;
+      border-radius:25px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:0.8rem;
+      line-height:1.2;
+      display:flex;
+      align-items:center;
+      gap:5px;
+      box-shadow:0 3px 8px rgba(0,0,0,0.3);
       transition: background 0.3s, transform 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
+
     .lang-switch:hover {
-      background: #eab308;
-      transform: scale(1.05);
+      background:#eab308;
+      transform:scale(1.05);
     }
-    .lang-flag { font-size: 1rem; }
+
+    .lang-flag { font-size:1rem; }
 
     /* Modal */
-    #resultModal { 
-      display:none; 
-      position:fixed; 
-      top:0; left:0; 
-      width:100%; height:100%; 
-      background:rgba(0,0,0,0.7); 
-      justify-content:center; 
-      align-items:center; 
+    #resultModal {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.75);
+      justify-content:center;
+      align-items:center;
       z-index:999;
       overflow-y:auto;
     }
-    .modal-content { 
-      background: rgba(255,255,255,0.95); 
-      color:#000; 
-      padding:20px; 
-      border-radius:16px; 
-      width:90%; 
-      max-width:400px; 
-      text-align:center; 
-      position:relative; 
-      box-shadow:0 6px 25px rgba(0,0,0,0.5);
+
+    .modal-content {
+      background: rgba(255,255,255,0.95);
+      color:#000;
+      padding:25px 20px;
+      border-radius:20px;
+      width:90%;
+      max-width:400px;
+      text-align:center;
+      position:relative;
+      box-shadow:0 8px 25px rgba(0,0,0,0.5);
       animation: fadeIn 0.3s ease-in-out;
     }
-    .modal-content h2 { 
-      color:#16a34a; 
-      margin-bottom:10px; 
+
+    .modal-content img {
+      max-width:200px;
+      max-height:200px;
+      margin-top:10px;
+      border-radius:10px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.3);
     }
-    .modal-content img { 
-      max-width:200px; 
-      max-height:200px; 
-      margin-top:10px; 
-      border-radius:10px; 
-      box-shadow:0 4px 15px rgba(0,0,0,0.4);
-    }
+
     .close-btn {
-      position:absolute; 
-      top:10px; 
-      right:10px; 
-      background:#ef4444; 
-      color:#fff; 
-      border:none; 
-      border-radius:50%; 
-      width:32px; 
-      height:32px; 
-      cursor:pointer; 
+      position:absolute;
+      top:10px;
+      right:10px;
+      background:#ef4444;
+      color:#fff;
+      border:none;
+      border-radius:50%;
+      width:32px;
+      height:32px;
+      cursor:pointer;
       font-weight:bold;
     }
+
     .close-btn:hover { background:#dc2626; }
+
     @keyframes fadeIn {
-      from { opacity:0; transform:scale(0.9); }
-      to { opacity:1; transform:scale(1); }
+      from { opacity:0; transform:scale(0.9);}
+      to { opacity:1; transform:scale(1);}
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-  <form id="registerForm">
+  <form class="container" id="registerForm">
     <button type="button" class="lang-switch" onclick="toggleLang()">
       <span id="langFlag" class="lang-flag">🇬🇧</span>
       <span id="langText">EN</span>
     </button>
+
+    <img src="https://cdn-icons-png.flaticon.com/512/1041/1041883.png" class="logo" alt="Logo">
 
     <h1 id="formTitle">ลงทะเบียนวิ่ง</h1>
     <h2 id="formSubtitle">Running Registration Form</h2>
@@ -220,12 +244,12 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // โหลด categories
+    // Load categories
     async function loadCategories() {
-      const { data, error } = await supabaseClient.from("categories").select("*").order("id", { ascending: true });
-      if (!error) {
+      const { data, error } = await supabaseClient.from("categories").select("*").order("id",{ascending:true});
+      if(!error){
         const select = document.getElementById("category");
-        data.forEach(cat => {
+        data.forEach(cat=>{
           const opt = document.createElement("option");
           opt.value = cat.name;
           opt.textContent = cat.name;
@@ -235,114 +259,91 @@
     }
     document.addEventListener("DOMContentLoaded", loadCategories);
 
-    // ปิด modal
-    function closeModal() {
-      document.getElementById("resultModal").style.display = "none";
-    }
+    function closeModal(){ document.getElementById("resultModal").style.display="none"; }
 
-    // Toggle Language
-    let currentLang = "TH";
-    function toggleLang() {
-      if (currentLang === "TH") {
-        document.getElementById("formTitle").innerText = "Running Registration";
-        document.getElementById("formSubtitle").innerText = "Fill in the form to join the event";
-        document.getElementById("labelFirstName").innerText = "First Name";
-        document.getElementById("labelLastName").innerText = "Last Name";
-        document.getElementById("labelNationalId").innerText = "National ID";
-        document.getElementById("labelPhone").innerText = "Phone Number";
-        document.getElementById("labelEmail").innerText = "Email";
-        document.getElementById("labelCategory").innerText = "Category (Age / Gender)";
-        document.getElementById("labelSlip").innerText = "Upload Payment Slip";
-        document.getElementById("submitBtn").innerText = "Register";
-        document.getElementById("modalTitle").innerText = "Registration Successful ✅";
-        document.getElementById("langText").innerText = "TH";
-        document.getElementById("langFlag").innerText = "🇹🇭";
-        currentLang = "EN";
+    // Language toggle
+    let currentLang="TH";
+    function toggleLang(){
+      if(currentLang==="TH"){
+        document.getElementById("formTitle").innerText="Running Registration";
+        document.getElementById("formSubtitle").innerText="Fill in the form to join the event";
+        document.getElementById("labelFirstName").innerText="First Name";
+        document.getElementById("labelLastName").innerText="Last Name";
+        document.getElementById("labelNationalId").innerText="National ID";
+        document.getElementById("labelPhone").innerText="Phone Number";
+        document.getElementById("labelEmail").innerText="Email";
+        document.getElementById("labelCategory").innerText="Category (Age / Gender)";
+        document.getElementById("labelSlip").innerText="Upload Payment Slip";
+        document.getElementById("submitBtn").innerText="Register";
+        document.getElementById("modalTitle").innerText="Registration Successful ✅";
+        document.getElementById("langText").innerText="TH";
+        document.getElementById("langFlag").innerText="🇹🇭";
+        currentLang="EN";
       } else {
-        document.getElementById("formTitle").innerText = "ลงทะเบียนวิ่ง";
-        document.getElementById("formSubtitle").innerText = "Running Registration Form";
-        document.getElementById("labelFirstName").innerText = "ชื่อ";
-        document.getElementById("labelLastName").innerText = "นามสกุล";
-        document.getElementById("labelNationalId").innerText = "เลขบัตรประชาชน";
-        document.getElementById("labelPhone").innerText = "เบอร์โทรศัพท์";
-        document.getElementById("labelEmail").innerText = "Email";
-        document.getElementById("labelCategory").innerText = "รุ่นอายุ/เพศ";
-        document.getElementById("labelSlip").innerText = "แนบสลิปโอนเงิน";
-        document.getElementById("submitBtn").innerText = "ลงทะเบียน";
-        document.getElementById("modalTitle").innerText = "ลงทะเบียนสำเร็จ ✅";
-        document.getElementById("langText").innerText = "EN";
-        document.getElementById("langFlag").innerText = "🇬🇧";
-        currentLang = "TH";
+        document.getElementById("formTitle").innerText="ลงทะเบียนวิ่ง";
+        document.getElementById("formSubtitle").innerText="Running Registration Form";
+        document.getElementById("labelFirstName").innerText="ชื่อ";
+        document.getElementById("labelLastName").innerText="นามสกุล";
+        document.getElementById("labelNationalId").innerText="เลขบัตรประชาชน";
+        document.getElementById("labelPhone").innerText="เบอร์โทรศัพท์";
+        document.getElementById("labelEmail").innerText="Email";
+        document.getElementById("labelCategory").innerText="รุ่นอายุ/เพศ";
+        document.getElementById("labelSlip").innerText="แนบสลิปโอนเงิน";
+        document.getElementById("submitBtn").innerText="ลงทะเบียน";
+        document.getElementById("modalTitle").innerText="ลงทะเบียนสำเร็จ ✅";
+        document.getElementById("langText").innerText="EN";
+        document.getElementById("langFlag").innerText="🇬🇧";
+        currentLang="TH";
       }
     }
 
-    // submit form
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    // Submit form
+    document.getElementById("registerForm").addEventListener("submit",async(e)=>{
       e.preventDefault();
-      document.getElementById("loading").style.display = "block";
+      document.getElementById("loading").style.display="block";
 
-      const firstName = document.getElementById("firstName").value;
-      const lastName = document.getElementById("lastName").value;
-      const nationalId = document.getElementById("nationalId").value;
-      const phone = document.getElementById("phone").value;
-      const email = document.getElementById("email").value;
-      const category = document.getElementById("category").value;
-      const slipFile = document.getElementById("slip").files[0];
+      const firstName=document.getElementById("firstName").value;
+      const lastName=document.getElementById("lastName").value;
+      const nationalId=document.getElementById("nationalId").value;
+      const phone=document.getElementById("phone").value;
+      const email=document.getElementById("email").value;
+      const category=document.getElementById("category").value;
+      const slipFile=document.getElementById("slip").files[0];
 
-      // ตรวจสอบเลขบัตรซ้ำ
-      const { data: existing } = await supabaseClient
-        .from("kaimukandaman")
-        .select("national_id")
-        .eq("national_id", nationalId);
-
-      if (existing && existing.length > 0) {
+      // Check duplicate
+      const { data: existing } = await supabaseClient.from("kaimukandaman").select("national_id").eq("national_id",nationalId);
+      if(existing && existing.length>0){
         alert("เลขบัตรประชาชนนี้ลงทะเบียนแล้ว ❌");
-        document.getElementById("loading").style.display = "none";
+        document.getElementById("loading").style.display="none";
         return;
       }
 
-      // upload slip
-      const fileName = `slip_${Date.now()}_${slipFile.name}`;
-      const { error: uploadError } = await supabaseClient.storage
-        .from("slips")
-        .upload(fileName, slipFile);
-
-      if (uploadError) {
+      const fileName=`slip_${Date.now()}_${slipFile.name}`;
+      const { error: uploadError } = await supabaseClient.storage.from("slips").upload(fileName,slipFile);
+      if(uploadError){
         alert("อัพโหลดสลิปไม่สำเร็จ ❌");
         console.error(uploadError);
-        document.getElementById("loading").style.display = "none";
+        document.getElementById("loading").style.display="none";
         return;
       }
+      const slipUrl=`${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
 
-      const slipUrl = `${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
+      const { error } = await supabaseClient.from("kaimukandaman").insert([{
+        first_name:firstName,last_name:lastName,national_id:nationalId,phone,email,category,slip_url:slipUrl,status:"pending"
+      }]);
 
-      // insert ข้อมูล
-      const { error } = await supabaseClient.from("kaimukandaman").insert([
-        {
-          first_name: firstName,
-          last_name: lastName,
-          national_id: nationalId,
-          phone: phone,
-          email: email,
-          category: category,
-          slip_url: slipUrl,
-          status: "pending"
-        }
-      ]);
+      document.getElementById("loading").style.display="none";
 
-      document.getElementById("loading").style.display = "none";
-
-      if (error) {
+      if(error){
         alert("บันทึกไม่สำเร็จ ❌");
         console.error(error);
         return;
       }
 
-      // โชว์ modal
-      document.getElementById("resultText").innerText =
+      document.getElementById("resultText").innerText=
         `ชื่อ: ${firstName} ${lastName}\nรุ่น: ${category}\nเบอร์: ${phone}\nEmail: ${email}`;
-      document.getElementById("slipPreview").src = slipUrl;
-      document.getElementById("resultModal").style.display = "flex";
+      document.getElementById("slipPreview").src=slipUrl;
+      document.getElementById("resultModal").style.display="flex";
 
       document.getElementById("registerForm").reset();
     });
