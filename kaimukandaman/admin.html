@@ -1,180 +1,207 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin - Approve Participants</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Approve Registrations</title>
   <style>
-    body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Arial; background:#0b1220; color:#e6eef8; padding:20px;}
-    h1{color:#7dd3fc;text-align:center;margin-bottom:18px;}
-    table{width:100%;border-collapse:collapse;background:#071028;border-radius:8px;overflow:hidden}
-    th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;font-size:14px}
-    thead th{background:#071a2a;color:#e6eef8}
-    .actions{display:flex;gap:8px}
-    button{padding:6px 10px;border-radius:6px;border:0;cursor:pointer}
-    .btn-approve{background:#16a34a;color:#fff}
-    .btn-reject{background:#dc2626;color:#fff}
-    .slip{max-width:120px;height:auto;border-radius:6px;cursor:pointer}
-    .status-pill{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.04);font-weight:600}
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    table th, table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    table th {
+      background: #222;
+      color: #fff;
+    }
+    img.slip {
+      max-width: 100px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button.approve {
+      background: #28a745;
+      color: white;
+    }
+    button.approve:hover {
+      background: #218838;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      width: 400px;
+      border-radius: 8px;
+      text-align: center;
+      position: relative;
+    }
+    .modal-content img {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 8px;
+    }
+    .close {
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
-  <h1>Admin Panel — Approve Participants</h1>
-  <table id="participantsTable" aria-label="participants">
+  <h1>Admin Panel - Approve Registrations</h1>
+
+  <table id="participantsTable">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>National ID</th>
+        <th>ID</th>
+        <th>Full Name</th>
         <th>Email</th>
-        <th>Phone</th>
         <th>Category</th>
         <th>Slip</th>
         <th>Status</th>
         <th>Action</th>
       </tr>
     </thead>
-    <tbody id="participantsBody"></tbody>
+    <tbody></tbody>
   </table>
 
-<script>
-/* ====== CONFIG - ใส่ค่าจริงตรงนี้ ====== */
-const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+  <!-- Modal สำหรับแสดงสลิป -->
+  <div id="slipModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="slipImage" src="" alt="Slip Image"/>
+    </div>
+  </div>
 
-const EMAILJS_PUBLIC_KEY = "xyPTiaVqlFqMrd_3U";     // public_xxx
-const EMAILJS_SERVICE_ID = "service_moqi7ru";     // service_xxx
-const EMAILJS_TEMPLATE_ID = "template_ghijgse";   // template_xxx
-/* ======================================= */
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // Config
+    const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supabase = supabasejs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Init EmailJS
+    emailjs.init("xyPTiaVqlFqMrd_3U"); // ใช้ public key จาก EmailJS
 
-// init EmailJS (public key)
-if (typeof emailjs !== "undefined") {
-  emailjs.init(EMAILJS_PUBLIC_KEY);
-} else {
-  console.warn("EmailJS lib not loaded");
-}
+    // Load participants
+    async function loadParticipants() {
+      const { data, error } = await client
+        .from("kaimukandaman")
+        .select("*")
+        .order("id", { ascending: true });
 
-async function loadParticipants(){
-  const tbody = document.getElementById("participantsBody");
-  tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;padding:18px;color:#9ca3af'>Loading...</td></tr>";
-  try {
-    const { data, error } = await supabase.from("kaimukandaman").select("*").order("id",{ascending:true});
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      tbody.innerHTML = "<tr><td colspan='9' style='text-align:center;padding:18px;color:#9ca3af'>No applicants</td></tr>";
-      return;
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      const tbody = document.querySelector("#participantsTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach((p) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.first_name} ${p.last_name}</td>
+          <td>${p.email || "-"}</td>
+          <td>${p.category || "-"}</td>
+          <td><img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/></td>
+          <td>${p.status || "Pending"}</td>
+          <td>
+            <button class="approve" onclick="approve(${p.id}, '${p.email}', '${p.first_name} ${p.last_name}')">
+              Approve
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
-    tbody.innerHTML = "";
-    data.forEach((p, idx) => {
-      const tr = document.createElement("tr");
+    // Approve function
+    async function approve(id, email, fullName) {
+      const { error } = await client
+        .from("kaimukandaman")
+        .update({ status: "Approved" })
+        .eq("id", id);
 
-      const slipImg = p.slip_url ? `<img src="${p.slip_url}" class="slip" alt="slip">` : "—";
+      if (error) {
+        console.error(error);
+        alert("Failed to update status!");
+        return;
+      }
 
-      tr.innerHTML = `
-        <td>${idx+1}</td>
-        <td>${escapeHtml(p.first_name || "")} ${escapeHtml(p.last_name || "")}</td>
-        <td>${escapeHtml(p.national_id || "")}</td>
-        <td>${escapeHtml(p.email || "")}</td>
-        <td>${escapeHtml(p.phone || "")}</td>
-        <td>${escapeHtml(p.category || "")}</td>
-        <td>${slipImg}</td>
-        <td><span class="status-pill">${escapeHtml(p.status || "pending")}</span></td>
-        <td class="actions"></td>
-      `;
-      tbody.appendChild(tr);
+      // ส่งอีเมลผ่าน EmailJS
+      const templateParams = {
+        to_email: email,
+        to_name: fullName,
+        message: "Your registration has been approved. See you at the event!"
+      };
 
-      const actionsTd = tr.querySelector(".actions");
-      // create approve button
-      const btnApprove = document.createElement("button");
-      btnApprove.className = "btn-approve";
-      btnApprove.innerText = p.status === "approved" ? "✅ Approved" : "Approve";
-      btnApprove.disabled = p.status === "approved";
-      btnApprove.addEventListener("click", () => handleApprove(p));
-      actionsTd.appendChild(btnApprove);
-
-      // create reject button
-      const btnReject = document.createElement("button");
-      btnReject.className = "btn-reject";
-      btnReject.innerText = p.status === "rejected" ? "❌ Rejected" : "Reject";
-      btnReject.disabled = p.status === "rejected";
-      btnReject.addEventListener("click", () => handleReject(p));
-      actionsTd.appendChild(btnReject);
-    });
-  } catch(err){
-    console.error("Load participants error:", err);
-    document.getElementById("participantsBody").innerHTML = `<tr><td colspan='9' style='text-align:center;padding:18px;color:#ff6b6b'>Error loading data</td></tr>`;
-  }
-}
-
-// Escape to avoid injected HTML when displaying user content
-function escapeHtml(s){ return String(s || "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
-
-// Approve handler: update Supabase and send email
-async function handleApprove(participant){
-  if (!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
-
-  // 1) Update status in Supabase
-  const { error:updateError } = await supabase
-    .from("kaimukandaman")
-    .update({ status: "approved" })
-    .eq("id", participant.id);
-
-  if (updateError) {
-    alert("Failed to update status: " + updateError.message);
-    return;
-  }
-
-  // 2) Prepare templateParams (ต้องประกาศก่อนเรียก emailjs.send)
-  const templateParams = {
-    to_email: participant.email || "",
-    to_name: `${participant.first_name || ""} ${participant.last_name || ""}`,
-    message: `สวัสดี ${participant.first_name || ""},\n\nการสมัครของคุณได้รับการอนุมัติแล้ว ✅\n\nขอบคุณครับ/ค่ะ`
-  };
-
-  // 3) Send email via EmailJS (frontend)
-  try {
-    // ตรวจสอบว่าคีย์ใส่หรือยัง
-    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID) {
-      console.warn("EmailJS SERVICE_ID / TEMPLATE_ID not configured");
-      alert("Approved but email not sent — service/template not configured.");
-      await loadParticipants();
-      return;
+      emailjs.send("service_moqi7ru", "template_ghijgse", templateParams)
+        .then((res) => {
+          console.log("Email sent:", res);
+          alert("Approved and email sent to " + email);
+          loadParticipants();
+        })
+        .catch((err) => {
+          console.error("Email failed:", err);
+          alert("Approved but email failed to send.");
+          loadParticipants();
+        });
     }
-    const res = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
-    console.log("EmailJS send success:", res);
-    alert("Approved and email sent to " + templateParams.to_email);
-  } catch (err) {
-    console.error("EmailJS send error:", err);
-    alert("Approved but failed to send email. See console for details.");
-  }
 
-  // Reload table to reflect new status
-  loadParticipants();
-}
+    // Modal functions
+    function openModal(url) {
+      document.getElementById("slipImage").src = url;
+      document.getElementById("slipModal").style.display = "block";
+    }
+    function closeModal() {
+      document.getElementById("slipModal").style.display = "none";
+    }
 
-// Reject handler (update status only)
-async function handleReject(participant){
-  if (!confirm(`Reject ${participant.first_name} ${participant.last_name}?`)) return;
-  const { error:updateError } = await supabase
-    .from("kaimukandaman")
-    .update({ status: "rejected" })
-    .eq("id", participant.id);
-
-  if (updateError) {
-    alert("Failed to update status: " + updateError.message);
-    return;
-  }
-  alert("Status updated to rejected");
-  loadParticipants();
-}
-
-// initial load
-loadParticipants();
-</script>
+    // Load on start
+    loadParticipants();
+  </script>
 </body>
 </html>
