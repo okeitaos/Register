@@ -1,130 +1,148 @@
-<!doctype html>
-<html lang="th">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard Admin</title>
-<style>
-body{font-family:Segoe UI,sans-serif;background:#000;color:#f3f4f6;padding:20px;}
-h1,h2{text-align:center;color:#60a5fa;margin-bottom:20px;}
-table{width:100%;border-collapse:collapse;margin-top:20px;}
-th,td{padding:12px;border:1px solid #4b5563;text-align:center;vertical-align: middle;}
-th{background:#1e40af;color:white;}
-tr:nth-child(even){background:#1f2937;}
-button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;color:#fff;margin:0 2px;}
-.approve{background:#10b981;} .reject{background:#ef4444;}
-img.slip{max-width:80px;border-radius:6px;cursor:pointer;transition:0.2s;}
-img.slip:hover{transform:scale(1.1);}
-.modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;}
-.modal img{max-width:90%;max-height:90%;border-radius:12px;}
-.close-modal{position:absolute;top:20px;right:20px;padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Admin - Approve Participants</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background: #333;
+      color: #fff;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #16a34a;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #15803d;
+    }
+    .slip-img {
+      width: 120px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
+  <h1>Admin Panel - Approve Participants</h1>
+  <table id="participantsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>National ID</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Category</th>
+        <th>Slip</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<h1>Dashboard Admin</h1>
+  <script>
+    // 🔹 Supabase Init
+    const supabaseUrl = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-<h2>ผู้สมัครทั้งหมด</h2>
-<table id="adminTable">
-  <thead>
-    <tr>
-      <th>ชื่อ</th>
-      <th>เลขบัตร</th>
-      <th>เบอร์</th>
-      <th>รุ่น/เพศ</th>
-      <th>สลิป</th>
-      <th>สถานะ</th>
-      <th>จัดการ</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    // 🔹 EmailJS Init
+    (function(){
+      emailjs.init("xyPTiaVqlFqMrd_3U");
+    })();
 
-<h2>รายชื่อผู้มีสิทธิ์เข้าแข่งขัน</h2>
-<table id="approvedTable">
-  <thead>
-    <tr>
-      <th>ลำดับ</th>
-      <th>ชื่อ - นามสกุล</th>
-      <th>เลขบัตร</th>
-      <th>เบอร์โทร</th>
-      <th>รุ่น/เพศ</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    // โหลดข้อมูลผู้สมัคร
+    async function loadParticipants() {
+      const { data, error } = await supabaseClient
+        .from("kaimukandaman")
+        .select("*");
+      if (error) {
+        console.error(error);
+        return;
+      }
 
-<!-- Modal สำหรับดูสลิปขนาดเต็ม -->
-<div class="modal" id="slipModal">
-  <button class="close-modal" id="closeSlipModal">ปิด</button>
-  <img id="modalSlipImg" src="" alt="Slip Image"/>
-</div>
+      const tbody = document.querySelector("#participantsTable tbody");
+      tbody.innerHTML = "";
+      data.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.first_name} ${p.last_name}</td>
+          <td>${p.national_id}</td>
+          <td>${p.email}</td>
+          <td>${p.phone}</td>
+          <td>${p.category}</td>
+          <td><img src="${p.slip_url}" class="slip-img"></td>
+          <td>${p.status || "pending"}</td>
+          <td>
+            ${p.status === "approved" ? "✅ Approved" :
+              `<button onclick="approveParticipant(${p.id}, '${p.email}', '${p.first_name} ${p.last_name}')">Approve</button>`
+            }
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-<script>
-const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
-const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    // กดอนุมัติ
+    async function approveParticipant(id, email, fullname) {
+      // อัปเดตสถานะใน Supabase
+      const { error } = await supabaseClient
+        .from("kaimukandaman")
+        .update({ status: "approved" })
+        .eq("id", id);
 
-const adminTbody = document.querySelector("#adminTable tbody");
-const approvedTbody = document.querySelector("#approvedTable tbody");
-const slipModal = document.getElementById("slipModal");
-const modalSlipImg = document.getElementById("modalSlipImg");
-const closeSlipModalBtn = document.getElementById("closeSlipModal");
+      if (error) {
+        alert("❌ Error updating status");
+        return;
+      }
 
-closeSlipModalBtn.addEventListener("click",()=>{ slipModal.style.display="none"; });
-slipModal.addEventListener("click", e=>{ if(e.target==slipModal) slipModal.style.display="none"; });
+      // ส่งอีเมลแจ้งเตือน
+      const templateParams = {
+        to_email: email,
+        to_name: fullname,
+        message: `Dear ${fullname},\n\nYour registration has been approved. ✅\n\nThank you for joining the competition!`
+      };
 
-async function loadApplicants(){
-  const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error) return console.error(error);
-  adminTbody.innerHTML = "";
-  data.forEach(app=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${app.first_name} ${app.last_name}</td>
-      <td>${app.national_id}</td>
-      <td>${app.phone}</td>
-      <td>${app.category}</td>
-      <td>${app.slip_url ? `<img class="slip" src="${app.slip_url}" onclick="showSlip('${app.slip_url}')"/>`:"-"}</td>
-      <td>${app.status}</td>
-      <td>
-        <button class="approve" onclick="updateStatus('${app.id}','approved')">Approve</button>
-        <button class="reject" onclick="updateStatus('${app.id}','rejected')">Reject</button>
-      </td>`;
-    adminTbody.appendChild(tr);
-  });
-}
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", templateParams)
+        .then(() => {
+          alert("✅ Approved and email sent to " + fullname);
+          loadParticipants();
+        }, (err) => {
+          console.error("Email error:", err);
+          alert("✅ Approved but failed to send email");
+          loadParticipants();
+        });
+    }
 
-function showSlip(url){
-  modalSlipImg.src = url;
-  slipModal.style.display="flex";
-}
-
-async function loadApproved(){
-  const { data, error } = await client.from("kaimukandaman").select("*").eq("status","approved").order("id",{ascending:true});
-  if(error) return console.error(error);
-  approvedTbody.innerHTML = "";
-  data.forEach((app,index)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${index+1}</td>
-      <td>${app.first_name} ${app.last_name}</td>
-      <td>${app.national_id}</td>
-      <td>${app.phone}</td>
-      <td>${app.category}</td>`;
-    approvedTbody.appendChild(tr);
-  });
-}
-
-async function updateStatus(id,status){
-  const { error } = await client.from("kaimukandaman").update({status}).eq("id",id);
-  if(error) return alert("เกิดข้อผิดพลาด: "+error.message);
-  loadApplicants();
-  loadApproved();
-}
-
-// โหลดครั้งแรก
-loadApplicants();
-loadApproved();
-</script>
+    loadParticipants();
+  </script>
 </body>
 </html>
