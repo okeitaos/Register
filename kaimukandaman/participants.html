@@ -7,51 +7,70 @@
 <style>
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: #fff;
-  margin:0;
-  padding:20px;
+  margin: 0;
+  padding: 20px;
 }
 h1 {
-  text-align:center;
-  margin-bottom:20px;
-  font-size:2rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 }
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
-  background: rgba(255,255,255,0.05);
   padding: 20px;
-  border-radius:12px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+label {
+  font-weight: 600;
+  margin-right: 10px;
+}
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+select:hover {
+  background: rgba(255,255,255,0.3);
 }
 table {
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  border-radius: 12px;
+  overflow: hidden;
   background: rgba(255,255,255,0.1);
-  border-radius:8px;
-  overflow:hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 th, td {
-  padding:12px;
-  text-align:center;
+  padding: 12px;
+  text-align: center;
 }
 th {
-  background: #6a11cb;
-  background: linear-gradient(to right, #2575fc, #6a11cb);
-  color:#fff;
-  font-weight:600;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 tr:nth-child(even) {background: rgba(255,255,255,0.05);}
-select {
-  padding:8px 12px;
-  border-radius:6px;
-  border:none;
-  margin-bottom:10px;
-  background: rgba(255,255,255,0.2);
-  color:#fff;
-  font-weight:600;
+tr:hover {background: rgba(255,255,255,0.15);}
+@media(max-width:768px){
+  table, thead, tbody, th, td, tr {display: block;}
+  th {display:none;}
+  td {display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid rgba(255,255,255,0.2);}
+  td::before {font-weight:bold; content: attr(data-label); color:#ffd;}
 }
 </style>
 </head>
@@ -84,7 +103,6 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let allParticipants = [];
 
 async function loadParticipants(){
-  // ดึงผู้สมัครที่อนุมัติแล้ว
   const { data, error } = await client.from("kaimukandaman")
     .select("first_name,last_name,category")
     .eq("status","Approved")
@@ -96,7 +114,6 @@ async function loadParticipants(){
   displayParticipants();
 }
 
-// สร้าง dropdown ตัวกรอง
 function populateFilter(){
   const select = document.getElementById("filterCategory");
   const categories = [...new Set(allParticipants.map(p=>p.category).filter(c=>c))];
@@ -104,7 +121,6 @@ function populateFilter(){
   select.onchange = displayParticipants;
 }
 
-// แสดงข้อมูลตาม filter
 function displayParticipants(){
   const tbody = document.querySelector("#participantsTable tbody");
   const filter = document.getElementById("filterCategory").value;
@@ -113,7 +129,11 @@ function displayParticipants(){
   tbody.innerHTML = "";
   filtered.forEach((p,i)=>{
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${i+1}</td><td>${p.first_name} ${p.last_name}</td><td>${p.category || "-"}</td>`;
+    tr.innerHTML = `
+      <td data-label="#">${i+1}</td>
+      <td data-label="Full Name">${p.first_name} ${p.last_name}</td>
+      <td data-label="Category">${p.category || "-"}</td>
+    `;
     tbody.appendChild(tr);
   });
 
@@ -122,7 +142,6 @@ function displayParticipants(){
   }
 }
 
-// โหลดครั้งแรก + รีเฟรชทุก 5 วินาที
 loadParticipants();
 setInterval(loadParticipants,5000);
 </script>
