@@ -84,7 +84,8 @@
   <input type="text" id="lastName" required>
 
   <label id="labelNationalId">เลขบัตรประชาชน</label>
-  <input type="text" id="nationalId" required>
+  <input type="text" id="nationalId" maxlength="13" required
+  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,13)">
 
   <label id="labelPhone">เบอร์โทรศัพท์</label>
   <input type="tel" id="phone" required>
