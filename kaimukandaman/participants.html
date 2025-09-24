@@ -64,6 +64,28 @@ th {
 }
 tr:nth-child(even) {background: rgba(255,255,255,0.05);}
 tr:hover {background: rgba(255,255,255,0.15);}
+.pagination {
+  margin-top: 15px;
+  text-align: center;
+}
+.pagination button {
+  padding: 6px 12px;
+  margin: 0 3px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.pagination button:hover {
+  background: rgba(255,255,255,0.4);
+}
+.pagination button.active {
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: #fff;
+}
 @media(max-width:768px){
   table, thead, tbody, th, td, tr {display: block;}
   th {display:none;}
@@ -92,6 +114,8 @@ tr:hover {background: rgba(255,255,255,0.15);}
     </thead>
     <tbody></tbody>
   </table>
+
+  <div class="pagination" id="pagination"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -101,6 +125,8 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allParticipants = [];
+let currentPage = 1;
+const itemsPerPage = 10;
 
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman")
@@ -118,7 +144,7 @@ function populateFilter(){
   const select = document.getElementById("filterCategory");
   const categories = [...new Set(allParticipants.map(p=>p.category).filter(c=>c))];
   select.innerHTML = `<option value="">All Categories</option>` + categories.map(c=>`<option value="${c}">${c}</option>`).join("");
-  select.onchange = displayParticipants;
+  select.onchange = () => { currentPage=1; displayParticipants(); };
 }
 
 function displayParticipants(){
@@ -131,11 +157,15 @@ function displayParticipants(){
     return (fullName.includes(search)) && (filter ? p.category===filter : true);
   });
 
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const start = (currentPage-1)*itemsPerPage;
+  const pageItems = filtered.slice(start,start+itemsPerPage);
+
   tbody.innerHTML = "";
-  filtered.forEach((p,i)=>{
+  pageItems.forEach((p,i)=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="#">${i+1}</td>
+      <td data-label="#">${start + i + 1}</td>
       <td data-label="Full Name">${p.first_name} ${p.last_name}</td>
       <td data-label="Category">${p.category || "-"}</td>
     `;
@@ -145,10 +175,21 @@ function displayParticipants(){
   if(filtered.length===0){
     tbody.innerHTML = `<tr><td colspan="3">No participants found</td></tr>`;
   }
+
+  // สร้าง pagination
+  const paginationDiv = document.getElementById("pagination");
+  paginationDiv.innerHTML = "";
+  for(let i=1;i<=totalPages;i++){
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if(i===currentPage) btn.classList.add("active");
+    btn.onclick = () => { currentPage=i; displayParticipants(); };
+    paginationDiv.appendChild(btn);
+  }
 }
 
-// ฟังก์ชันค้นหาเรียลไทม์
-document.getElementById("searchInput").addEventListener("input", displayParticipants);
+// ค้นหาเรียลไทม์
+document.getElementById("searchInput").addEventListener("input", () => { currentPage=1; displayParticipants(); });
 
 loadParticipants();
 setInterval(loadParticipants,5000);
