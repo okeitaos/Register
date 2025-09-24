@@ -13,14 +13,14 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       text-align: center;
       padding: 20px;
     }
 
     header {
-      margin-bottom: 30px;
+      margin: 40px 0 20px 0;
     }
 
     header img {
@@ -32,16 +32,24 @@
     }
 
     h1 {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       color: #facc15;
       margin-bottom: 10px;
       text-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
     }
 
+    h2 {
+      font-size: 1.6rem;
+      color: #fbbf24;
+      margin: 25px 0 15px 0;
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+    }
+
     p {
       color: #cbd5e1;
-      font-size: 1.1rem;
-      margin-bottom: 30px;
+      font-size: 1.05rem;
+      margin-bottom: 15px;
+      line-height: 1.6;
     }
 
     .btn {
@@ -55,11 +63,23 @@
       text-decoration: none;
       transition: transform 0.2s ease, box-shadow 0.3s ease;
       box-shadow: 0 6px 20px rgba(250,204,21,0.4);
+      margin-top: 25px;
     }
 
     .btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 25px rgba(250,204,21,0.6);
+    }
+
+    section {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      background: rgba(255,255,255,0.05);
+      padding: 25px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     }
 
     footer {
@@ -76,7 +96,23 @@
     <p>มาวิ่งไปด้วยกัน สนุก สุขภาพดี และร่วมเป็นส่วนหนึ่งของกิจกรรมดี ๆ 🏃‍♂️🏃‍♀️</p>
   </header>
 
-  <a href="register.html" class="btn">ลงทะเบียนเข้าร่วมวิ่ง</a>
+  <section>
+    <h2>📅 รายละเอียดงานวิ่ง</h2>
+    <p><strong>วันจัดงาน:</strong> วันอาทิตย์ที่ 15 มิถุนายน 2025</p>
+    <p><strong>สถานที่:</strong> ริมหาดอันดามัน จังหวัดพังงา</p>
+    <p><strong>เวลาเริ่มงาน:</strong> 05:00 น. - 10:00 น.</p>
+    <p><strong>ระยะทางการแข่งขัน:</strong></p>
+    <ul>
+      <li>🏃‍♂️ Fun Run 5 km</li>
+      <li>🏃‍♀️ Mini Marathon 10 km</li>
+      <li>🏅 Half Marathon 21 km</li>
+    </ul>
+    <p><strong>สิทธิประโยชน์:</strong> เสื้อที่ระลึก, เหรียญที่ระลึก, อาหาร/น้ำดื่มหลังวิ่ง</p>
+
+    <div style="text-align:center;">
+      <a href="register.html" class="btn">ลงทะเบียนเข้าร่วมวิ่ง</a>
+    </div>
+  </section>
 
   <footer>
     © 2025 Kaimuk Andaman Run | Powered by Supabase
