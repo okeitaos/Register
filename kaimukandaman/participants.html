@@ -1,84 +1,60 @@
-<!doctype html>
-<html lang="th">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>รายชื่อผู้มีสิทธิ์เข้าแข่งขัน</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participants</title>
 <style>
-body{font-family:Segoe UI,sans-serif;background:#000;color:#f3f4f6;padding:20px;}
-h1{text-align:center;color:#60a5fa;margin-bottom:20px;}
-select{padding:10px;border-radius:6px;border:1px solid #4b5563;margin-bottom:15px;background:#1f2937;color:#f3f4f6;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{padding:12px;border:1px solid #4b5563;text-align:center;}
-th{background:#1e40af;color:white;}
-tr:nth-child(even){background:#1f2937;}
+body {font-family: Arial, sans-serif; background: #f4f6f9; padding:20px;}
+h1 {text-align:center;}
+table {width:100%; border-collapse:collapse; margin-top:20px;}
+th, td {padding:10px; border:1px solid #ddd; text-align:center;}
+th {background:#222; color:#fff;}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-
-<h1>รายชื่อผู้มีสิทธิ์เข้าแข่งขัน</h1>
-
-<label>กรองรุ่นการแข่งขัน:</label>
-<select id="categoryFilter">
-  <option value="">-- แสดงทั้งหมด --</option>
-  <option value="male_u12">ชาย - ต่ำกว่า 12 ปี</option>
-  <option value="female_u12">หญิง - ต่ำกว่า 12 ปี</option>
-  <option value="male_u18">ชาย - ต่ำกว่า 18 ปี</option>
-  <option value="female_u18">หญิง - ต่ำกว่า 18 ปี</option>
-  <option value="male_open">ชาย - รุ่นทั่วไป</option>
-  <option value="female_open">หญิง - รุ่นทั่วไป</option>
-</select>
-
+<h1>Participants Approved</h1>
 <table id="participantsTable">
-  <thead>
-    <tr>
-      <th>ลำดับ</th>
-      <th>ชื่อ - นามสกุล</th>
-      <th>รุ่นการแข่งขัน</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+<thead>
+<tr>
+<th>#</th>
+<th>Full Name</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody></tbody>
 </table>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co"; // ใส่ URL ของคุณ
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // ใส่ ANON KEY ของคุณ
-const client = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+// ใส่ Supabase URL + ANON KEY ของคุณ
+const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const tbody = document.querySelector("#participantsTable tbody");
-const categoryFilter = document.getElementById("categoryFilter");
+// ฟังก์ชันดึงข้อมูล
+async function loadParticipants() {
+  const { data, error } = await client
+    .from("kaimukandaman")
+    .select("first_name, last_name, category")
+    .eq("status", "Approved")
+    .order("id", { ascending:true });
 
-async function loadParticipants(){
-  let query = client.from("kaimukandaman").select("*").eq("status","approved").order("id",{ascending:true});
-  
-  const selectedCategory = categoryFilter.value;
-  if(selectedCategory) query = query.eq("category", selectedCategory);
+  const tbody = document.querySelector("#participantsTable tbody");
+  if(error){ console.error(error); tbody.innerHTML="<tr><td colspan='3'>Error loading data</td></tr>"; return;}
+  if(!data || data.length===0){ tbody.innerHTML="<tr><td colspan='3'>No participants approved yet</td></tr>"; return;}
 
-  const { data, error } = await query;
-  if(error){ console.error(error); return; }
-
-  tbody.innerHTML = "";
-  data.forEach((app,index)=>{
+  tbody.innerHTML="";
+  data.forEach((p, i)=>{
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${index+1}</td>
-      <td>${app.first_name} ${app.last_name}</td>
-      <td>${app.category}</td>
-    `;
+    tr.innerHTML=`<td>${i+1}</td><td>${p.first_name} ${p.last_name}</td><td>${p.category || "-"}</td>`;
     tbody.appendChild(tr);
   });
 }
 
-// โหลดครั้งแรก
+// โหลดครั้งแรก + รีเฟรชทุก 5 วินาที
 loadParticipants();
-
-// รีเฟรชทุก 5 วินาที
 setInterval(loadParticipants, 5000);
-
-// รีโหลดเมื่อเปลี่ยนค่า filter
-categoryFilter.addEventListener("change", loadParticipants);
 </script>
-
 </body>
 </html>
