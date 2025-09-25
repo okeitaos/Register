@@ -6,23 +6,14 @@
   <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</title>
   <style>
     /* ---------- Reset & Global ---------- */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin:0; padding:0; }
     body {
       font-family: 'Arial', sans-serif;
       background-color: #000;
       color: #ddd;
       line-height: 1.6;
     }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
     /* ---------- Header ---------- */
     header {
@@ -35,14 +26,12 @@
       text-align: center;
       position: relative;
     }
-
     header::after {
       content: "";
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.6);
     }
-
     header h1 {
       position: relative;
       font-size: 3rem;
@@ -52,7 +41,6 @@
       z-index: 1;
       margin-bottom: 10px;
     }
-
     header p {
       position: relative;
       font-size: 1.2rem;
@@ -62,6 +50,7 @@
       margin-bottom: 20px;
     }
 
+    /* ---------- Buttons ---------- */
     .btn {
       position: relative;
       z-index: 1;
@@ -72,11 +61,16 @@
       font-weight: bold;
       border-radius: 30px;
       transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 5px;
     }
+    .btn:hover { background: #ffb400; transform: scale(1.05); }
 
-    .btn:hover {
-      background: #ffb400;
-      transform: scale(1.05);
+    .lang-btn img {
+      width: 24px;
+      vertical-align: middle;
+      margin-right: 8px;
+      border-radius: 50%;
     }
 
     /* ---------- Sections ---------- */
@@ -85,7 +79,6 @@
       max-width: 1000px;
       margin: auto;
     }
-
     h2 {
       color: #00E5FF;
       text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
@@ -94,56 +87,31 @@
       padding-left: 10px;
       font-size: 2rem;
     }
-
-    h3 {
-      color: #FFD700;
-      margin-bottom: 10px;
-    }
-
-    p, ul {
-      margin-bottom: 20px;
-      font-size: 1rem;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    ul li {
-      margin-bottom: 8px;
-      padding-left: 10px;
-      position: relative;
-    }
-
-    ul li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: #FFD700;
-    }
+    h3 { color: #FFD700; margin-bottom: 10px; }
+    p, ul { margin-bottom: 20px; font-size: 1rem; }
+    ul { list-style: none; padding-left: 0; }
+    ul li { margin-bottom: 8px; padding-left: 10px; position: relative; }
+    ul li::before { content:"•"; position:absolute; left:0; color:#FFD700; }
 
     /* ---------- Gallery ---------- */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
       gap: 20px;
       justify-items: center;
       margin-top: 40px;
     }
-
     .gallery img {
       width: 100%;
       height: 200px;
       object-fit: cover;
       border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 10px rgba(255,255,255,0.2);
       transition: transform 0.3s, box-shadow 0.3s;
     }
-
     .gallery img:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+      box-shadow: 0 6px 20px rgba(255,215,0,0.6);
     }
 
     /* ---------- Footer ---------- */
@@ -157,32 +125,30 @@
 
     /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
-      header h1 {
-        font-size: 2.2rem;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
+      header h1 { font-size: 2.2rem; }
+      h2 { font-size: 1.5rem; }
     }
-
     @media (max-width: 480px) {
-      .gallery img {
-        height: 180px;
-      }
+      .gallery img { height: 180px; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
-    <p>Khai Mook Mini Marathon 4th</p>
-    <a href="payment.html" class="btn">ลงทะเบียน/Register</a>
+    <h1 id="title">🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
+    <p id="subtitle">Khai Mook Mini Marathon 4th</p>
+    <div>
+      <a href="payment.html" class="btn" id="registerBtn">ลงทะเบียน/Register</a>
+      <button class="btn lang-btn" id="langBtn">
+        <img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg" alt="flag"> TH
+      </button>
+    </div>
   </header>
 
   <section>
-    <h2>📅 วันเวลา & สถานที่</h2>
-    <p>
+    <h2 id="dateTitle">📅 วันเวลา & สถานที่</h2>
+    <p id="dateText">
       วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br>
       23 November 2025, 6:00 AM <br>
       ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
@@ -192,14 +158,14 @@
   </section>
 
   <section>
-    <h2>💰 ค่าสมัคร</h2>
-    <p>ทุกประเภทการแข่งขัน 350 บาท (350 THB)</p>
+    <h2 id="feeTitle">💰 ค่าสมัคร</h2>
+    <p id="feeText">ทุกประเภทการแข่งขัน 350 บาท (350 THB)</p>
   </section>
 
   <section>
-    <h2>👇 ประเภทการแข่งขัน</h2>
-    <h3>🏃 ฟันรัน 5 กิโลเมตร</h3>
-    <ul>
+    <h2 id="categoryTitle">👇 ประเภทการแข่งขัน</h2>
+    <h3 id="funRunTitle">🏃 ฟันรัน 5 กิโลเมตร</h3>
+    <ul id="funRunList">
       <li>รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง</li>
       <li>รุ่นทั่วไป ชาย/หญิง</li>
       <li>รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง</li>
@@ -207,8 +173,8 @@
       <li>รุ่นน้ำหนัก 70 กก. หญิง</li>
       <li>รุ่นน้ำหนัก 80 กก. ชาย</li>
     </ul>
-    <h3>🏃 มินิ 10.5 กิโลเมตร</h3>
-    <ul>
+    <h3 id="miniTitle">🏃 มินิ 10.5 กิโลเมตร</h3>
+    <ul id="miniList">
       <li>รุ่นทั่วไป ชาย/หญิง</li>
       <li>รุ่นอายุ 30-39 ปี ชาย/หญิง</li>
       <li>รุ่นอายุ 40-49 ปี ชาย/หญิง</li>
@@ -219,8 +185,8 @@
   </section>
 
   <section>
-    <h2>🎁 ของรางวัล & สิทธิพิเศษ</h2>
-    <ul>
+    <h2 id="prizeTitle">🎁 ของรางวัล & สิทธิพิเศษ</h2>
+    <ul id="prizeList">
       <li>นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว</li>
       <li>รับเหรียญรางวัลหลังเข้าเส้นชัย</li>
       <li>รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
@@ -228,15 +194,15 @@
       <li>รางวัลแฟนซี 1-5 อันดับ</li>
     </ul>
     <div class="gallery">
-      <img src="https://lh5.googleusercontent.com/d/1Fmmtc8j6WYMz1rIEy25IIcWdxMjpZVSP" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" alt="เสื้อที่ระลึก">
       <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="ถ้วยรางวัล">
       <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="เหรียญรางวัล">
     </div>
   </section>
 
   <section>
-    <h2>📞 ติดต่อสอบถาม</h2>
-    <p>
+    <h2 id="contactTitle">📞 ติดต่อสอบถาม</h2>
+    <p id="contactText">
       086-6898082 / 082-4116530 <br>
       085-8964999 / 094-4191658
     </p>
@@ -245,6 +211,31 @@
   <footer>
     © 2025 Khai Mook Mini Marathon | All Rights Reserved
   </footer>
+
+  <!-- ---------- Language Switch JS ---------- -->
+  <script>
+    const langBtn = document.getElementById('langBtn');
+    let isThai = true;
+
+    langBtn.addEventListener('click', () => {
+      isThai = !isThai;
+      if(isThai) {
+        // เปลี่ยนเป็นภาษาไทย
+        document.getElementById('title').innerText = '🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4';
+        document.getElementById('subtitle').innerText = 'Khai Mook Mini Marathon 4th';
+        document.getElementById('registerBtn').innerText = 'ลงทะเบียน/Register';
+        document.getElementById('langFlag').src = 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg';
+        document.getElementById('langBtn').innerHTML = `<img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg"> TH`;
+      } else {
+        // เปลี่ยนเป็นภาษาอังกฤษ
+        document.getElementById('title').innerText = '🏃‍♂️ Khai Mook Andaman Mini Marathon 4th';
+        document.getElementById('subtitle').innerText = '';
+        document.getElementById('registerBtn').innerText = 'Register';
+        document.getElementById('langFlag').src = 'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg';
+        document.getElementById('langBtn').innerHTML = `<img id="langFlag" src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"> EN`;
+      }
+    });
+  </script>
 
 </body>
 </html>
