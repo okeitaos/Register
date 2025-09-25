@@ -115,6 +115,22 @@ function openModal(url){ document.getElementById("slipImage").src=url; document.
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
 loadParticipants();
+
+  // ป้องกันการคลิกขวา
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+  alert("❌ ไม่อนุญาตให้คลิกขวา");
+});
+
+// ป้องกันการกดปุ่ม F12, Ctrl+Shift+I, Ctrl+U
+document.addEventListener("keydown", function(e) {
+  if (e.key === "F12" || 
+      (e.ctrlKey && e.shiftKey && e.key === "I") || 
+      (e.ctrlKey && e.key === "u")) {
+    e.preventDefault();
+    alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด");
+  }
+});
 </script>
 </body>
 </html>
