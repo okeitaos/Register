@@ -97,10 +97,17 @@ button:disabled {
   display: block;
   width: auto;
   height: auto;
-  max-width: 95vw;   /* จำกัดไม่เกินความกว้างจอ */
-  max-height: 85vh;  /* จำกัดไม่เกินความสูงจอ */
+  max-width: 80vw;   /* ไม่เกิน 80% ของหน้าจอ */
+  max-height: 80vh;  /* ไม่เกิน 80% ของความสูง */
   border-radius: 8px;
-  object-fit: contain; /* รักษาสัดส่วน ไม่บี้ */
+  object-fit: contain; /* รักษาสัดส่วน ไม่เพี้ยน */
+}
+
+@media (max-width: 768px) {
+  .modal-content img {
+    max-width: 95vw;  /* มือถือใช้เกือบเต็ม */
+    max-height: 85vh;
+  }
 }
 .close {
   position: fixed;
