@@ -52,8 +52,6 @@
 
     /* ---------- Buttons ---------- */
     .btn {
-      position: relative;
-      z-index: 1;
       display: inline-block;
       padding: 15px 30px;
       background: #FFD700;
@@ -63,14 +61,28 @@
       transition: all 0.3s ease;
       cursor: pointer;
       margin: 5px;
+      z-index: 1;
     }
     .btn:hover { background: #ffb400; transform: scale(1.05); }
 
+    /* Language button top-right */
+    .lang-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-radius: 20px;
+      background: #FFD700;
+    }
     .lang-btn img {
       width: 24px;
+      height: 16px;
+      border-radius: 2px;
       vertical-align: middle;
-      margin-right: 8px;
-      border-radius: 50%;
     }
 
     /* ---------- Sections ---------- */
@@ -127,6 +139,7 @@
     @media (max-width: 768px) {
       header h1 { font-size: 2.2rem; }
       h2 { font-size: 1.5rem; }
+      .lang-btn { top: 10px; right: 10px; padding: 8px 12px; font-size: 0.9rem; }
     }
     @media (max-width: 480px) {
       .gallery img { height: 180px; }
@@ -138,12 +151,10 @@
   <header>
     <h1 id="title">🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
     <p id="subtitle">Khai Mook Mini Marathon 4th</p>
-    <div>
-      <a href="payment.html" class="btn" id="registerBtn">ลงทะเบียน/Register</a>
-      <button class="btn lang-btn" id="langBtn">
-        <img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg" alt="flag"> TH
-      </button>
-    </div>
+    <a href="register.html" class="btn" id="registerBtn">ลงทะเบียน/Register</a>
+    <button class="btn lang-btn" id="langBtn">
+      <img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg" alt="flag"> TH
+    </button>
   </header>
 
   <section>
@@ -212,29 +223,127 @@
     © 2025 Khai Mook Mini Marathon | All Rights Reserved
   </footer>
 
-  <!-- ---------- Language Switch JS ---------- -->
   <script>
     const langBtn = document.getElementById('langBtn');
     let isThai = true;
 
-    langBtn.addEventListener('click', () => {
-      isThai = !isThai;
-      if(isThai) {
-        // เปลี่ยนเป็นภาษาไทย
-        document.getElementById('title').innerText = '🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4';
-        document.getElementById('subtitle').innerText = 'Khai Mook Mini Marathon 4th';
-        document.getElementById('registerBtn').innerText = 'ลงทะเบียน/Register';
-        document.getElementById('langFlag').src = 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg';
-        document.getElementById('langBtn').innerHTML = `<img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg"> TH`;
-      } else {
-        // เปลี่ยนเป็นภาษาอังกฤษ
-        document.getElementById('title').innerText = '🏃‍♂️ Khai Mook Andaman Mini Marathon 4th';
-        document.getElementById('subtitle').innerText = '';
-        document.getElementById('registerBtn').innerText = 'Register';
-        document.getElementById('langFlag').src = 'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg';
-        document.getElementById('langBtn').innerHTML = `<img id="langFlag" src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"> EN`;
+    const translations = {
+      TH: {
+        title: '🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4',
+        subtitle: 'Khai Mook Mini Marathon 4th',
+        register: 'ลงทะเบียน/Register',
+        dateTitle: '📅 วันเวลา & สถานที่',
+        dateText: `วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br>
+        23 November 2025, 6:00 AM <br>
+        ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
+        At King Rama IX Park, Phuket Province <br>
+        📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">เปิดแผนที่</a>`,
+        feeTitle: '💰 ค่าสมัคร',
+        feeText: 'ทุกประเภทการแข่งขัน 350 บาท (350 THB)',
+        categoryTitle: '👇 ประเภทการแข่งขัน',
+        funRunTitle: '🏃 ฟันรัน 5 กิโลเมตร',
+        funRunList: [
+          'รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง',
+          'รุ่นทั่วไป ชาย/หญิง',
+          'รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง',
+          'รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง',
+          'รุ่นน้ำหนัก 70 กก. หญิง',
+          'รุ่นน้ำหนัก 80 กก. ชาย'
+        ],
+        miniTitle: '🏃 มินิ 10.5 กิโลเมตร',
+        miniList: [
+          'รุ่นทั่วไป ชาย/หญิง',
+          'รุ่นอายุ 30-39 ปี ชาย/หญิง',
+          'รุ่นอายุ 40-49 ปี ชาย/หญิง',
+          'รุ่นอายุ 50 ปีขึ้นไป หญิง',
+          'รุ่นอายุ 50-59 ปี ชาย',
+          'รุ่นอายุ 60 ปีขึ้นไป ชาย'
+        ],
+        prizeTitle: '🎁 ของรางวัล & สิทธิพิเศษ',
+        prizeList: [
+          'นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว',
+          'รับเหรียญรางวัลหลังเข้าเส้นชัย',
+          'รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket',
+          'ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง',
+          'รางวัลแฟนซี 1-5 อันดับ'
+        ],
+        contactTitle: '📞 ติดต่อสอบถาม',
+        contactText: '086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
+        flag: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg',
+        langText: 'TH'
+      },
+      EN: {
+        title: '🏃‍♂️ Khai Mook Andaman Mini Marathon 4th',
+        subtitle: '',
+        register: 'Register',
+        dateTitle: '📅 Date & Location',
+        dateText: `Sunday, 23 November 2025, from 6:00 AM <br>
+        At King Rama IX Park, Phuket Province <br>
+        📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">Open Map</a>`,
+        feeTitle: '💰 Registration Fee',
+        feeText: 'All categories 350 THB',
+        categoryTitle: '👇 Race Categories',
+        funRunTitle: '🏃 Fun Run 5 km',
+        funRunList: [
+          'Under 15 Male/Female',
+          'General Male/Female',
+          'Over 60 Male/Female',
+          'Special: Over 70 Male/Female',
+          'Weight 70 kg Female',
+          'Weight 80 kg Male'
+        ],
+        miniTitle: '🏃 Mini 10.5 km',
+        miniList: [
+          'General Male/Female',
+          'Age 30-39 Male/Female',
+          'Age 40-49 Male/Female',
+          'Age 50+ Female',
+          'Age 50-59 Male',
+          'Age 60+ Male'
+        ],
+        prizeTitle: '🎁 Prizes & Special Rewards',
+        prizeList: [
+          'All runners receive 1 souvenir shirt',
+          'Finishers receive medals',
+          'Special Prize: Rank 1-5 receive I ❤️ Phuket Shirt',
+          'Overall Trophy Mini Male/Female',
+          'Fancy Prize 1-5 rank'
+        ],
+        contactTitle: '📞 Contact',
+        contactText: '086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
+        flag: 'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg',
+        langText: 'EN'
       }
+    };
+
+    function setLanguage(lang){
+      const t = translations[lang];
+      document.getElementById('title').innerHTML = t.title;
+      document.getElementById('subtitle').innerHTML = t.subtitle;
+      document.getElementById('registerBtn').innerHTML = t.register;
+      document.getElementById('dateTitle').innerHTML = t.dateTitle;
+      document.getElementById('dateText').innerHTML = t.dateText;
+      document.getElementById('feeTitle').innerHTML = t.feeTitle;
+      document.getElementById('feeText').innerHTML = t.feeText;
+      document.getElementById('categoryTitle').innerHTML = t.categoryTitle;
+      document.getElementById('funRunTitle').innerHTML = t.funRunTitle;
+      document.getElementById('funRunList').innerHTML = t.funRunList.map(li=>`<li>${li}</li>`).join('');
+      document.getElementById('miniTitle').innerHTML = t.miniTitle;
+      document.getElementById('miniList').innerHTML = t.miniList.map(li=>`<li>${li}</li>`).join('');
+      document.getElementById('prizeTitle').innerHTML = t.prizeTitle;
+      document.getElementById('prizeList').innerHTML = t.prizeList.map(li=>`<li>${li}</li>`).join('');
+      document.getElementById('contactTitle').innerHTML = t.contactTitle;
+      document.getElementById('contactText').innerHTML = t.contactText;
+      langBtn.innerHTML = `<img src="${t.flag}"> ${t.langText}`;
+    }
+
+    langBtn.addEventListener('click', ()=>{
+      isThai = !isThai;
+      setLanguage(isThai ? 'TH':'EN');
     });
+
+    // ตั้งค่าเริ่มต้น
+    setLanguage('TH');
   </script>
 
 </body>
