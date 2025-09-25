@@ -1,161 +1,146 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4 | Khai Mook Mini Marathon 4th</title>
-  <style>
-    body {
-      margin:0; padding:0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
-      color: #fff;
-      overflow-x: hidden;
-      line-height: 1.7;
-    }
-    header {
-      text-align: center;
-      padding: 60px 20px 40px;
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    }
-    header h1 {
-      font-size: 2.2rem;
-      color: #facc15;
-      margin-bottom: 10px;
-      animation: fadeInDown 1s ease;
-      text-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
-    }
-    header h2 {
-      font-size: 1.2rem;
-      color: #cbd5e1;
-      animation: fadeInDown 1.2s ease;
-    }
-    section {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      animation: fadeInUp 1s ease;
-    }
-    section h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-      color: #facc15;
-      text-align: center;
-    }
-    section ul {
-      list-style: none;
-      padding: 0;
-    }
-    section ul li {
-      margin: 6px 0;
-    }
-    .btn-register {
-      display: block;
-      width: fit-content;
-      margin: 30px auto 0;
-      padding: 14px 28px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #000;
-      background: linear-gradient(90deg,#facc15,#f59e0b);
-      border-radius: 30px;
-      text-decoration: none;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .btn-register:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(250,204,21,0.6);
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      color: #94a3b8;
-      background: rgba(0,0,0,0.4);
-      margin-top: 40px;
-    }
-    @keyframes fadeInDown {
-      from {opacity:0; transform: translateY(-20px);}
-      to {opacity:1; transform: translateY(0);}
-    }
-    @keyframes fadeInUp {
-      from {opacity:0; transform: translateY(20px);}
-      to {opacity:1; transform: translateY(0);}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    background: #0f172a;
+  }
+
+  /* Parallax Section */
+  .parallax {
+    height: 100vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .parallax h1 {
+    font-size: 3rem;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.4);
+    padding: 20px 30px;
+    border-radius: 12px;
+    animation: fadeInDown 1.5s ease;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Content Section */
+  .content {
+    padding: 60px 20px;
+    background: #1e293b;
+    text-align: center;
+  }
+  .content h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #facc15;
+  }
+  .content p {
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    line-height: 1.8;
+  }
+
+  /* Register Button */
+  .register-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+    background: linear-gradient(90deg,#facc15,#f59e0b);
+    border-radius: 30px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(250,204,21,0.5);
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4</h1>
-    <h2>Khai Mook Mini Marathon 4th</h2>
-  </header>
 
-  <section>
-    <h3>📅 รายละเอียดงาน</h3>
-    <p>📌 วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00น. เป็นต้นไป</p>
-    <p>📅 23 November 2025</p>
-    <p>📍 ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต</p>
-    <p>📍 At King Rama IX Park, Phuket Province</p>
-    <p>🌐 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank" style="color:#38bdf8;">Google Maps</a></p>
-  </section>
+<!-- Hero Section -->
+<div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80');">
+  <h1>🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4<br>
+  Khai Mook Mini Marathon 4th</h1>
+</div>
 
-  <section>
-    <h3>💰 ค่าสมัคร</h3>
-    <p>📌 ค่าสมัคร 350 บาท ทุกประเภทการแข่งขัน / 350 THB</p>
-  </section>
+<!-- รายละเอียดงาน -->
+<div class="content">
+  <h2>📌 รายละเอียดงาน</h2>
+  <p>
+    วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00น. เป็นต้นไป <br>
+    23 November 2025 <br>
+    ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
+    At King Rama IX Park, Phuket Province <br>
+    📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">เปิดแผนที่ Google Maps</a>
+  </p>
+  <p>ค่าสมัคร 350 บาท ทุกประเภทการแข่งขัน / 350THB</p>
+</div>
 
-  <section>
-    <h3>🏃 ประเภทการแข่งขัน</h3>
-    <ul>
-      <li><strong>ฟันรัน 5 กิโลเมตร</strong></li>
-      <li>- รุ่นอายุไม่เกิน 15ปี ชาย/หญิง</li>
-      <li>- รุ่นทั่วไป ชาย/หญิง</li>
-      <li>- รุ่นอายุ 60ปีขึ้นไป ชาย/หญิง</li>
-      <li>👉 รุ่นพิเศษ</li>
-      <li>- รุ่นอายุ 70ปีขึ้นไป ชาย/หญิง</li>
-      <li>- รุ่นน้ำหนัก 70 กิโลกรัม หญิง</li>
-      <li>- รุ่นน้ำหนัก 80 กิโลกรัม ชาย</li>
-      <br>
-      <li><strong>มินิ 10.5 กิโลเมตร</strong></li>
-      <li>- รุ่นทั่วไป ชาย/หญิง</li>
-      <li>- รุ่นอายุ 30-39ปี ชาย/หญิง</li>
-      <li>- รุ่นอายุ 40-49ปี ชาย/หญิง</li>
-      <li>- รุ่นอายุ 50ปีขึ้นไป หญิง</li>
-      <li>- รุ่นอายุ 50-59ปี ชาย</li>
-      <li>- รุ่นอายุ 60ปีขึ้นไป ชาย</li>
-    </ul>
-  </section>
+<!-- Atmosphere Section -->
+<div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=1600&q=80');">
+  <h1>บรรยากาศงานวิ่ง • Running Vibes</h1>
+</div>
 
-  <section>
-    <h3>🎁 ของที่ระลึก & รางวัล</h3>
-    <p>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึกจำนวน 1 ตัว</p>
-    <p>🎖 รับเหรียญรางวัลที่ระลึกหลังเข้าเส้นชัยทุกคน</p>
-    <ul>
-      <li>- 🥇 อันดับที่ 1 : เงินรางวัล 1,000 บาท + 🏆 ถ้วยรางวัล</li>
-      <li>- 🥈 อันดับที่ 2 : เงินรางวัล 700 บาท + 🏆 ถ้วยรางวัล</li>
-      <li>- 🥉 อันดับที่ 3 : เงินรางวัล 500 บาท + 🏆 ถ้วยรางวัล</li>
-      <li>- อันดับที่ 4-5 : 🏆 ถ้วยรางวัล</li>
-      <li>- อันดับที่ 6-10 : 🎟 Gift Voucher 500 บาท จากร้านอาหาร O-OH Phuket</li>
-      <li>- 👕 รางวัลพิเศษ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
-      <li>- 🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
-      <li>- 🎭 รางวัลแฟนซี 1-5 อันดับ</li>
-    </ul>
-  </section>
+<!-- ประเภทการแข่งขัน -->
+<div class="content">
+  <h2>👇 ประเภทการแข่ง</h2>
+  <p>
+    🏃 ฟันรัน 5 กิโลเมตร <br>
+    - รุ่นอายุไม่เกิน 15ปี ชาย/หญิง<br>
+    - รุ่นทั่วไป ชาย/หญิง<br>
+    - รุ่นอายุ 60ปีขึ้นไป ชาย/หญิง<br>
+    👉 รุ่นพิเศษ<br>
+    - รุ่นอายุ 70ปีขึ้นไป ชาย/หญิง<br>
+    - รุ่นน้ำหนัก 70 กก. หญิง<br>
+    - รุ่นน้ำหนัก 80 กก. ชาย
+  </p>
+  <p>
+    🏃 มินิ 10.5 กิโลเมตร <br>
+    - รุ่นทั่วไป ชาย/หญิง<br>
+    - รุ่นอายุ 30-39ปี ชาย/หญิง<br>
+    - รุ่นอายุ 40-49ปี ชาย/หญิง<br>
+    - รุ่นอายุ 50ปีขึ้นไป หญิง<br>
+    - รุ่นอายุ 50-59ปี ชาย<br>
+    - รุ่นอายุ 60ปีขึ้นไป ชาย
+  </p>
+</div>
 
-  <section>
-    <h3>📞 สอบถามเพิ่มเติม</h3>
-    <p>👉 086-6898082 / 082-4116530</p>
-    <p>👉 085-8964999 / 094-4191658</p>
-  </section>
+<!-- Finish Line Section -->
+<div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1509475826633-fed577a2c71b?auto=format&fit=crop&w=1600&q=80');">
+  <h1>🎖 รางวัลและของที่ระลึก</h1>
+</div>
 
-  <a href="register.html" class="btn-register">ลงทะเบียน / Register Now</a>
+<!-- รางวัล -->
+<div class="content">
+  <h2>🎁 รางวัล</h2>
+  <p>
+    🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึกจำนวน 1 ตัว <br>
+    🎖 รับเหรียญรางวัลที่ระลึกหลังเข้าเส้นชัย <br>
+    🎁 ของรางวัล อันดับ 1-10 + รางวัลพิเศษ (ถ้วย, เงินสด, เสื้อ I ❤️ Phuket, Gift Voucher)
+  </p>
+  <a href="register.html" class="register-btn">ลงทะเบียนเลย</a>
+</div>
 
-  <footer>
-    © 2025 Khai Mook Mini Marathon 4th | Designed for Runners 🏃‍♂️🏃‍♀️
-  </footer>
 </body>
 </html>
