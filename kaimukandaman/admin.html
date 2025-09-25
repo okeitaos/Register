@@ -32,6 +32,7 @@ th, td {
   padding: 15px;
   border-bottom: 1px solid #eee;
   text-align: center;
+  font-size: 0.95rem;
 }
 th {
   background: #222;
@@ -81,7 +82,7 @@ button:disabled {
   z-index: 1000;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.9);
   overflow: auto; /* scroll ถ้าภาพใหญ่เกินหน้าจอ */
 }
 .modal-content {
@@ -90,19 +91,21 @@ button:disabled {
   align-items: center;
   min-height: 100vh;
   position: relative;
-  padding: 20px;
+  padding: 10px;
 }
 .modal-content img {
   display: block;
   width: auto;
   height: auto;
-  max-width: none; /* ใช้ขนาดจริงของภาพ */
-  max-height: none;
+  max-width: 95vw;   /* จำกัดไม่เกินความกว้างจอ */
+  max-height: 85vh;  /* จำกัดไม่เกินความสูงจอ */
+  border-radius: 8px;
+  object-fit: contain; /* รักษาสัดส่วน ไม่บี้ */
 }
 .close {
   position: fixed;
-  right: 20px;
-  top: 20px;
+  right: 15px;
+  top: 15px;
   font-size: 30px;
   font-weight: bold;
   color: #fff;
@@ -114,7 +117,14 @@ button:disabled {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
+  body { padding: 10px; }
   img.slip { max-width: 60px; }
+  th, td { padding: 10px; font-size: 0.85rem; }
+  h1 { font-size: 1.5rem; }
+  .modal-content img {
+    max-width: 100vw; 
+    max-height: 90vh;
+  }
 }
 </style>
 </head>
@@ -216,8 +226,7 @@ async function approve(participant){
 function openModal(url){ 
   const img = document.getElementById("slipImage");
   img.src = url; 
-  const modal = document.getElementById("slipModal");
-  modal.style.display = "block"; 
+  document.getElementById("slipModal").style.display = "block"; 
 }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
@@ -225,8 +234,8 @@ function closeModal(){ document.getElementById("slipModal").style.display="none"
 loadParticipants();
 
 // ---------- Security ----------
-document.addEventListener("contextmenu", function(e){ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
-document.addEventListener("keydown", function(e){ 
+document.addEventListener("contextmenu", e=>{ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
+document.addEventListener("keydown", e=>{ 
   if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ 
     e.preventDefault(); alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด"); 
   }
