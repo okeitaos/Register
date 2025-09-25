@@ -123,37 +123,53 @@
       color: #FFD700;
     }
 
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 40px;
-}
+    /* ---------- Gallery ---------- */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      justify-items: center;
+      margin-top: 40px;
+    }
 
-.gallery img {
-  width: 300px;      /* กำหนดความกว้างเท่ากัน */
-  height: 200px;     /* กำหนดความสูงเท่ากัน */
-  object-fit: cover; /* ครอบภาพเต็มกรอบโดยไม่บิดเบี้ยว */
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s;
-}
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-.gallery img:hover {
-  transform: scale(1.05);
-}
+    .gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    }
 
-/* Responsive สำหรับมือถือ */
-@media (max-width: 768px) {
-  .gallery img {
-    width: 90%;       /* ภาพใหญ่ขึ้นตามหน้าจอมือถือ */
-    height: auto;     /* ให้สัดส่วนตามความกว้าง */
-  }
-}
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
 
+    /* ---------- Responsive ---------- */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
 
-    
+    @media (max-width: 480px) {
+      .gallery img {
+        height: 180px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -161,7 +177,7 @@
   <header>
     <h1>🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
     <p>Khai Mook Mini Marathon 4th</p>
-    <a href="payment.html" class="btn">ลงทะเบียน/Register</a>
+    <a href="register.html" class="btn">ลงทะเบียน/Register</a>
   </header>
 
   <section>
@@ -212,9 +228,9 @@
       <li>รางวัลแฟนซี 1-5 อันดับ</li>
     </ul>
     <div class="gallery">
-      <img src="https://lh5.googleusercontent.com/d/1Fmmtc8j6WYMz1rIEy25IIcWdxMjpZVSP" width="322" height="215 alt="ถ้วยรางวัล">
-      <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" width="322" height="215 alt="ถ้วยรางวัล">
-      <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" width="322" height="215 alt="เหรียญรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1Fmmtc8j6WYMz1rIEy25IIcWdxMjpZVSP" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="เหรียญรางวัล">
     </div>
   </section>
 
