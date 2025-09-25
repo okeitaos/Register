@@ -3,64 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ชำระเงินค่าสมัคร</title>
+<title>ชำระเงินค่าสมัคร / Payment</title>
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background: #0f172a;
-    color: #fff;
+    margin:0;
+    padding:0;
+    background: linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
   }
   .container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #1e293b;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    max-width:600px;
+    background: rgba(30,41,59,0.95);
+    border-radius:20px;
+    padding:30px 25px;
+    text-align:center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
   }
   h1 {
-    color: #facc15;
-    margin-bottom: 20px;
+    color:#facc15;
+    margin-bottom:20px;
+    text-shadow:0 0 10px rgba(250,204,21,0.7);
+  }
+  p {
+    margin:12px 0;
+    font-size:1rem;
   }
   img.qr {
-    width: 280px;
-    margin: 20px auto;
-    border: 8px solid #fff;
-    border-radius: 12px;
+    width:280px;
+    margin:20px auto;
+    border:8px solid #fff;
+    border-radius:12px;
   }
   .btn {
-    display: inline-block;
-    margin-top: 25px;
-    padding: 15px 30px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #000;
+    display:inline-block;
+    margin-top:25px;
+    padding:14px 28px;
+    font-size:1.1rem;
+    font-weight:bold;
+    color:#000;
     background: linear-gradient(90deg,#facc15,#f59e0b);
-    border-radius: 30px;
-    text-decoration: none;
+    border-radius:30px;
+    text-decoration:none;
     transition: transform 0.2s, box-shadow 0.3s;
   }
   .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(250,204,21,0.5);
+    box-shadow:0 6px 20px rgba(250,204,21,0.5);
   }
+  .lang-switch {
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:#facc15;
+    color:#000;
+    border:none;
+    padding:6px 12px;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:0.9rem;
+    box-shadow:0 3px 8px rgba(0,0,0,0.3);
+  }
+  .lang-switch:hover { background:#eab308; }
 </style>
 </head>
 <body>
 
+<button class="lang-switch" onclick="toggleLang()"><span id="langFlag">🇬🇧</span> <span id="langText">EN</span></button>
+
 <div class="container">
-  <h1>📌 ชำระเงินค่าสมัคร 350 บาท</h1>
-  <p>กรุณาสแกน QR Code เพื่อชำระเงินก่อนเข้าสู่หน้าลงทะเบียน</p>
-  
-  <!-- ใส่ QR Code ที่สร้างจากธนาคาร/PromptPay -->
-  <img src="https://promptpay.io/0936494961/350" alt="QR Code" class="qr">
-  
-  <p>หลังจากชำระเงินเสร็จแล้ว กดปุ่มด้านล่างเพื่อลงทะเบียน</p>
-  <a href="register.html" class="btn">ไปหน้าลงทะเบียน</a>
+  <h1 id="title">📌 ชำระเงินค่าสมัคร 350 บาท</h1>
+  <p id="desc">กรุณาสแกน QR Code เพื่อชำระเงินก่อนเข้าสู่หน้าลงทะเบียน</p>
+  <img src="your-qrcode.png" alt="QR Code" class="qr">
+  <p id="afterPay">หลังจากชำระเงินเสร็จแล้ว กดปุ่มด้านล่างเพื่อลงทะเบียน</p>
+  <a href="register.html" class="btn" id="registerBtn">ไปหน้าลงทะเบียน</a>
 </div>
+
+<script>
+let currentLang="TH";
+
+function toggleLang(){
+  const title = document.getElementById("title");
+  const desc = document.getElementById("desc");
+  const afterPay = document.getElementById("afterPay");
+  const btn = document.getElementById("registerBtn");
+  const langFlag = document.getElementById("langFlag");
+  const langText = document.getElementById("langText");
+
+  if(currentLang==="TH"){
+    title.innerText="📌 Payment 350 THB";
+    desc.innerText="Please scan the QR Code to pay before proceeding to registration";
+    afterPay.innerText="After payment, click the button below to register";
+    btn.innerText="Go to Registration";
+    langFlag.innerText="🇹🇭";
+    langText.innerText="TH";
+    currentLang="EN";
+  } else {
+    title.innerText="📌 ชำระเงินค่าสมัคร 350 บาท";
+    desc.innerText="กรุณาสแกน QR Code เพื่อชำระเงินก่อนเข้าสู่หน้าลงทะเบียน";
+    afterPay.innerText="หลังจากชำระเงินเสร็จแล้ว กดปุ่มด้านล่างเพื่อลงทะเบียน";
+    btn.innerText="ไปหน้าลงทะเบียน";
+    langFlag.innerText="🇬🇧";
+    langText.innerText="EN";
+    currentLang="TH";
+  }
+}
+</script>
 
 </body>
 </html>
