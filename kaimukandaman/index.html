@@ -83,7 +83,6 @@
       flex-direction: column;
       cursor: pointer;
     }
-
     .menu-toggle span {
       height: 3px;
       width: 25px;
@@ -92,7 +91,6 @@
       border-radius: 5px;
       transition: 0.3s;
     }
-
     @media (max-width: 768px) {
       nav ul {
         position: absolute;
@@ -105,12 +103,8 @@
         transition: left 0.3s ease-in-out;
         padding: 15px 0;
       }
-      nav ul.show {
-        left: 0;
-      }
-      .menu-toggle {
-        display: flex;
-      }
+      nav ul.show { left: 0; }
+      .menu-toggle { display: flex; }
     }
 
     header {
@@ -126,7 +120,6 @@
       margin-bottom: 15px;
       animation: bounce 3s infinite;
     }
-
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
@@ -140,7 +133,7 @@
     }
 
     section {
-      max-width: 800px;
+      max-width: 900px;
       margin: 20px auto;
       text-align: left;
       background: rgba(255,255,255,0.07);
@@ -150,19 +143,18 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.5);
       animation: slideUp 1.5s ease;
     }
-
     h2 {
       text-align: center;
       font-size: 1.6rem;
       color: #fbbf24;
       margin-bottom: 15px;
     }
-
     p, ul {
       font-size: 1.05rem;
       line-height: 1.6;
       color: #e2e8f0;
     }
+    ul li { margin-bottom: 8px; }
 
     .btn {
       display: inline-block;
@@ -178,7 +170,6 @@
       margin-top: 25px;
       animation: fadeInUp 2s ease;
     }
-
     .btn:hover {
       transform: scale(1.1);
       box-shadow: 0 10px 25px rgba(250,204,21,0.7);
@@ -192,25 +183,10 @@
     }
 
     /* Keyframes Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes fadeInUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -224,9 +200,7 @@
       <li><a href="#contact">📞 ติดต่อเรา</a></li>
     </ul>
     <div class="menu-toggle" id="menu-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </div>
   </nav>
 
@@ -241,13 +215,50 @@
     <p><strong>วันจัดงาน:</strong> วันอาทิตย์ที่ 15 มิถุนายน 2025</p>
     <p><strong>สถานที่:</strong> ริมหาดอันดามัน จังหวัดพังงา</p>
     <p><strong>เวลาเริ่มงาน:</strong> 05:00 น. - 10:00 น.</p>
+    <p><strong>ค่าสมัคร:</strong> 350 บาท ทุกประเภทการแข่งขัน / 350THB</p>
     <p><strong>ระยะทางการแข่งขัน:</strong></p>
     <ul>
       <li>🏃‍♂️ Fun Run 5 km</li>
-      <li>🏃‍♀️ Mini Marathon 10 km</li>
+      <li>🏃‍♀️ Mini Marathon 10.5 km</li>
       <li>🏅 Half Marathon 21 km</li>
     </ul>
-    <p><strong>สิทธิประโยชน์:</strong> เสื้อที่ระลึก, เหรียญที่ระลึก, อาหาร/น้ำดื่มหลังวิ่ง</p>
+
+    <h2>👇 ประเภทการแข่งขัน</h2>
+    <p><strong>🏃 ฟันรัน 5 กิโลเมตร</strong></p>
+    <ul>
+      <li>รุ่นอายุไม่เกิน 15ปี ชาย/หญิง</li>
+      <li>รุ่นทั่วไป ชาย/หญิง</li>
+      <li>รุ่นอายุ 60-69 ชาย/หญิง</li>
+      <li>รุ่นอายุ 70ปีขึ้นไป ชาย/หญิง</li>
+      <li>รุ่นน้ำหนัก 70 กิโลกรัม หญิง</li>
+      <li>รุ่นน้ำหนัก 80 กิโลกรัม ชาย</li>
+    </ul>
+    <p><strong>🏃 มินิ 10.5 กิโลเมตร</strong></p>
+    <ul>
+      <li>รุ่นทั่วไป ชาย/หญิง</li>
+      <li>รุ่นอายุ 30-39ปี ชาย/หญิง</li>
+      <li>รุ่นอายุ 40-49ปี ชาย/หญิง</li>
+      <li>รุ่นอายุ 50ปีขึ้นไป หญิง</li>
+      <li>รุ่นอายุ 50-59ปี ชาย</li>
+      <li>รุ่นอายุ 60ปีขึ้นไปชาย</li>
+    </ul>
+
+    <h2>🎁 สิทธิประโยชน์ & รางวัล</h2>
+    <ul>
+      <li>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึกจำนวน 1 ตัว</li>
+      <li>🎖 รับเหรียญรางวัลที่ระลึกหลังเข้าเส้นชัยทุกคน</li>
+      <li>🎁 ของรางวัลสำหรับนักวิ่งทุกรุ่นทุกประเภท:</li>
+      <ul>
+        <li>อันดับที่ 1: 💵 1,000 บาท + 🏆 ถ้วยรางวัล</li>
+        <li>อันดับที่ 2: 💵 700 บาท + 🏆 ถ้วยรางวัล</li>
+        <li>อันดับที่ 3: 💵 500 บาท + 🏆 ถ้วยรางวัล</li>
+        <li>อันดับที่ 4-5: 🏆 ถ้วยรางวัล</li>
+        <li>อันดับที่ 6-10: 🎟 Gift Voucher 500 บาท (ร้านอาหาร O-OH Phuket)</li>
+      </ul>
+      <li>👕 รางวัลพิเศษ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
+      <li>🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
+      <li>🎭 รางวัลแฟนซี 1-5 อันดับ</li>
+    </ul>
 
     <div style="text-align:center;">
       <a href="register.html" class="btn">ลงทะเบียนเข้าร่วมวิ่ง</a>
@@ -255,7 +266,8 @@
   </section>
 
   <footer id="contact">
-    © 2025 Kaimuk Andaman Run | ติดต่อ: kaimukrun@email.com | โทร: 080-123-4567
+    © 2025 KEITA PHOTO CAMERA | ติดต่อ: oresearcho@gmail.com |
+    โทร: 080-123-4567
   </footer>
 
   <script>
