@@ -120,10 +120,50 @@
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(255,255,255,0.2);
       transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
     }
     .gallery img:hover {
       transform: scale(1.05);
       box-shadow: 0 6px 20px rgba(255,215,0,0.6);
+    }
+
+    /* ---------- Modal Styles ---------- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(255,215,0,0.6);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .modal-close:hover { color: #FFD700; }
+    #modalCaption {
+      text-align: center;
+      color: #fff;
+      margin-top: 10px;
+      font-size: 1.2rem;
     }
 
     /* ---------- Footer ---------- */
@@ -141,9 +181,7 @@
       h2 { font-size: 1.5rem; }
       .lang-btn { top: 10px; right: 10px; padding: 8px 12px; font-size: 0.9rem; }
     }
-    @media (max-width: 480px) {
-      .gallery img { height: 180px; }
-    }
+    @media (max-width: 480px) { .gallery img { height: 180px; } }
   </style>
 </head>
 <body>
@@ -151,7 +189,7 @@
   <header>
     <h1 id="title">🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
     <p id="subtitle">Khai Mook Mini Marathon 4th</p>
-    <a href="payment.html" class="btn" id="registerBtn">ลงทะเบียน/Register</a>
+    <a href="register.html" class="btn" id="registerBtn">ลงทะเบียน/Register</a>
     <button class="btn lang-btn" id="langBtn">
       <img id="langFlag" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg" alt="flag"> TH
     </button>
@@ -204,8 +242,10 @@
       <li>ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
       <li>รางวัลแฟนซี 1-5 อันดับ</li>
     </ul>
+
+    <!-- Gallery -->
     <div class="gallery">
-      <img src="https://lh5.googleusercontent.com/d/1Fmmtc8j6WYMz1rIEy25IIcWdxMjpZVSP" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" alt="เสื้อที่ระลึก">
       <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="ถ้วยรางวัล">
       <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="เหรียญรางวัล">
     </div>
@@ -223,96 +263,64 @@
     © 2025 Khai Mook Mini Marathon | All Rights Reserved
   </footer>
 
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content" id="modalImg">
+    <div id="modalCaption"></div>
+  </div>
+
   <script>
+    // ---------- Language Switch ----------
     const langBtn = document.getElementById('langBtn');
     let isThai = true;
 
     const translations = {
       TH: {
-        title: '🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4',
-        subtitle: 'Khai Mook Mini Marathon 4th',
-        register: 'ลงทะเบียน/Register',
-        dateTitle: '📅 วันเวลา & สถานที่',
-        dateText: `วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br>
-        23 November 2025, 6:00 AM <br>
-        ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
-        At King Rama IX Park, Phuket Province <br>
-        📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">เปิดแผนที่</a>`,
-        feeTitle: '💰 ค่าสมัคร',
-        feeText: 'ทุกประเภทการแข่งขัน 350 บาท (350 THB)',
-        categoryTitle: '👇 ประเภทการแข่งขัน',
-        funRunTitle: '🏃 ฟันรัน 5 กิโลเมตร',
-        funRunList: [
-          'รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง',
-          'รุ่นทั่วไป ชาย/หญิง',
-          'รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง',
-          'รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง',
-          'รุ่นน้ำหนัก 70 กก. หญิง',
-          'รุ่นน้ำหนัก 80 กก. ชาย'
-        ],
-        miniTitle: '🏃 มินิ 10.5 กิโลเมตร',
-        miniList: [
-          'รุ่นทั่วไป ชาย/หญิง',
-          'รุ่นอายุ 30-39 ปี ชาย/หญิง',
-          'รุ่นอายุ 40-49 ปี ชาย/หญิง',
-          'รุ่นอายุ 50 ปีขึ้นไป หญิง',
-          'รุ่นอายุ 50-59 ปี ชาย',
-          'รุ่นอายุ 60 ปีขึ้นไป ชาย'
-        ],
-        prizeTitle: '🎁 ของรางวัล & สิทธิพิเศษ',
-        prizeList: [
-          'นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว',
-          'รับเหรียญรางวัลหลังเข้าเส้นชัย',
-          'รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket',
-          'ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง',
-          'รางวัลแฟนซี 1-5 อันดับ'
-        ],
-        contactTitle: '📞 ติดต่อสอบถาม',
-        contactText: '086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
-        flag: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg',
-        langText: 'TH'
+        title:'🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4',
+        subtitle:'Khai Mook Mini Marathon 4th',
+        register:'ลงทะเบียน/Register',
+        dateTitle:'📅 วันเวลา & สถานที่',
+        dateText:`วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br>
+                  23 November 2025, 6:00 AM <br>
+                  ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
+                  At King Rama IX Park, Phuket Province <br>
+                  📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">เปิดแผนที่</a>`,
+        feeTitle:'💰 ค่าสมัคร',
+        feeText:'ทุกประเภทการแข่งขัน 350 บาท (350 THB)',
+        categoryTitle:'👇 ประเภทการแข่งขัน',
+        funRunTitle:'🏃 ฟันรัน 5 กิโลเมตร',
+        funRunList:['รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง','รุ่นทั่วไป ชาย/หญิง','รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง','รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง','รุ่นน้ำหนัก 70 กก. หญิง','รุ่นน้ำหนัก 80 กก. ชาย'],
+        miniTitle:'🏃 มินิ 10.5 กิโลเมตร',
+        miniList:['รุ่นทั่วไป ชาย/หญิง','รุ่นอายุ 30-39 ปี ชาย/หญิง','รุ่นอายุ 40-49 ปี ชาย/หญิง','รุ่นอายุ 50 ปีขึ้นไป หญิง','รุ่นอายุ 50-59 ปี ชาย','รุ่นอายุ 60 ปีขึ้นไป ชาย'],
+        prizeTitle:'🎁 ของรางวัล & สิทธิพิเศษ',
+        prizeList:['นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว','รับเหรียญรางวัลหลังเข้าเส้นชัย','รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket','ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง','รางวัลแฟนซี 1-5 อันดับ'],
+        contactTitle:'📞 ติดต่อสอบถาม',
+        contactText:'086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
+        flag:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg',
+        langText:'TH'
       },
       EN: {
-        title: '🏃‍♂️ Khai Mook Andaman Mini Marathon 4th',
-        subtitle: '',
-        register: 'Register',
-        dateTitle: '📅 Date & Location',
-        dateText: `Sunday, 23 November 2025, from 6:00 AM <br>
-        At King Rama IX Park, Phuket Province <br>
-        📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">Open Map</a>`,
-        feeTitle: '💰 Registration Fee',
-        feeText: 'All categories 350 THB',
-        categoryTitle: '👇 Race Categories',
-        funRunTitle: '🏃 Fun Run 5 km',
-        funRunList: [
-          'Under 15 Male/Female',
-          'General Male/Female',
-          'Over 60 Male/Female',
-          'Special: Over 70 Male/Female',
-          'Weight 70 kg Female',
-          'Weight 80 kg Male'
-        ],
-        miniTitle: '🏃 Mini 10.5 km',
-        miniList: [
-          'General Male/Female',
-          'Age 30-39 Male/Female',
-          'Age 40-49 Male/Female',
-          'Age 50+ Female',
-          'Age 50-59 Male',
-          'Age 60+ Male'
-        ],
-        prizeTitle: '🎁 Prizes & Special Rewards',
-        prizeList: [
-          'All runners receive 1 souvenir shirt',
-          'Finishers receive medals',
-          'Special Prize: Rank 1-5 receive I ❤️ Phuket Shirt',
-          'Overall Trophy Mini Male/Female',
-          'Fancy Prize 1-5 rank'
-        ],
-        contactTitle: '📞 Contact',
-        contactText: '086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
-        flag: 'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg',
-        langText: 'EN'
+        title:'🏃‍♂️ Khai Mook Andaman Mini Marathon 4th',
+        subtitle:'',
+        register:'Register',
+        dateTitle:'📅 Date & Location',
+        dateText:`Sunday, 23 November 2025, from 6:00 AM <br>
+                  At King Rama IX Park, Phuket Province <br>
+                  📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">Open Map</a>`,
+        feeTitle:'💰 Registration Fee',
+        feeText:'All categories 350 THB',
+        categoryTitle:'👇 Race Categories',
+        funRunTitle:'🏃 Fun Run 5 km',
+        funRunList:['Under 15 Male/Female','General Male/Female','Over 60 Male/Female','Special: Over 70 Male/Female','Weight 70 kg Female','Weight 80 kg Male'],
+        miniTitle:'🏃 Mini 10.5 km',
+        miniList:['General Male/Female','Age 30-39 Male/Female','Age 40-49 Male/Female','Age 50+ Female','Age 50-59 Male','Age 60+ Male'],
+        prizeTitle:'🎁 Prizes & Special Rewards',
+        prizeList:['All runners receive 1 souvenir shirt','Finishers receive medals','Special Prize: Rank 1-5 receive I ❤️ Phuket Shirt','Overall Trophy Mini Male/Female','Fancy Prize 1-5 rank'],
+        contactTitle:'📞 Contact',
+        contactText:'086-6898082 / 082-4116530 <br>085-8964999 / 094-4191658',
+        flag:'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg',
+        langText:'EN'
       }
     };
 
@@ -341,9 +349,25 @@
       isThai = !isThai;
       setLanguage(isThai ? 'TH':'EN');
     });
-
-    // ตั้งค่าเริ่มต้น
     setLanguage('TH');
+
+    // ---------- Modal Script ----------
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalCaption = document.getElementById('modalCaption');
+    const galleryImgs = document.querySelectorAll('.gallery img');
+    const modalClose = document.querySelector('.modal-close');
+
+    galleryImgs.forEach(img => {
+      img.addEventListener('click', () => {
+        modal.style.display = 'block';
+        modalImg.src = img.src;
+        modalCaption.innerText = img.alt;
+      });
+    });
+
+    modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = 'none'; });
   </script>
 
 </body>
