@@ -123,6 +123,34 @@
       color: #FFD700;
     }
 
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.gallery img {
+  width: 300px;      /* กำหนดความกว้างเท่ากัน */
+  height: 200px;     /* กำหนดความสูงเท่ากัน */
+  object-fit: cover; /* ครอบภาพเต็มกรอบโดยไม่บิดเบี้ยว */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive สำหรับมือถือ */
+@media (max-width: 768px) {
+  .gallery img {
+    width: 90%;       /* ภาพใหญ่ขึ้นตามหน้าจอมือถือ */
+    height: auto;     /* ให้สัดส่วนตามความกว้าง */
+  }
+}
 
   </style>
 </head>
