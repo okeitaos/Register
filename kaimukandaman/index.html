@@ -3,259 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4</title>
+  <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</title>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Arial', sans-serif;
       background-color: #000;
-      color: #fff;
+      color: #ddd;
       line-height: 1.6;
     }
+
     header {
-      background: url("https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC") no-repeat center center/cover;
+      background: url('https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC') no-repeat center center/cover;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      color: white;
-      background-attachment: fixed;
+      position: relative;
     }
-    header h1 {
-      font-size: 2.5rem;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-    }
-    header p {
-      font-size: 1.2rem;
-    }
-    .language-switch {
+
+    header::after {
+      content: "";
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
     }
-    .language-switch button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      background: #ff9800;
+
+    header h1 {
+      position: relative;
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: #FFD700; /* สีทอง */
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+      z-index: 1;
+    }
+
+    header p {
+      position: relative;
+      font-size: 1.2rem;
       color: #fff;
-      cursor: pointer;
-      font-size: 12px;
-      margin-left: 5px;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+      z-index: 1;
     }
-    .container {
+
+    section {
+      padding: 50px 20px;
       max-width: 1000px;
       margin: auto;
-      padding: 40px 20px;
     }
-    .section {
-      margin-bottom: 50px;
-    }
-    .section h2 {
-      text-align: center;
+
+    h2 {
+      color: #00E5FF; /* ฟ้าเทอร์ควอยซ์ */
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
       margin-bottom: 20px;
-      font-size: 1.8rem;
-      border-bottom: 2px solid #ff9800;
-      display: inline-block;
-      padding-bottom: 5px;
+      border-left: 5px solid #FFD700;
+      padding-left: 10px;
     }
-    .categories, .rewards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: #111;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(255,152,0,0.3);
-    }
-    .card h3 {
-      margin-top: 0;
-      color: #ff9800;
-    }
+
     ul {
-      padding-left: 20px;
+      list-style: none;
+      padding: 0;
     }
-    .images {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
+
+    ul li {
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-block;
       margin-top: 20px;
-    }
-    .images img {
-      max-width: 250px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-    }
-    .register-btn {
-      display: block;
-      text-align: center;
-      margin: 40px auto;
-    }
-    .register-btn a {
-      padding: 12px 25px;
-      background: #ff9800;
-      color: #fff;
+      padding: 15px 30px;
+      background: #FFD700;
+      color: #000;
       text-decoration: none;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: background 0.3s ease;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: 0.3s;
     }
-    .register-btn a:hover {
-      background: #e68900;
+
+    .btn:hover {
+      background: #ffb400;
+      transform: scale(1.05);
+    }
+
+    .gallery {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .gallery img {
+      max-width: 280px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(255,255,255,0.2);
+      transition: transform 0.3s;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111;
+      color: #aaa;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+
   <header>
-    <div class="language-switch">
-      <button onclick="setLanguage('th')">ไทย</button>
-      <button onclick="setLanguage('en')">EN</button>
-    </div>
-    <h1 id="title-th">🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4</h1>
-    <h1 id="title-en" style="display:none;">🏃‍♂️ Khai Mook Mini Marathon 4th</h1>
-    <p id="subtitle-th">📅 วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br> 📍 ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต</p>
-    <p id="subtitle-en" style="display:none;">📅 Sunday, 23 November 2025, from 6:00 AM <br> 📍 At King Rama IX Park, Phuket Province</p>
-    <p><a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank" style="color:#ff9800;">ดูแผนที่ / View Map</a></p>
+    <h1>🏃‍♂️ วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</h1>
+    <p>Khai Mook Mini Marathon 4th</p>
+    <a href="register.html" class="btn">ลงทะเบียน/Register</a>
   </header>
 
-  <div class="container">
+  <section>
+    <h2>📅 วันเวลา & สถานที่</h2>
+    <p>
+      วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00 น. เป็นต้นไป <br>
+      23 November 2025, 6:00 AM <br>
+      ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต <br>
+      At King Rama IX Park, Phuket Province <br>
+      📍 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank">เปิดแผนที่</a>
+    </p>
+  </section>
 
-    <!-- ค่าสมัคร -->
-    <div class="section">
-      <h2 id="fee-th">📌 ค่าสมัคร</h2>
-      <h2 id="fee-en" style="display:none;">📌 Entry Fee</h2>
-      <p id="fee-detail-th">350 บาท ทุกประเภทการแข่งขัน</p>
-      <p id="fee-detail-en" style="display:none;">350 THB for all categories</p>
+  <section>
+    <h2>💰 ค่าสมัคร</h2>
+    <p>ทุกประเภทการแข่งขัน 350 บาท (350 THB)</p>
+  </section>
+
+  <section>
+    <h2>👇 ประเภทการแข่งขัน</h2>
+    <h3>🏃 ฟันรัน 5 กิโลเมตร</h3>
+    <ul>
+      <li>- รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง</li>
+      <li>- รุ่นทั่วไป ชาย/หญิง</li>
+      <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง</li>
+      <li>- รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง</li>
+      <li>- รุ่นน้ำหนัก 70 กก. หญิง</li>
+      <li>- รุ่นน้ำหนัก 80 กก. ชาย</li>
+    </ul>
+    <h3>🏃 มินิ 10.5 กิโลเมตร</h3>
+    <ul>
+      <li>- รุ่นทั่วไป ชาย/หญิง</li>
+      <li>- รุ่นอายุ 30-39 ปี ชาย/หญิง</li>
+      <li>- รุ่นอายุ 40-49 ปี ชาย/หญิง</li>
+      <li>- รุ่นอายุ 50 ปีขึ้นไป หญิง</li>
+      <li>- รุ่นอายุ 50-59 ปี ชาย</li>
+      <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎁 ของรางวัล & สิทธิพิเศษ</h2>
+    <ul>
+      <li>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว</li>
+      <li>🎖 รับเหรียญรางวัลหลังเข้าเส้นชัย</li>
+      <li>👕 รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
+      <li>🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
+      <li>🎁 รางวัลแฟนซี 1-5 อันดับ</li>
+    </ul>
+    <div class="gallery">
+      <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" alt="เสื้อที่ระลึก">
+      <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="เหรียญรางวัล">
     </div>
+  </section>
 
-    <!-- ประเภทการแข่งขัน -->
-    <div class="section">
-      <h2 id="category-th">👇 ประเภทการแข่งขัน</h2>
-      <h2 id="category-en" style="display:none;">👇 Race Categories</h2>
+  <section>
+    <h2>📞 ติดต่อสอบถาม</h2>
+    <p>
+      📞 086-6898082 / 082-4116530 <br>
+      📞 085-8964999 / 094-4191658
+    </p>
+  </section>
 
-      <div id="categories-th">
-        <div class="card">
-          <h3>🏃 ฟันรัน 5 กิโลเมตร</h3>
-          <ul>
-            <li>- รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง</li>
-            <li>- รุ่นทั่วไป ชาย/หญิง</li>
-            <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง</li>
-            <li>👉 รุ่นพิเศษ</li>
-            <li>- รุ่นอายุ 70 ปีขึ้นไป ชาย/หญิง</li>
-            <li>- รุ่นน้ำหนัก 70 กิโลกรัม หญิง</li>
-            <li>- รุ่นน้ำหนัก 80 กิโลกรัม ชาย</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>🏃 มินิ 10.5 กิโลเมตร</h3>
-          <ul>
-            <li>- รุ่นทั่วไป ชาย/หญิง</li>
-            <li>- รุ่นอายุ 30-39 ปี ชาย/หญิง</li>
-            <li>- รุ่นอายุ 40-49 ปี ชาย/หญิง</li>
-            <li>- รุ่นอายุ 50 ปีขึ้นไป หญิง</li>
-            <li>- รุ่นอายุ 50-59 ปี ชาย</li>
-            <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย</li>
-          </ul>
-        </div>
-      </div>
+  <footer>
+    © 2025 Khai Mook Mini Marathon | All Rights Reserved
+  </footer>
 
-      <div id="categories-en" style="display:none;">
-        <div class="card">
-          <h3>🏃 Fun Run 5 km</h3>
-          <ul>
-            <li>- Under 15 years Male/Female</li>
-            <li>- Open Male/Female</li>
-            <li>- Age 60+ Male/Female</li>
-            <li>👉 Special Categories</li>
-            <li>- Age 70+ Male/Female</li>
-            <li>- Weight 70kg+ Female</li>
-            <li>- Weight 80kg+ Male</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>🏃 Mini Marathon 10.5 km</h3>
-          <ul>
-            <li>- Open Male/Female</li>
-            <li>- Age 30-39 Male/Female</li>
-            <li>- Age 40-49 Male/Female</li>
-            <li>- Age 50+ Female</li>
-            <li>- Age 50-59 Male</li>
-            <li>- Age 60+ Male</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- ของรางวัล -->
-    <div class="section">
-      <h2 id="reward-th">🎁 ของรางวัล</h2>
-      <h2 id="reward-en" style="display:none;">🎁 Rewards</h2>
-      <div class="rewards">
-        <div class="card">
-          <h3 id="reward-title-th">รางวัลสำหรับนักวิ่ง</h3>
-          <h3 id="reward-title-en" style="display:none;">Rewards for Runners</h3>
-          <ul id="reward-list-th">
-            <li>- อันดับที่ 1 เงินรางวัล 1,000 บาท + ถ้วยรางวัล</li>
-            <li>- อันดับที่ 2 เงินรางวัล 700 บาท + ถ้วยรางวัล</li>
-            <li>- อันดับที่ 3 เงินรางวัล 500 บาท + ถ้วยรางวัล</li>
-            <li>- อันดับที่ 4-5 ถ้วยรางวัล</li>
-            <li>- อันดับที่ 6-10 Gift Voucher 500 บาท</li>
-          </ul>
-          <ul id="reward-list-en" style="display:none;">
-            <li>- 1st Place: 1,000 THB + Trophy</li>
-            <li>- 2nd Place: 700 THB + Trophy</li>
-            <li>- 3rd Place: 500 THB + Trophy</li>
-            <li>- 4th-5th Place: Trophy</li>
-            <li>- 6th-10th Place: Gift Voucher 500 THB</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>🎗 สิทธิพิเศษ</h3>
-          <ul id="special-th">
-            <li>- เสื้อที่ระลึก 1 ตัว</li>
-            <li>- เหรียญรางวัลหลังเข้าเส้นชัย</li>
-            <li>- ถ้วย Overall Mini Marathon ชาย/หญิง</li>
-            <li>- รางวัลแฟนซี 1-5</li>
-          </ul>
-          <ul id="special-en" style="display:none;">
-            <li>- 1 Event T-shirt</li>
-            <li>- Finisher Medal</li>
-            <li>- Overall Trophy Mini Marathon Male/Female</li>
-            <li>- Fancy Costume Award (Top 5)</li>
-          </ul>
-        </div>
-      </div>
-      <div class="images">
-        <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" alt="Running Shirt">
-        <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="Trophy">
-        <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="Medal">
-      </div>
-    </div>
-
-    <!-- ปุ่มลงทะเบียน -->
-    <div class="register-btn">
-      <a href="payment.html" id="register-th">📋 ลงทะเบียน</a>
-      <a href="payment.html" id="register-en" style="display:none;">📋 Register</a>
-    </div>
-  </div>
-
-  <script>
-    function setLanguage(lang) {
-      const th = document.querySelectorAll('[id$="-th"]');
-      const en = document.querySelectorAll('[id$="-en"]');
-      if (lang === "th") {
-        th.forEach(el => el.style.display = "block");
-        en.forEach(el => el.style.display = "none");
-      } else {
-        th.forEach(el => el.style.display = "none");
-        en.forEach(el => el.style.display = "block");
-      }
-    }
-  </script>
 </body>
 </html>
