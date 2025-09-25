@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ชำระเงินค่าสมัคร</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: #0f172a;
+    color: #fff;
+  }
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #1e293b;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  }
+  h1 {
+    color: #facc15;
+    margin-bottom: 20px;
+  }
+  img.qr {
+    width: 280px;
+    margin: 20px auto;
+    border: 8px solid #fff;
+    border-radius: 12px;
+  }
+  .btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #000;
+    background: linear-gradient(90deg,#facc15,#f59e0b);
+    border-radius: 30px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(250,204,21,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📌 ชำระเงินค่าสมัคร 350 บาท</h1>
+  <p>กรุณาสแกน QR Code เพื่อชำระเงินก่อนเข้าสู่หน้าลงทะเบียน</p>
+  
+  <!-- ใส่ QR Code ที่สร้างจากธนาคาร/PromptPay -->
+  <img src="https://promptpay.io/0936494961/350" alt="QR Code" class="qr">
+  
+  <p>หลังจากชำระเงินเสร็จแล้ว กดปุ่มด้านล่างเพื่อลงทะเบียน</p>
+  <a href="register.html" class="btn">ไปหน้าลงทะเบียน</a>
+</div>
+
+</body>
+</html>
