@@ -3,279 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>งานวิ่ง Kaimuk Andaman Run</title>
+  <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4 | Khai Mook Mini Marathon 4th</title>
   <style>
     body {
-      margin: 0;
+      margin:0; padding:0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
-      background-size: 300% 300%;
-      animation: gradientBG 12s ease infinite;
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      justify-content: flex-start;
-      align-items: center;
-      text-align: center;
       overflow-x: hidden;
+      line-height: 1.7;
     }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Navbar */
-    nav {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
-      animation: slideDown 1s ease;
-    }
-
-    nav .logo {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #facc15;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { text-shadow: 0 0 10px #facc15; }
-      50% { text-shadow: 0 0 25px #facc15; }
-      100% { text-shadow: 0 0 10px #facc15; }
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #facc15;
-      font-weight: bold;
-      font-size: 1rem;
-      transition: color 0.3s, transform 0.3s;
-    }
-
-    nav ul li a:hover {
-      color: #fbbf24;
-      transform: scale(1.1);
-    }
-
-    /* Hamburger */
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-    }
-    .menu-toggle span {
-      height: 3px;
-      width: 25px;
-      background: #facc15;
-      margin: 4px 0;
-      border-radius: 5px;
-      transition: 0.3s;
-    }
-    @media (max-width: 768px) {
-      nav ul {
-        position: absolute;
-        top: 60px;
-        left: -100%;
-        width: 100%;
-        background: rgba(15, 23, 42, 0.95);
-        flex-direction: column;
-        text-align: center;
-        transition: left 0.3s ease-in-out;
-        padding: 15px 0;
-      }
-      nav ul.show { left: 0; }
-      .menu-toggle { display: flex; }
-    }
-
     header {
-      margin: 40px 20px 20px 20px;
-      animation: fadeIn 1.5s ease-in-out;
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     }
-
-    header img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
-      margin-bottom: 15px;
-      animation: bounce 3s infinite;
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    h1 {
-      font-size: 2.4rem;
+    header h1 {
+      font-size: 2.2rem;
       color: #facc15;
       margin-bottom: 10px;
+      animation: fadeInDown 1s ease;
       text-shadow: 0 0 15px rgba(250, 204, 21, 0.7);
     }
-
+    header h2 {
+      font-size: 1.2rem;
+      color: #cbd5e1;
+      animation: fadeInDown 1.2s ease;
+    }
     section {
       max-width: 900px;
-      margin: 20px auto;
-      text-align: left;
-      background: rgba(255,255,255,0.07);
-      padding: 25px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-      animation: slideUp 1.5s ease;
+      margin: 40px auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      animation: fadeInUp 1s ease;
     }
-    h2 {
-      text-align: center;
-      font-size: 1.6rem;
-      color: #fbbf24;
+    section h3 {
+      font-size: 1.5rem;
       margin-bottom: 15px;
+      color: #facc15;
+      text-align: center;
     }
-    p, ul {
-      font-size: 1.05rem;
-      line-height: 1.6;
-      color: #e2e8f0;
+    section ul {
+      list-style: none;
+      padding: 0;
     }
-    ul li { margin-bottom: 8px; }
-
-    .btn {
-      display: inline-block;
+    section ul li {
+      margin: 6px 0;
+    }
+    .btn-register {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
       padding: 14px 28px;
-      background: linear-gradient(90deg,#facc15,#f59e0b);
-      color: #000;
+      font-size: 1.1rem;
       font-weight: bold;
-      font-size: 1.2rem;
+      color: #000;
+      background: linear-gradient(90deg,#facc15,#f59e0b);
       border-radius: 30px;
       text-decoration: none;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 6px 20px rgba(250,204,21,0.4);
-      margin-top: 25px;
-      animation: fadeInUp 2s ease;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 10px 25px rgba(250,204,21,0.7);
+    .btn-register:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(250,204,21,0.6);
     }
-
     footer {
-      margin: 40px 0 20px 0;
+      text-align: center;
+      padding: 20px;
       font-size: 0.9rem;
       color: #94a3b8;
-      animation: fadeIn 2s ease-in-out;
+      background: rgba(0,0,0,0.4);
+      margin-top: 40px;
     }
-
-    /* Keyframes Animations */
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeInDown {
+      from {opacity:0; transform: translateY(-20px);}
+      to {opacity:1; transform: translateY(0);}
+    }
+    @keyframes fadeInUp {
+      from {opacity:0; transform: translateY(20px);}
+      to {opacity:1; transform: translateY(0);}
+    }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">🏃 Kaimuk Run</div>
-    <ul id="menu">
-      <li><a href="index.html">🏠 หน้าหลัก</a></li>
-      <li><a href="register.html">📝 ลงทะเบียน</a></li>
-      <li><a href="participants.html">👥 ผู้เข้าร่วม</a></li>
-      <li><a href="#contact">📞 ติดต่อเรา</a></li>
-    </ul>
-    <div class="menu-toggle" id="menu-toggle">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
   <header>
-    <img src="https://cdn-icons-png.flaticon.com/512/1041/1041883.png" alt="Running Logo">
-    <h1>Kaimuk Andaman Run 2025</h1>
-    <p>มาวิ่งไปด้วยกัน สนุก สุขภาพดี และร่วมเป็นส่วนหนึ่งของกิจกรรมดี ๆ 🏃‍♂️🏃‍♀️</p>
+    <h1>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่4</h1>
+    <h2>Khai Mook Mini Marathon 4th</h2>
   </header>
 
   <section>
-    <h2>📅 รายละเอียดงานวิ่ง</h2>
-    <p><strong>วันจัดงาน:</strong> วันอาทิตย์ที่ 15 มิถุนายน 2025</p>
-    <p><strong>สถานที่:</strong> ริมหาดอันดามัน จังหวัดพังงา</p>
-    <p><strong>เวลาเริ่มงาน:</strong> 05:00 น. - 10:00 น.</p>
-    <p><strong>ค่าสมัคร:</strong> 350 บาท ทุกประเภทการแข่งขัน / 350THB</p>
-    <p><strong>ระยะทางการแข่งขัน:</strong></p>
-    <ul>
-      <li>🏃‍♂️ Fun Run 5 km</li>
-      <li>🏃‍♀️ Mini Marathon 10.5 km</li>
-      <li>🏅 Half Marathon 21 km</li>
-    </ul>
-
-    <h2>👇 ประเภทการแข่งขัน</h2>
-    <p><strong>🏃 ฟันรัน 5 กิโลเมตร</strong></p>
-    <ul>
-      <li>รุ่นอายุไม่เกิน 15ปี ชาย/หญิง</li>
-      <li>รุ่นทั่วไป ชาย/หญิง</li>
-      <li>รุ่นอายุ 60-69 ชาย/หญิง</li>
-      <li>รุ่นอายุ 70ปีขึ้นไป ชาย/หญิง</li>
-      <li>รุ่นน้ำหนัก 70 กิโลกรัม หญิง</li>
-      <li>รุ่นน้ำหนัก 80 กิโลกรัม ชาย</li>
-    </ul>
-    <p><strong>🏃 มินิ 10.5 กิโลเมตร</strong></p>
-    <ul>
-      <li>รุ่นทั่วไป ชาย/หญิง</li>
-      <li>รุ่นอายุ 30-39ปี ชาย/หญิง</li>
-      <li>รุ่นอายุ 40-49ปี ชาย/หญิง</li>
-      <li>รุ่นอายุ 50ปีขึ้นไป หญิง</li>
-      <li>รุ่นอายุ 50-59ปี ชาย</li>
-      <li>รุ่นอายุ 60ปีขึ้นไปชาย</li>
-    </ul>
-
-    <h2>🎁 สิทธิประโยชน์ & รางวัล</h2>
-    <ul>
-      <li>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึกจำนวน 1 ตัว</li>
-      <li>🎖 รับเหรียญรางวัลที่ระลึกหลังเข้าเส้นชัยทุกคน</li>
-      <li>🎁 ของรางวัลสำหรับนักวิ่งทุกรุ่นทุกประเภท:</li>
-      <ul>
-        <li>อันดับที่ 1: 💵 1,000 บาท + 🏆 ถ้วยรางวัล</li>
-        <li>อันดับที่ 2: 💵 700 บาท + 🏆 ถ้วยรางวัล</li>
-        <li>อันดับที่ 3: 💵 500 บาท + 🏆 ถ้วยรางวัล</li>
-        <li>อันดับที่ 4-5: 🏆 ถ้วยรางวัล</li>
-        <li>อันดับที่ 6-10: 🎟 Gift Voucher 500 บาท (ร้านอาหาร O-OH Phuket)</li>
-      </ul>
-      <li>👕 รางวัลพิเศษ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
-      <li>🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
-      <li>🎭 รางวัลแฟนซี 1-5 อันดับ</li>
-    </ul>
-
-    <div style="text-align:center;">
-      <a href="register.html" class="btn">ลงทะเบียนเข้าร่วมวิ่ง</a>
-    </div>
+    <h3>📅 รายละเอียดงาน</h3>
+    <p>📌 วันอาทิตย์ที่ 23 พฤศจิกายน 2568 เวลา 06.00น. เป็นต้นไป</p>
+    <p>📅 23 November 2025</p>
+    <p>📍 ณ สวนเฉลิมพระเกียรติ ร.9 (สวนหลวง) จังหวัดภูเก็ต</p>
+    <p>📍 At King Rama IX Park, Phuket Province</p>
+    <p>🌐 <a href="https://maps.app.goo.gl/God5ZjvG1nHSoi4E9" target="_blank" style="color:#38bdf8;">Google Maps</a></p>
   </section>
 
-  <footer id="contact">
-    © 2025 KEITA PHOTO CAMERA | ติดต่อ: oresearcho@gmail.com |
-    โทร: 080-123-4567
-  </footer>
+  <section>
+    <h3>💰 ค่าสมัคร</h3>
+    <p>📌 ค่าสมัคร 350 บาท ทุกประเภทการแข่งขัน / 350 THB</p>
+  </section>
 
-  <script>
-    const menuToggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('menu');
-    menuToggle.addEventListener('click', () => {
-      menu.classList.toggle('show');
-    });
-  </script>
+  <section>
+    <h3>🏃 ประเภทการแข่งขัน</h3>
+    <ul>
+      <li><strong>ฟันรัน 5 กิโลเมตร</strong></li>
+      <li>- รุ่นอายุไม่เกิน 15ปี ชาย/หญิง</li>
+      <li>- รุ่นทั่วไป ชาย/หญิง</li>
+      <li>- รุ่นอายุ 60ปีขึ้นไป ชาย/หญิง</li>
+      <li>👉 รุ่นพิเศษ</li>
+      <li>- รุ่นอายุ 70ปีขึ้นไป ชาย/หญิง</li>
+      <li>- รุ่นน้ำหนัก 70 กิโลกรัม หญิง</li>
+      <li>- รุ่นน้ำหนัก 80 กิโลกรัม ชาย</li>
+      <br>
+      <li><strong>มินิ 10.5 กิโลเมตร</strong></li>
+      <li>- รุ่นทั่วไป ชาย/หญิง</li>
+      <li>- รุ่นอายุ 30-39ปี ชาย/หญิง</li>
+      <li>- รุ่นอายุ 40-49ปี ชาย/หญิง</li>
+      <li>- รุ่นอายุ 50ปีขึ้นไป หญิง</li>
+      <li>- รุ่นอายุ 50-59ปี ชาย</li>
+      <li>- รุ่นอายุ 60ปีขึ้นไป ชาย</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>🎁 ของที่ระลึก & รางวัล</h3>
+    <p>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึกจำนวน 1 ตัว</p>
+    <p>🎖 รับเหรียญรางวัลที่ระลึกหลังเข้าเส้นชัยทุกคน</p>
+    <ul>
+      <li>- 🥇 อันดับที่ 1 : เงินรางวัล 1,000 บาท + 🏆 ถ้วยรางวัล</li>
+      <li>- 🥈 อันดับที่ 2 : เงินรางวัล 700 บาท + 🏆 ถ้วยรางวัล</li>
+      <li>- 🥉 อันดับที่ 3 : เงินรางวัล 500 บาท + 🏆 ถ้วยรางวัล</li>
+      <li>- อันดับที่ 4-5 : 🏆 ถ้วยรางวัล</li>
+      <li>- อันดับที่ 6-10 : 🎟 Gift Voucher 500 บาท จากร้านอาหาร O-OH Phuket</li>
+      <li>- 👕 รางวัลพิเศษ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
+      <li>- 🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
+      <li>- 🎭 รางวัลแฟนซี 1-5 อันดับ</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>📞 สอบถามเพิ่มเติม</h3>
+    <p>👉 086-6898082 / 082-4116530</p>
+    <p>👉 085-8964999 / 094-4191658</p>
+  </section>
+
+  <a href="register.html" class="btn-register">ลงทะเบียน / Register Now</a>
+
+  <footer>
+    © 2025 Khai Mook Mini Marathon 4th | Designed for Runners 🏃‍♂️🏃‍♀️
+  </footer>
 </body>
 </html>
