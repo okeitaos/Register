@@ -5,14 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>วิ่งไข่มุกอันดามันมินิมาราธอน ครั้งที่ 4</title>
   <style>
-    body {
+    /* ---------- Reset & Global ---------- */
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       font-family: 'Arial', sans-serif;
       background-color: #000;
       color: #ddd;
       line-height: 1.6;
     }
 
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ---------- Header ---------- */
     header {
       background: url('https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC') no-repeat center center/cover;
       height: 100vh;
@@ -33,11 +45,12 @@
 
     header h1 {
       position: relative;
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: bold;
-      color: #FFD700; /* สีทอง */
+      color: #FFD700;
       text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
       z-index: 1;
+      margin-bottom: 10px;
     }
 
     header p {
@@ -46,41 +59,19 @@
       color: #fff;
       text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
       z-index: 1;
-    }
-
-    section {
-      padding: 50px 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    h2 {
-      color: #00E5FF; /* ฟ้าเทอร์ควอยซ์ */
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
       margin-bottom: 20px;
-      border-left: 5px solid #FFD700;
-      padding-left: 10px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    ul li {
-      margin-bottom: 8px;
     }
 
     .btn {
+      position: relative;
+      z-index: 1;
       display: inline-block;
-      margin-top: 20px;
       padding: 15px 30px;
       background: #FFD700;
       color: #000;
-      text-decoration: none;
       font-weight: bold;
       border-radius: 30px;
-      transition: 0.3s;
+      transition: all 0.3s ease;
     }
 
     .btn:hover {
@@ -88,10 +79,55 @@
       transform: scale(1.05);
     }
 
+    /* ---------- Sections ---------- */
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #00E5FF;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+      margin-bottom: 20px;
+      border-left: 5px solid #FFD700;
+      padding-left: 10px;
+      font-size: 2rem;
+    }
+
+    h3 {
+      color: #FFD700;
+      margin-bottom: 10px;
+    }
+
+    p, ul {
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+      padding-left: 10px;
+      position: relative;
+    }
+
+    ul li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #FFD700;
+    }
+
+    /* ---------- Gallery ---------- */
     .gallery {
       display: flex;
-      gap: 20px;
       flex-wrap: wrap;
+      gap: 20px;
       justify-content: center;
       margin-top: 40px;
     }
@@ -107,12 +143,26 @@
       transform: scale(1.1);
     }
 
+    /* ---------- Footer ---------- */
     footer {
       text-align: center;
       padding: 20px;
       background: #111;
       color: #aaa;
       font-size: 0.9rem;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .gallery img {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -144,45 +194,45 @@
     <h2>👇 ประเภทการแข่งขัน</h2>
     <h3>🏃 ฟันรัน 5 กิโลเมตร</h3>
     <ul>
-      <li>- รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง</li>
-      <li>- รุ่นทั่วไป ชาย/หญิง</li>
-      <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง</li>
-      <li>- รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง</li>
-      <li>- รุ่นน้ำหนัก 70 กก. หญิง</li>
-      <li>- รุ่นน้ำหนัก 80 กก. ชาย</li>
+      <li>รุ่นอายุไม่เกิน 15 ปี ชาย/หญิง</li>
+      <li>รุ่นทั่วไป ชาย/หญิง</li>
+      <li>รุ่นอายุ 60 ปีขึ้นไป ชาย/หญิง</li>
+      <li>รุ่นพิเศษ: อายุ 70 ปีขึ้นไป ชาย/หญิง</li>
+      <li>รุ่นน้ำหนัก 70 กก. หญิง</li>
+      <li>รุ่นน้ำหนัก 80 กก. ชาย</li>
     </ul>
     <h3>🏃 มินิ 10.5 กิโลเมตร</h3>
     <ul>
-      <li>- รุ่นทั่วไป ชาย/หญิง</li>
-      <li>- รุ่นอายุ 30-39 ปี ชาย/หญิง</li>
-      <li>- รุ่นอายุ 40-49 ปี ชาย/หญิง</li>
-      <li>- รุ่นอายุ 50 ปีขึ้นไป หญิง</li>
-      <li>- รุ่นอายุ 50-59 ปี ชาย</li>
-      <li>- รุ่นอายุ 60 ปีขึ้นไป ชาย</li>
+      <li>รุ่นทั่วไป ชาย/หญิง</li>
+      <li>รุ่นอายุ 30-39 ปี ชาย/หญิง</li>
+      <li>รุ่นอายุ 40-49 ปี ชาย/หญิง</li>
+      <li>รุ่นอายุ 50 ปีขึ้นไป หญิง</li>
+      <li>รุ่นอายุ 50-59 ปี ชาย</li>
+      <li>รุ่นอายุ 60 ปีขึ้นไป ชาย</li>
     </ul>
   </section>
 
   <section>
     <h2>🎁 ของรางวัล & สิทธิพิเศษ</h2>
     <ul>
-      <li>🎗 นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว</li>
-      <li>🎖 รับเหรียญรางวัลหลังเข้าเส้นชัย</li>
-      <li>👕 รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
-      <li>🏆 ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
-      <li>🎁 รางวัลแฟนซี 1-5 อันดับ</li>
+      <li>นักวิ่งทุกท่านจะได้รับเสื้อที่ระลึก 1 ตัว</li>
+      <li>รับเหรียญรางวัลหลังเข้าเส้นชัย</li>
+      <li>รางวัลพิเศษ​ อันดับ 1-5 ได้รับเสื้อ I ❤️ Phuket</li>
+      <li>ถ้วยรางวัล Overall ประเภทมินิ ชาย/หญิง</li>
+      <li>รางวัลแฟนซี 1-5 อันดับ</li>
     </ul>
     <div class="gallery">
-      <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" width="322" height="215 alt="เสื้อที่ระลึก">
-      <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" width="322" height="215 alt="ถ้วยรางวัล">
-      <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" width="322" height="215 alt="เหรียญรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1bv11wxdl-4hO-py89XdErNdAD4q-pHqC" alt="เสื้อที่ระลึก">
+      <img src="https://lh5.googleusercontent.com/d/1HHf0NdHbWLq6nPWFS0LuItn3d1chM_Gx" alt="ถ้วยรางวัล">
+      <img src="https://lh5.googleusercontent.com/d/1rvPMh8j0mZrYKCjUfC1dOg0ut-BubrUL" alt="เหรียญรางวัล">
     </div>
   </section>
 
   <section>
     <h2>📞 ติดต่อสอบถาม</h2>
     <p>
-      📞 086-6898082 / 082-4116530 <br>
-      📞 085-8964999 / 094-4191658
+      086-6898082 / 082-4116530 <br>
+      085-8964999 / 094-4191658
     </p>
   </section>
 
