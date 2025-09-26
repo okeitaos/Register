@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Approve Registrations</title>
+<title>Admin - Approve Registrations</title>
 <style>
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
+  background-color: #121212;
+  color: #eee;
   margin: 0;
   padding: 20px;
-  color: #eee;
 }
 h1 {
   text-align: center;
@@ -20,106 +20,114 @@ h1 {
 .stats {
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.stat {
-  background: #1f1f1f;
+.stat-card {
+  background-color: #1f1f1f;
   padding: 15px 25px;
-  border-radius: 12px;
-  text-align: center;
+  border-radius: 10px;
   margin: 5px;
   flex: 1 1 120px;
-}
-.stat p { margin: 5px 0; font-weight: bold; }
-.stat .number { font-size: 1.5rem; color: #FFD700; }
-
-/* Search */
-#searchInput {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  margin: 0 auto 20px;
-  display: block;
-  background: #1f1f1f;
-  color: #fff;
-}
-
-/* Filter Buttons */
-.filters {
   text-align: center;
-  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+.stat-card p { margin: 5px 0; font-size: 1rem; }
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 10px;
 }
 .filters button {
-  margin: 5px;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 16px;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
+  background-color: #333;
+  color: #eee;
   font-weight: bold;
   transition: 0.3s;
 }
-.filters button.active { background: #FFD700; color: #000; }
-.filters button:not(.active) { background: #1f1f1f; color: #fff; }
-.filters button:hover:not(.active) { background: #333; }
-
-/* Cards */
+.filters button.active, .filters button:hover {
+  background-color: #28a745;
+  color: #fff;
+}
+#searchInput {
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 8px 12px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #1f1f1f;
+  color: #eee;
+}
 .card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 15px;
 }
 .card {
-  background: #1f1f1f;
+  background-color: #1f1f1f;
+  border-radius: 10px;
   padding: 15px;
-  border-radius: 12px;
+  width: 220px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.8);
 }
 .card img.slip {
   max-width: 100%;
-  border-radius: 8px;
   margin: 10px 0;
-  cursor: pointer;
-}
-.card button.approve {
-  background: #28a745;
-  color: #fff;
   border-radius: 6px;
-  padding: 8px 15px;
-  margin-top: 10px;
-  border: none;
   cursor: pointer;
+  transition: transform 0.2s;
 }
-.card button.approve:disabled {
-  background: #555;
+.card img.slip:hover {
+  transform: scale(1.05);
+}
+.card button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #28a745;
+  color: #fff;
+  font-weight: 500;
+  margin-top: 8px;
+  transition: 0.3s;
+}
+.card button:disabled {
+  background-color: #555;
   cursor: not-allowed;
 }
 
-/* Modal */
+/* ---------- Modal ---------- */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  left:0; top:0;
-  width:100%; height:100%;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
   overflow: auto;
 }
 .modal-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   position: relative;
   padding: 10px;
 }
 .modal-content img {
   display: block;
-  width: auto;
-  height: auto;
   max-width: 90vw;
   max-height: 90vh;
   border-radius: 8px;
@@ -135,11 +143,13 @@ h1 {
   cursor: pointer;
   z-index: 1001;
 }
-.close:hover { color: #FFD700; }
+.close:hover { color: #ff4d4d; }
 
-@media (max-width: 768px) {
+/* Responsive */
+@media(max-width:600px){
   .stats { flex-direction: column; align-items: center; }
-  .filters button { width: 80%; margin: 5px 0; }
+  .stat-card { width: 80%; }
+  .card { width: 90%; }
 }
 </style>
 </head>
@@ -148,18 +158,18 @@ h1 {
 <h1>Admin Panel - Approve Registrations</h1>
 
 <div class="stats">
-  <div class="stat"><p>Total</p><p class="number" id="totalCount">0</p></div>
-  <div class="stat"><p>Pending</p><p class="number" id="pendingCount">0</p></div>
-  <div class="stat"><p>Approved</p><p class="number" id="approvedCount">0</p></div>
+  <div class="stat-card">All: <p id="totalCount">0</p></div>
+  <div class="stat-card">Pending: <p id="pendingCount">0</p></div>
+  <div class="stat-card">Approved: <p id="approvedCount">0</p></div>
 </div>
-
-<input type="text" id="searchInput" placeholder="Search by name, surname or email..."/>
 
 <div class="filters">
   <button class="filter-btn active" data-status="All">All</button>
   <button class="filter-btn" data-status="Pending">Pending</button>
   <button class="filter-btn" data-status="Approved">Approved</button>
 </div>
+
+<input type="text" id="searchInput" placeholder="ค้นหาชื่อ / นามสกุล / อีเมล">
 
 <div class="card-container" id="cardContainer"></div>
 
@@ -174,12 +184,11 @@ h1 {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-// Supabase Config
+// ---------- Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// EmailJS Init
 emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
@@ -189,32 +198,32 @@ let currentStatusFilter = "All";
 
 const cardContainer = document.getElementById("cardContainer");
 const searchInput = document.getElementById("searchInput");
+const filterButtons = document.querySelectorAll(".filter-btn");
 
-// Load Participants
+// ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); cardContainer.innerHTML="<p>Error loading data</p>"; return;}
+  if(error){ console.error(error); return;}
   participantsData = data || [];
   renderCards();
 }
 
-// Render Cards
-function renderCards() {
+// ---------- Render Cards ----------
+function renderCards(){
   const filterText = searchInput.value.toLowerCase();
   const filtered = participantsData.filter(p=>{
-    const status = p.status || "Pending"; // Treat undefined/null as Pending
-    const matchesStatus = currentStatusFilter==="All" || status===currentStatusFilter;
+    const status = p.status || "Pending";
+    const matchesStatus = currentStatusFilter==="All" || 
+      (currentStatusFilter==="Pending" && (!p.status || p.status==="Pending")) ||
+      status===currentStatusFilter;
     const matchesSearch = `${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(filterText);
     return matchesStatus && matchesSearch;
   });
 
   // Update stats
-  const total = participantsData.length;
-  const pending = participantsData.filter(p=>!p.status || p.status==="Pending").length;
-  const approved = participantsData.filter(p=>p.status==="Approved").length;
-  document.getElementById("totalCount").textContent = total;
-  document.getElementById("pendingCount").textContent = pending;
-  document.getElementById("approvedCount").textContent = approved;
+  document.getElementById("totalCount").textContent = participantsData.length;
+  document.getElementById("pendingCount").textContent = participantsData.filter(p=>!p.status || p.status==="Pending").length;
+  document.getElementById("approvedCount").textContent = participantsData.filter(p=>p.status==="Approved").length;
 
   cardContainer.innerHTML = "";
   filtered.forEach(p=>{
@@ -235,39 +244,48 @@ function renderCards() {
   });
 }
 
-// Approve Participant
-async function approve(participant){
-  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
-  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("Failed to update status!"); console.error(error); return;}
-  const templateParams = { to_email: participant.email, to_name:`${participant.first_name} ${participant.last_name}`, category: participant.category || "-" };
+// ---------- Approve ----------
+async function approve(p){
+  if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
+  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
+  if(error){ alert("Failed!"); return;}
+
+  // Send Email
+  const templateParams = {
+    to_email: p.email,
+    to_name: `${p.first_name} ${p.last_name}`,
+    category: p.category || "-"
+  };
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(res=>{ alert(`Approved & email sent to ${participant.email}`); loadParticipants(); })
-    .catch(err=>{ alert(`Approved but email failed to send to ${participant.email}`); loadParticipants(); });
+    .then(()=>{ alert(`Approved & email sent to ${p.email}`); renderCards(); })
+    .catch(()=>{ alert(`Approved but email failed to send to ${p.email}`); renderCards(); });
 }
 
-// Modal
-function openModal(url){
-  document.getElementById("slipImage").src = url;
-  document.getElementById("slipModal").style.display = "block";
-}
-function closeModal(){ document.getElementById("slipModal").style.display = "none"; }
+// ---------- Modal ----------
+function openModal(url){ document.getElementById("slipImage").src=url; document.getElementById("slipModal").style.display="flex"; }
+function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// Filter buttons
-document.querySelectorAll(".filter-btn").forEach(btn=>{
+// ---------- Filters ----------
+filterButtons.forEach(btn=>{
   btn.addEventListener("click",()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    filterButtons.forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     currentStatusFilter = btn.dataset.status;
     renderCards();
   });
 });
-
-// Search
 searchInput.addEventListener("input", renderCards);
 
-// Load data
+// ---------- Init ----------
 loadParticipants();
+
+// ---------- Security ----------
+document.addEventListener("contextmenu", e=>{ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
+document.addEventListener("keydown", e=>{ 
+  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ 
+    e.preventDefault(); alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด"); 
+  }
+});
 </script>
 </body>
 </html>
