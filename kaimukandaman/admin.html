@@ -16,131 +16,132 @@ h1 {
   text-align: center;
   margin-bottom: 20px;
   color: #fff;
+  font-size: 2rem;
 }
-
-/* ---------- Stats ---------- */
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-.stats div {
-  font-size: 1rem;
-}
-
-/* ---------- Filter Buttons ---------- */
-.filter-btns {
+#stats {
   text-align: center;
   margin-bottom: 20px;
+  font-size: 1rem;
 }
-.filter-btns button {
-  padding: 8px 16px;
-  margin: 0 5px;
+#stats span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+#searchBar {
+  display: block;
+  margin: 10px auto 20px auto;
+  width: 90%;
+  max-width: 400px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+#cardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* Card */
+.card {
+  background: #1f1f1f;
+  border-radius: 8px;
+  padding: 15px;
+  width: 220px;
+  color: #eee;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+.card img.slip {
+  max-width: 100px;
+  margin: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card img.slip:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+}
+.card button {
+  padding: 6px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  background: #333;
-  color: #fff;
-  transition: 0.3s;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  width: 100%;
 }
-.filter-btns button:hover {
+button.approve {
+  background: #28a745;
+  color: #fff;
+  font-weight: 500;
+}
+button.approve:hover:not(:disabled) {
+  background: #218838;
+}
+button:disabled {
   background: #555;
+  cursor: not-allowed;
 }
 
-/* ---------- Cards ---------- */
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-}
-.card {
-  background: #1e1e1e;
-  padding: 15px;
-  border-radius: 10px;
-  width: 260px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  text-align: center;
-}
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 1.1rem;
-  color: #ffd700;
-}
-.card p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #fff;
-}
-
-/* ---------- Modal ---------- */
-/* ---------- Modal ---------- */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.9);
-  display: flex;               /* ใช้ flex container */
-  justify-content: center;     /* แนวนอนตรงกลาง */
-  align-items: center;         /* แนวตั้งตรงกลาง */
-  overflow: auto;              /* scroll ถ้าภาพใหญ่ */
+  background-color: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
 }
 .modal-content {
   position: relative;
   padding: 10px;
 }
 .modal-content img {
-  max-width: 70vw;
-  max-height: 70vh;
+  max-width: 60vw;
+  max-height: 80vh;
   border-radius: 8px;
   object-fit: contain;
 }
 .close {
-  position: absolute;          /* วางปุ่ม close บน modal-content */
+  position: absolute;
   top: -10px;
   right: -10px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   line-height: 32px;
   text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
   cursor: pointer;
+  z-index: 1001;
 }
-
 .close:hover { color: #ff4d4d; }
 
-/* ---------- Card Image ---------- */
-img.slip {
-  max-width: 100px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-
-/* ---------- Approve Button ---------- */
-button.approve {
-  background: #28a745;
-  color: #fff;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-button.approve:hover:not(:disabled) { background: #218838; }
-button:disabled { background: #555; cursor: not-allowed; }
-
-/* ---------- Responsive ---------- */
 @media (max-width: 768px) {
-  .cards { flex-direction: column; align-items: center; }
-  img.slip { max-width: 80px; }
+  .card { width: 45%; }
+  .modal-content img { max-width: 90vw; max-height: 70vh; }
+}
+@media (max-width: 480px) {
+  .card { width: 90%; }
 }
 </style>
 </head>
@@ -148,30 +149,23 @@ button:disabled { background: #555; cursor: not-allowed; }
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<!-- Stats -->
-<div class="stats">
-  <div>Total: <span id="totalCount">0</span></div>
-  <div>Pending: <span id="pendingCount">0</span></div>
-  <div>Approved: <span id="approvedCount">0</span></div>
+<div id="stats">
+  Total: <span id="totalCount">0</span> |
+  Pending: <span id="pendingCount">0</span> |
+  Approved: <span id="approvedCount">0</span>
 </div>
 
-<!-- Filter Buttons -->
-<div class="filter-btns">
-  <button onclick="filterCards('All')">All</button>
-  <button onclick="filterCards('Pending')">Pending</button>
-  <button onclick="filterCards('Approved')">Approved</button>
-</div>
+<input type="text" id="searchBar" placeholder="ค้นหาชื่อ / นามสกุล / อีเมล">
 
-<!-- Cards Container -->
-<div class="cards" id="cardsContainer"></div>
+<div id="cardsContainer"></div>
 
 <!-- Modal -->
-<!-- <div id="slipModal" class="modal">
+<div id="slipModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
     <img id="slipImage" src="" alt="Slip Image"/>
   </div>
-</div> -->
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -186,78 +180,57 @@ emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
-// ---------- Data ----------
-let participantsData = [];
-let currentFilter = "All";
+let allParticipants = [];
 
 // ---------- Load Participants ----------
-async function loadParticipants(){
+async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); return;}
-  participantsData = data || [];
-  renderCards();
+  if(error){ console.error(error); return; }
+  allParticipants = data || [];
+  renderCards(allParticipants);
   updateStats();
 }
 
 // ---------- Render Cards ----------
-function renderCards(){
+function renderCards(list) {
   const container = document.getElementById("cardsContainer");
   container.innerHTML = "";
-  const filtered = participantsData.filter(p=>{
-    if(currentFilter==="All") return true;
-    if(currentFilter==="Pending") return !p.status || p.status!=="Approved";
-    if(currentFilter==="Approved") return p.status==="Approved";
-  });
+  if(list.length === 0){ container.innerHTML = "<p>ไม่พบผู้สมัคร</p>"; return; }
 
-  filtered.forEach(p=>{
+  list.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <h3>${p.first_name} ${p.last_name}</h3>
-      <p>Email: ${p.email || "-"}</p>
-      <p>Category: ${p.category || "-"}</p>
+      <div><strong>${p.first_name} ${p.last_name}</strong></div>
+      <div>${p.email || "-"}</div>
+      <div>Category: ${p.category || "-"}</div>
+      <div>Status: ${p.status || "Pending"}</div>
       ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
-      <p>Status: ${p.status || "Pending"}</p>
       <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
     `;
     container.appendChild(card);
 
     const btn = card.querySelector(".approve");
-    btn.addEventListener("click", ()=>approve(p));
+    btn.addEventListener("click",()=>approve(p));
   });
 }
 
-// ---------- Filter ----------
-function filterCards(status){
-  currentFilter = status;
-  renderCards();
-}
-
-// ---------- Update Stats ----------
-function updateStats(){
-  const total = participantsData.length;
-  const approved = participantsData.filter(p=>p.status==="Approved").length;
-  const pending = total - approved;
-  document.getElementById("totalCount").innerText = total;
-  document.getElementById("approvedCount").innerText = approved;
-  document.getElementById("pendingCount").innerText = pending;
-}
-
 // ---------- Approve ----------
-async function approve(p){
-  if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
-  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
-  if(error){ alert("Failed"); return;}
+async function approve(participant){
+  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
+  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
+  if(error){ alert("Failed!"); console.error(error); return; }
+  
+  // Email send
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email: participant.email,
+    to_name: `${participant.first_name} ${participant.last_name}`,
+    category: participant.category || "-"
+  }).then(()=>console.log("Email sent")).catch(err=>console.error(err));
 
-  // Send Email (optional)
-  const templateParams = {
-    to_email: p.email,
-    to_name: `${p.first_name} ${p.last_name}`,
-    category: p.category || "-"
-  };
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(res=>{ console.log("Email sent"); loadParticipants(); })
-    .catch(err=>{ console.error(err); loadParticipants(); });
+  participant.status = "Approved";
+  renderCards(allParticipants);
+  updateStats();
 }
 
 // ---------- Modal ----------
@@ -265,9 +238,28 @@ function openModal(url){
   document.getElementById("slipImage").src = url;
   document.getElementById("slipModal").style.display = "flex";
 }
-function closeModal(){ document.getElementById("slipModal").style.display = "none"; }
+function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// ---------- Load ----------
+// ---------- Stats ----------
+function updateStats(){
+  const total = allParticipants.length;
+  const pending = allParticipants.filter(p=>!p.status || p.status==="Pending").length;
+  const approved = allParticipants.filter(p=>p.status==="Approved").length;
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("pendingCount").textContent = pending;
+  document.getElementById("approvedCount").textContent = approved;
+}
+
+// ---------- Search Filter ----------
+document.getElementById("searchBar").addEventListener("input", e=>{
+  const keyword = e.target.value.toLowerCase();
+  const filtered = allParticipants.filter(p=>{
+    return (p.first_name + " " + p.last_name + " " + (p.email||"")).toLowerCase().includes(keyword);
+  });
+  renderCards(filtered);
+});
+
+// ---------- Load Data ----------
 loadParticipants();
 </script>
 </body>
