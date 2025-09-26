@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel - Approve Registrations</title>
+<title>Admin - Approve Registrations</title>
 <style>
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #121212;
   margin: 0;
   padding: 20px;
-  color: #fff;
+  color: #eee;
 }
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #FFD700;
+  color: #fff;
 }
 
 /* ---------- Stats ---------- */
@@ -26,95 +26,94 @@ h1 {
   margin-bottom: 20px;
 }
 .stat-card {
-  background: #1e1e1e;
+  background: #1f1f1f;
   padding: 15px 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   text-align: center;
-  flex: 1 1 120px;
+  min-width: 120px;
   margin: 5px;
+  flex: 1 1 120px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   transition: transform 0.2s;
 }
-.stat-card:hover { transform: translateY(-2px); }
-.stat-card h2 { margin: 0; font-size: 1.5rem; color: #00E5FF; }
-.stat-card p { margin: 5px 0 0; font-size: 0.9rem; color: #ccc; }
+.stat-card:hover { transform: scale(1.05); }
+.stat-card h2 { margin:5px 0; font-size:1.2rem; color:#FFD700; }
+.stat-card p { margin:0; font-size:0.9rem; color:#aaa; }
 
-/* ---------- Filter/Search ---------- */
-.controls {
+/* ---------- Filters ---------- */
+.filters {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  justify-content: center;
   margin-bottom: 15px;
-}
-.controls .buttons {
-  display: flex;
-  gap: 10px;
   flex-wrap: wrap;
 }
-.controls button {
+.filters button {
   padding: 8px 16px;
+  margin: 5px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  background: #333;
+  font-weight: 500;
+  background: #1f1f1f;
   color: #fff;
-  transition: 0.3s;
+  box-shadow: 0 3px 8px rgba(255,255,255,0.1);
+  transition: 0.2s;
 }
-.controls button.active, .controls button:hover {
-  background: #FFD700;
-  color: #000;
+.filters button.active, .filters button:hover { background: #FFD700; color: #000; }
+
+/* ---------- Search ---------- */
+.search-box {
+  text-align: center;
+  margin-bottom: 15px;
 }
-.controls input {
+.search-box input {
   padding: 8px 12px;
+  width: 80%;
+  max-width: 300px;
   border-radius: 8px;
   border: none;
-  flex: 1 1 200px;
-  margin-top: 5px;
+  font-size: 1rem;
 }
 
 /* ---------- Cards ---------- */
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 15px;
-  justify-content: center;
 }
 .card {
-  background: #1e1e1e;
+  background: #1f1f1f;
   padding: 15px;
   border-radius: 12px;
-  width: 260px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: transform 0.2s;
 }
-.card:hover { transform: translateY(-2px); }
-.card img {
-  max-width: 100%;
+.card:hover { transform: translateY(-3px); }
+.card img.slip {
+  width: 100px;
+  height: auto;
   border-radius: 8px;
+  margin-bottom: 10px;
   cursor: pointer;
 }
-.card h3 { margin: 10px 0 5px; font-size: 1.1rem; }
-.card p { margin: 3px 0; font-size: 0.9rem; color: #ccc; }
-.card button {
-  margin-top: 8px;
-  padding: 6px 12px;
-  width: 100%;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
+
+/* ---------- Buttons ---------- */
+.card button.approve {
   background: #28a745;
   color: #fff;
-  transition: 0.3s;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-top: 5px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
 }
-.card button:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-.card button:hover:not(:disabled) {
-  background: #218838;
-}
+.card button.approve:hover:not(:disabled) { background: #218838; }
+.card button:disabled { background: #555; cursor: not-allowed; }
 
 /* ---------- Modal ---------- */
 .modal {
@@ -124,21 +123,28 @@ h1 {
   left:0; top:0;
   width:100%; height:100%;
   background: rgba(0,0,0,0.9);
-  display: flex;
   justify-content: center;
   align-items: center;
 }
-.modal img {
-  max-width: 95vw;
+.modal-content {
+  position: relative;
+  max-width: 90vw;
   max-height: 90vh;
-  border-radius: 10px;
+  padding: 10px;
+}
+.modal-content img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
   object-fit: contain;
 }
 .close {
   position: fixed;
-  top: 15px;
   right: 15px;
-  font-size: 28px;
+  top: 15px;
+  font-size: 30px;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
@@ -148,7 +154,7 @@ h1 {
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .stats { flex-direction: column; align-items: center; }
-  .controls { flex-direction: column; gap: 10px; }
+  .filters { justify-content: center; }
 }
 </style>
 </head>
@@ -156,132 +162,140 @@ h1 {
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<!-- Stats -->
 <div class="stats">
-  <div class="stat-card"><h2 id="totalCount">0</h2><p>All</p></div>
+  <div class="stat-card"><h2 id="totalCount">0</h2><p>Total</p></div>
   <div class="stat-card"><h2 id="pendingCount">0</h2><p>Pending</p></div>
   <div class="stat-card"><h2 id="approvedCount">0</h2><p>Approved</p></div>
 </div>
 
-<!-- Controls -->
-<div class="controls">
-  <div class="buttons">
-    <button class="status-btn active" data-status="All">All</button>
-    <button class="status-btn" data-status="Pending">Pending</button>
-    <button class="status-btn" data-status="Approved">Approved</button>
-  </div>
-  <input type="text" id="searchInput" placeholder="ค้นหา ชื่อ / นามสกุล / อีเมล">
+<div class="filters">
+  <button class="filter-btn active" data-status="all">All</button>
+  <button class="filter-btn" data-status="Pending">Pending</button>
+  <button class="filter-btn" data-status="Approved">Approved</button>
 </div>
 
-<!-- Cards -->
-<div class="card-container" id="cardContainer"></div>
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="Search by name, surname, email...">
+</div>
+
+<div class="cards-container" id="cardsContainer"></div>
 
 <!-- Modal -->
-<div class="modal" id="slipModal">
-  <span class="close" onclick="closeModal()">&times;</span>
-  <img id="slipImage" src="" alt="Slip">
+<div id="slipModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img id="slipImage" src="" alt="Slip Image"/>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-// ---------- Supabase ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ---------- EmailJS ----------
+// EmailJS
 emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
-let participants = [];
-let currentStatusFilter = "All";
+let participantsData = [];
+let currentFilter = "all";
 
-// ---------- Load Participants ----------
+// Load Participants
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); return; }
-  participants = data.map(p => ({...p, status: (p.status||"Pending")}));
-  renderStats();
+  if(error){ console.error(error); alert("Error loading data"); return;}
+  participantsData = data || [];
   renderCards();
+  updateStats();
 }
 
-// ---------- Render Stats ----------
-function renderStats(){
-  const total = participants.length;
-  const pending = participants.filter(p=>p.status.toLowerCase()==="pending").length;
-  const approved = participants.filter(p=>p.status.toLowerCase()==="approved").length;
-  document.getElementById("totalCount").innerText = total;
-  document.getElementById("pendingCount").innerText = pending;
-  document.getElementById("approvedCount").innerText = approved;
-}
-
-// ---------- Render Cards ----------
+// Render Cards
 function renderCards(){
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const container = document.getElementById("cardContainer");
+  const container = document.getElementById("cardsContainer");
   container.innerHTML = "";
 
-  participants.filter(p=>{
-    const matchesStatus = currentStatusFilter==="All" || p.status.toLowerCase()===currentStatusFilter.toLowerCase();
-    const matchesSearch = `${p.first_name} ${p.last_name} ${p.email || ""}`.toLowerCase().includes(search);
-    return matchesStatus && matchesSearch;
-  }).forEach(p=>{
+  const searchText = document.getElementById("searchInput").value.toLowerCase();
+
+  const filtered = participantsData.filter(p=>{
+    const matchStatus = currentFilter==="all" || p.status===currentFilter;
+    const matchSearch = `${p.first_name} ${p.last_name} ${p.email || ""}`.toLowerCase().includes(searchText);
+    return matchStatus && matchSearch;
+  });
+
+  if(filtered.length===0){
+    container.innerHTML="<p style='text-align:center; color:#aaa'>No applicants found</p>";
+    return;
+  }
+
+  filtered.forEach(p=>{
     const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
+    card.className="card";
+    card.innerHTML=`
       <h3>${p.first_name} ${p.last_name}</h3>
       <p>Email: ${p.email || "-"}</p>
       <p>Category: ${p.category || "-"}</p>
-      ${p.slip_url ? `<img src="${p.slip_url}" onclick="openModal('${p.slip_url}')"/>` : ""}
-      <button class="approve-btn" ${p.status.toLowerCase()==="approved"?"disabled":""}>Approve</button>
+      <p>Status: ${p.status || "Pending"}</p>
+      ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
+      <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
     `;
     container.appendChild(card);
-    card.querySelector(".approve-btn")?.addEventListener("click",()=>approve(p));
+
+    const btn = card.querySelector(".approve");
+    btn.addEventListener("click",()=>approveParticipant(p));
   });
 }
 
-// ---------- Approve ----------
-async function approve(p){
+// Approve
+async function approveParticipant(p){
   if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
-  if(error){ alert("Failed"); return; }
-  p.status = "Approved";
-
-  const templateParams = {
+  if(error){ alert("Failed!"); return;}
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID,{
     to_email: p.email,
     to_name: `${p.first_name} ${p.last_name}`,
     category: p.category || "-"
-  };
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(()=>{ alert(`Approved & email sent to ${p.email}`); renderStats(); renderCards(); })
-    .catch(()=>{ alert(`Approved but email failed to send`); renderStats(); renderCards(); });
+  }).then(()=>{ alert("Approved & email sent"); }).catch(()=>{ alert("Approved but email failed"); });
+  loadParticipants();
 }
 
-// ---------- Status Buttons ----------
-document.querySelectorAll(".status-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentStatusFilter = btn.dataset.status;
-    renderCards();
-  });
-});
-
-// ---------- Search ----------
-document.getElementById("searchInput").addEventListener("input", renderCards);
-
-// ---------- Modal ----------
+// Modal
 function openModal(url){
   document.getElementById("slipImage").src=url;
   document.getElementById("slipModal").style.display="flex";
 }
-function closeModal(){
-  document.getElementById("slipModal").style.display="none";
+function closeModal(){ document.getElementById("slipModal").style.display="none"; }
+
+// Filters
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.status;
+    renderCards();
+  });
+});
+
+// Search
+document.getElementById("searchInput").addEventListener("input", renderCards);
+
+// Stats
+function updateStats(){
+  const total = participantsData.length;
+  const pending = participantsData.filter(p=>p.status==="Pending").length;
+  const approved = participantsData.filter(p=>p.status==="Approved").length;
+  document.getElementById("totalCount").innerText=total;
+  document.getElementById("pendingCount").innerText=pending;
+  document.getElementById("approvedCount").innerText=approved;
 }
 
-// ---------- Load ----------
+// Security
+document.addEventListener("contextmenu", e=>{ e.preventDefault(); });
+document.addEventListener("keydown", e=>{ if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ e.preventDefault(); } });
+
+// Initial Load
 loadParticipants();
 </script>
 </body>
