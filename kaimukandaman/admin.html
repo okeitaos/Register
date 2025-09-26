@@ -8,111 +8,117 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #121212;
-  color: #eee;
   margin: 0;
   padding: 20px;
+  color: #eee;
 }
 h1 {
   text-align: center;
   margin-bottom: 20px;
   color: #fff;
+  font-size: 2rem;
 }
+
+/* ---------- Stats ---------- */
 .stats {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
-.stats div {
+.stat-card {
   background: #1e1e1e;
-  padding: 10px 15px;
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 15px 25px;
   text-align: center;
-  min-width: 100px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  min-width: 120px;
+  flex: 1;
+  max-width: 180px;
+  transition: transform 0.2s;
 }
-.controls {
+.stat-card:hover { transform: translateY(-5px); }
+.stat-title { font-size: 0.9rem; color: #aaa; margin: 0; }
+.stat-number { font-size: 1.5rem; font-weight: bold; color: #28a745; margin: 5px 0 0 0; }
+
+/* ---------- Filters & Search ---------- */
+.filters {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
+  gap: 10px;
   margin-bottom: 20px;
 }
-.controls input[type="text"] {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  width: 100%;
-  max-width: 250px;
-}
-.controls .filters button {
+.filters button {
   padding: 8px 16px;
-  margin-left: 5px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  background: #444;
-  color: #fff;
+  background: #333;
+  color: #eee;
+  font-weight: 500;
   transition: 0.3s;
 }
-.controls .filters button.active, .controls .filters button:hover {
+.filters button.active, .filters button:hover {
   background: #28a745;
+  color: #fff;
+}
+#searchInput {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  margin-left: 10px;
+  width: 200px;
+  max-width: 80%;
 }
 
-#cardsContainer {
-  display: flex;
-  flex-wrap: wrap;
+/* ---------- Card Container ---------- */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
   gap: 15px;
-  justify-content: center;
 }
-
 .card {
   background: #1e1e1e;
-  border-radius: 10px;
   padding: 15px;
-  width: 230px;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s;
+  gap: 10px;
 }
-.card:hover { transform: translateY(-5px); }
-
+.card p { margin: 0; font-size: 0.9rem; }
+.card .status { font-weight: bold; }
 .card img.slip {
-  max-width: 100px;
+  max-width: 100%;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
-
-.card p {
-  margin: 4px 0;
-  font-size: 0.9rem;
-}
-
+.card img.slip:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 .card button.approve {
-  padding: 6px 12px;
+  padding: 8px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 14px;
   background: #28a745;
   color: #fff;
-  margin-top: 8px;
-  width: 100%;
+  font-weight: 500;
+  margin-top: 5px;
   transition: 0.3s;
 }
-.card button.approve:hover:not(:disabled) { background: #218838; }
-.card button:disabled { background: #555; cursor: not-allowed; }
+.card button.approve:hover:not(:disabled) { background: #218838; transform: translateY(-2px); }
+.card button.approve:disabled { background: #555; cursor: not-allowed; }
 
 /* ---------- Modal ---------- */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
+  left:0; top:0;
+  width:100%; height:100%;
   background-color: rgba(0,0,0,0.9);
   overflow: auto;
 }
@@ -135,20 +141,18 @@ h1 {
 }
 .close {
   position: fixed;
-  right: 15px;
-  top: 15px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #fff;
-  cursor: pointer;
-  z-index: 1001;
+  right: 15px; top: 15px;
+  font-size: 30px; font-weight: bold; color:#fff;
+  cursor: pointer; z-index:1001;
 }
 .close:hover { color: #ff4d4d; }
 
-@media (max-width: 600px) {
-  .controls { flex-direction: column; gap: 10px; }
-  .card { width: 90%; }
-  .stats { flex-direction: column; gap: 10px; align-items: center; }
+/* ---------- Responsive ---------- */
+@media (max-width: 600px){
+  .stats { gap: 10px; }
+  .stat-card { min-width: 45%; max-width: 45%; }
+  #searchInput { margin-top: 10px; width: 100%; }
+  .filters { justify-content: center; }
 }
 </style>
 </head>
@@ -158,22 +162,21 @@ h1 {
 
 <!-- Stats -->
 <div class="stats">
-  <div id="totalCount">Total: 0</div>
-  <div id="pendingCount">Pending: 0</div>
-  <div id="approvedCount">Approved: 0</div>
+  <div class="stat-card"><p class="stat-title">Total</p><p id="totalCount" class="stat-number">0</p></div>
+  <div class="stat-card"><p class="stat-title">Pending</p><p id="pendingCount" class="stat-number">0</p></div>
+  <div class="stat-card"><p class="stat-title">Approved</p><p id="approvedCount" class="stat-number">0</p></div>
 </div>
 
-<!-- Search & Filter -->
-<div class="controls">
-  <input type="text" id="searchInput" placeholder="ค้นหา ชื่อ/นามสกุล/อีเมล">
-  <div class="filters">
-    <button data-status="All" class="active">All</button>
-    <button data-status="Pending">Pending</button>
-    <button data-status="Approved">Approved</button>
-  </div>
+<!-- Filters & Search -->
+<div class="filters">
+  <button data-status="All" class="active">All</button>
+  <button data-status="Pending">Pending</button>
+  <button data-status="Approved">Approved</button>
+  <input type="text" id="searchInput" placeholder="Search by name/email"/>
 </div>
 
-<div id="cardsContainer"></div>
+<!-- Card Container -->
+<div class="card-container" id="cardContainer"></div>
 
 <!-- Modal -->
 <div id="slipModal" class="modal">
@@ -186,92 +189,84 @@ h1 {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
+// ---------- Supabase Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ---------- EmailJS ----------
 emailjs.init("xyPTiaVqlFqMrd_3U"); 
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
+// ---------- Variables ----------
 let participantsData = [];
 let currentStatusFilter = "All";
 const searchInput = document.getElementById("searchInput");
+const cardContainer = document.getElementById("cardContainer");
 
-async function loadParticipants() {
+// ---------- Load Participants ----------
+async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); alert("Error loading data"); return;}
+  if(error){ console.error(error); return; }
   participantsData = data || [];
-  updateStats();
   renderCards();
 }
 
-function updateStats(){
-  const total = participantsData.length;
-  const pending = participantsData.filter(p=> (p.status || "Pending").toLowerCase()==="pending").length;
-  const approved = participantsData.filter(p=> (p.status || "Pending").toLowerCase()==="approved").length;
-  document.getElementById("totalCount").innerText = `Total: ${total}`;
-  document.getElementById("pendingCount").innerText = `Pending: ${pending}`;
-  document.getElementById("approvedCount").innerText = `Approved: ${approved}`;
-}
-
+// ---------- Render Cards ----------
 function renderCards(){
-  const container = document.getElementById("cardsContainer");
-  const keyword = searchInput.value.trim().toLowerCase();
-
+  const filterText = searchInput.value.toLowerCase();
   const filtered = participantsData.filter(p=>{
-    const status = (p.status || "Pending").toLowerCase();
-    const matchStatus = currentStatusFilter === "All" || status === currentStatusFilter.toLowerCase();
-    const matchSearch = (`${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword)) ||
-                        (p.email||"").toLowerCase().includes(keyword);
-    return matchStatus && matchSearch;
+    const matchesStatus = currentStatusFilter==="All" || p.status===currentStatusFilter;
+    const matchesSearch = `${p.first_name} ${p.last_name} ${p.email}`.toLowerCase().includes(filterText);
+    return matchesStatus && matchesSearch;
   });
 
-  container.innerHTML = "";
-  if(filtered.length === 0){
-    container.innerHTML = "<p style='color:#aaa;text-align:center;width:100%;'>No applicants found</p>";
-    return;
-  }
+  // Update stats
+  const total = participantsData.length;
+  const pending = participantsData.filter(p=>p.status==="Pending"||!p.status).length;
+  const approved = participantsData.filter(p=>p.status==="Approved").length;
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("pendingCount").textContent = pending;
+  document.getElementById("approvedCount").textContent = approved;
 
+  // Render cards
+  cardContainer.innerHTML = "";
   filtered.forEach(p=>{
+    const statusText = p.status || "Pending";
     const card = document.createElement("div");
     card.className = "card";
-    const statusText = p.status || "Pending";
     card.innerHTML = `
-      ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
-      <p><b>${p.first_name} ${p.last_name}</b></p>
-      <p>${p.email || "-"}</p>
-      <p>Category: ${p.category || "-"}</p>
-      <p>Status: ${statusText}</p>
+      <p><strong>${p.first_name} ${p.last_name}</strong></p>
+      <p>${p.email||"-"}</p>
+      <p>Category: ${p.category||"-"}</p>
+      <p class="status">Status: ${statusText}</p>
+      ${p.slip_url?`<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>`:""}
       <button class="approve" ${statusText==="Approved"?"disabled":""}>Approve</button>
     `;
-    container.appendChild(card);
-
+    cardContainer.appendChild(card);
     const btn = card.querySelector(".approve");
     btn.addEventListener("click",()=>approve(p));
   });
 }
 
-async function approve(participant){
-  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
-  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("Failed!"); console.error(error); return;}
+// ---------- Approve ----------
+async function approve(p){
+  if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
+  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
+  if(error){ alert("Failed"); return; }
 
-  const templateParams = {
-    to_email: participant.email,
-    to_name: `${participant.first_name} ${participant.last_name}`,
-    category: participant.category || "-"
-  };
+  const templateParams = { to_email:p.email, to_name:`${p.first_name} ${p.last_name}`, category:p.category||"-" };
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
     .then(()=>{ loadParticipants(); })
     .catch(()=>{ loadParticipants(); });
 }
 
-// Modal
+// ---------- Modal ----------
 function openModal(url){ document.getElementById("slipImage").src=url; document.getElementById("slipModal").style.display="block"; }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// Filter buttons
+// ---------- Filters ----------
 document.querySelectorAll(".filters button").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
@@ -281,12 +276,13 @@ document.querySelectorAll(".filters button").forEach(btn=>{
   });
 });
 
-// Search input
+// ---------- Search ----------
 searchInput.addEventListener("input", renderCards);
 
+// ---------- Load ----------
 loadParticipants();
 
-// Security
+// ---------- Security ----------
 document.addEventListener("contextmenu", e=>{ e.preventDefault(); });
 document.addEventListener("keydown", e=>{ 
   if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")) e.preventDefault();
