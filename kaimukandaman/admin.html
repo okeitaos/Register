@@ -24,8 +24,28 @@ body {
 h1 {
   text-align: center;
   font-size: 1.8rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #111;
+}
+
+/* ---------- Search ---------- */
+.search-box {
+  max-width: 900px;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: center;
+}
+.search-box input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+}
+.search-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
 }
 
 /* ---------- Container ---------- */
@@ -130,6 +150,10 @@ button:disabled {
 
 <h1>Admin Panel - Approve Registrations</h1>
 
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="🔍 ค้นหาชื่อ, อีเมล หรือหมวดหมู่...">
+</div>
+
 <div class="container" id="participantsList"></div>
 
 <!-- Modal -->
@@ -145,28 +169,31 @@ button:disabled {
 <script>
 // ---------- Supabase Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // 👈 เปลี่ยนเป็น key จริง
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // 👈 ใส่ key จริง
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ---------- EmailJS Init ----------
-emailjs.init("xyPTiaVqlFqMrd_3U"); // 👈 เปลี่ยนเป็น key จริง
+emailjs.init("xyPTiaVqlFqMrd_3U"); // 👈 ใส่ key จริง
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
+
+let participantsData = [];
 
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  const list = document.getElementById("participantsList");
-  if(error){ 
-    console.error(error); 
-    list.innerHTML="<p>❌ Error loading data</p>"; 
-    return;
-  }
-  if(!data || data.length===0){ 
-    list.innerHTML="<p>📭 No applicants yet</p>"; 
-    return;
-  }
+  if(error){ console.error(error); return; }
+  participantsData = data || [];
+  renderParticipants(participantsData);
+}
 
+// ---------- Render ----------
+function renderParticipants(data){
+  const list = document.getElementById("participantsList");
+  if(data.length === 0){ 
+    list.innerHTML = "<p>📭 No applicants found</p>"; 
+    return;
+  }
   list.innerHTML="";
   data.forEach(p=>{
     const card = document.createElement("div");
@@ -186,7 +213,6 @@ async function loadParticipants() {
       </div>
     `;
     list.appendChild(card);
-
     card.querySelector(".approve").addEventListener("click",()=>approve(p));
   });
 }
@@ -222,6 +248,17 @@ function openModal(url){
 function closeModal(){ 
   document.getElementById("slipModal").style.display="none"; 
 }
+
+// ---------- Search ----------
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  const keyword = e.target.value.toLowerCase();
+  const filtered = participantsData.filter(p=>
+    `${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword) ||
+    (p.email || "").toLowerCase().includes(keyword) ||
+    (p.category || "").toLowerCase().includes(keyword)
+  );
+  renderParticipants(filtered);
+});
 
 // ---------- Init ----------
 loadParticipants();
