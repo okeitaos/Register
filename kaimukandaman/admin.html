@@ -3,159 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - Approve Registrations</title>
+<title>Admin Panel - Approve Registrations</title>
 <style>
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
-  margin: 0;
-  padding: 20px;
-  color: #eee;
-}
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #fff;
-}
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    margin: 0;
+    padding: 20px;
+    color: #ddd;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FFD700;
+    font-size: 2rem;
+  }
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap:10px;
+  }
+  .stat {
+    background: #1e1e1e;
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-align: center;
+    flex:1 1 150px;
+    box-shadow: 0 4px 12px rgba(255,215,0,0.2);
+  }
+  .stat h3 { margin: 0; font-size: 1.2rem; color:#FFD700; }
+  .stat p { margin:5px 0 0 0; font-size:1rem; color:#fff; }
 
-/* ---------- Stats ---------- */
-.stats {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-.stat-card {
-  background: #1f1f1f;
-  padding: 15px 25px;
-  border-radius: 12px;
-  text-align: center;
-  min-width: 120px;
-  margin: 5px;
-  flex: 1 1 120px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  transition: transform 0.2s;
-}
-.stat-card:hover { transform: scale(1.05); }
-.stat-card h2 { margin:5px 0; font-size:1.2rem; color:#FFD700; }
-.stat-card p { margin:0; font-size:0.9rem; color:#aaa; }
+  .filters {
+    display: flex;
+    justify-content: center;
+    gap:10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filters button {
+    padding: 8px 16px;
+    border:none;
+    border-radius: 6px;
+    cursor:pointer;
+    font-weight:500;
+    transition:0.3s;
+    background:#333;
+    color:#fff;
+  }
+  .filters button.active {
+    background:#FFD700;
+    color:#000;
+  }
 
-/* ---------- Filters ---------- */
-.filters {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
-  flex-wrap: wrap;
-}
-.filters button {
-  padding: 8px 16px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  background: #1f1f1f;
-  color: #fff;
-  box-shadow: 0 3px 8px rgba(255,255,255,0.1);
-  transition: 0.2s;
-}
-.filters button.active, .filters button:hover { background: #FFD700; color: #000; }
+  .search-box {
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .search-box input {
+    padding:8px 12px;
+    width:90%;
+    max-width:400px;
+    border-radius:6px;
+    border:none;
+    font-size:1rem;
+  }
 
-/* ---------- Search ---------- */
-.search-box {
-  text-align: center;
-  margin-bottom: 15px;
-}
-.search-box input {
-  padding: 8px 12px;
-  width: 80%;
-  max-width: 300px;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-}
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap:15px;
+    justify-content: center;
+  }
+  .card {
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:10px;
+    width:250px;
+    box-shadow:0 4px 12px rgba(255,215,0,0.2);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transition: transform 0.3s;
+  }
+  .card:hover { transform: translateY(-3px); }
+  .card h3 { margin:10px 0 5px 0; color:#FFD700; font-size:1.1rem; text-align:center;}
+  .card p { margin:3px 0; font-size:0.9rem; text-align:center; }
+  .card img.slip {
+    max-width:80px;
+    border-radius:6px;
+    cursor:pointer;
+    margin:5px 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card img.slip:hover {
+    transform: scale(1.1);
+    box-shadow:0 4px 12px rgba(255,215,0,0.4);
+  }
+  .card button.approve {
+    margin-top:8px;
+    padding:6px 12px;
+    background:#28a745;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:500;
+    width:100%;
+    transition:0.3s;
+  }
+  .card button.approve:hover:not(:disabled){ background:#218838; }
+  .card button.approve:disabled{ background:#555; cursor:not-allowed; }
 
-/* ---------- Cards ---------- */
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 15px;
-}
-.card {
-  background: #1f1f1f;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s;
-}
-.card:hover { transform: translateY(-3px); }
-.card img.slip {
-  width: 100px;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
+  /* Modal */
+  .modal { display:none; position:fixed; z-index:1000; left:0;top:0;width:100%;height:100%; background-color: rgba(0,0,0,0.9); justify-content:center; align-items:center; }
+  .modal-content { position:relative; max-width:90vw; max-height:90vh; }
+  .modal-content img { width:auto; height:auto; max-width:100%; max-height:100%; border-radius:8px; }
+  .close { position:absolute; top:10px; right:10px; font-size:28px; font-weight:bold; color:#fff; cursor:pointer; transition:0.2s; }
+  .close:hover{ color:#ff4d4d; }
 
-/* ---------- Buttons ---------- */
-.card button.approve {
-  background: #28a745;
-  color: #fff;
-  border-radius: 8px;
-  padding: 8px 16px;
-  margin-top: 5px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.card button.approve:hover:not(:disabled) { background: #218838; }
-.card button:disabled { background: #555; cursor: not-allowed; }
-
-/* ---------- Modal ---------- */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left:0; top:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.9);
-  justify-content: center;
-  align-items: center;
-}
-.modal-content {
-  position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  padding: 10px;
-}
-.modal-content img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 8px;
-  object-fit: contain;
-}
-.close {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #fff;
-  cursor: pointer;
-  z-index: 1001;
-}
-
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-  .stats { flex-direction: column; align-items: center; }
-  .filters { justify-content: center; }
-}
+  @media (max-width:768px){
+    .cards-container{justify-content:center;}
+    .card{width:90%;}
+    .search-box input{width:95%;}
+    .stats{flex-direction:column; align-items:center;}
+  }
 </style>
 </head>
 <body>
@@ -163,19 +137,19 @@ h1 {
 <h1>Admin Panel - Approve Registrations</h1>
 
 <div class="stats">
-  <div class="stat-card"><h2 id="totalCount">0</h2><p>Total</p></div>
-  <div class="stat-card"><h2 id="pendingCount">0</h2><p>Pending</p></div>
-  <div class="stat-card"><h2 id="approvedCount">0</h2><p>Approved</p></div>
+  <div class="stat"><h3 id="totalCount">0</h3><p>Total</p></div>
+  <div class="stat"><h3 id="pendingCount">0</h3><p>Pending</p></div>
+  <div class="stat"><h3 id="approvedCount">0</h3><p>Approved</p></div>
 </div>
 
 <div class="filters">
   <button class="filter-btn active" data-status="all">All</button>
-  <button class="filter-btn" data-status="Pending">Pending</button>
-  <button class="filter-btn" data-status="Approved">Approved</button>
+  <button class="filter-btn" data-status="pending">Pending</button>
+  <button class="filter-btn" data-status="approved">Approved</button>
 </div>
 
 <div class="search-box">
-  <input type="text" id="searchInput" placeholder="Search by name, surname, email...">
+  <input type="text" id="searchInput" placeholder="Search by name, surname, or email">
 </div>
 
 <div class="cards-container" id="cardsContainer"></div>
@@ -195,32 +169,39 @@ const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// EmailJS
-emailjs.init("xyPTiaVqlFqMrd_3U");
+emailjs.init("xyPTiaVqlFqMrd_3U"); 
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
 let participantsData = [];
 let currentFilter = "all";
 
-// Load Participants
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); alert("Error loading data"); return;}
-  participantsData = data || [];
-  renderCards();
+  if(error){ console.error(error); return;}
+  participantsData = data.map(p=>{
+    return {...p, status:(p.status||"Pending").trim()};
+  });
   updateStats();
+  renderCards();
 }
 
-// Render Cards
+function updateStats(){
+  const total = participantsData.length;
+  const pending = participantsData.filter(p=>p.status.toLowerCase()==="pending").length;
+  const approved = participantsData.filter(p=>p.status.toLowerCase()==="approved").length;
+  document.getElementById("totalCount").textContent = total;
+  document.getElementById("pendingCount").textContent = pending;
+  document.getElementById("approvedCount").textContent = approved;
+}
+
 function renderCards(){
   const container = document.getElementById("cardsContainer");
   container.innerHTML = "";
-
   const searchText = document.getElementById("searchInput").value.toLowerCase();
-
   const filtered = participantsData.filter(p=>{
-    const matchStatus = currentFilter==="all" || p.status===currentFilter;
+    const status = p.status.toLowerCase();
+    const matchStatus = currentFilter==="all" || status===currentFilter.toLowerCase();
     const matchSearch = `${p.first_name} ${p.last_name} ${p.email || ""}`.toLowerCase().includes(searchText);
     return matchStatus && matchSearch;
   });
@@ -237,27 +218,38 @@ function renderCards(){
       <h3>${p.first_name} ${p.last_name}</h3>
       <p>Email: ${p.email || "-"}</p>
       <p>Category: ${p.category || "-"}</p>
-      <p>Status: ${p.status || "Pending"}</p>
+      <p>Status: ${p.status}</p>
       ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
-      <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
+      <button class="approve" ${p.status.toLowerCase()==="approved"?"disabled":""}>Approve</button>
     `;
     container.appendChild(card);
-
-    const btn = card.querySelector(".approve");
-    btn.addEventListener("click",()=>approveParticipant(p));
+    card.querySelector(".approve").addEventListener("click", ()=>approveParticipant(p));
   });
 }
 
-// Approve
+// Filter Buttons
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.status;
+    renderCards();
+  });
+});
+
+// Search Input
+document.getElementById("searchInput").addEventListener("input", renderCards);
+
+// Approve Function
 async function approveParticipant(p){
   if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
-  if(error){ alert("Failed!"); return;}
+  if(error){ alert("Update failed"); return; }
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID,{
     to_email: p.email,
     to_name: `${p.first_name} ${p.last_name}`,
     category: p.category || "-"
-  }).then(()=>{ alert("Approved & email sent"); }).catch(()=>{ alert("Approved but email failed"); });
+  }).catch(console.error);
   loadParticipants();
 }
 
@@ -268,34 +260,6 @@ function openModal(url){
 }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// Filters
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.dataset.status;
-    renderCards();
-  });
-});
-
-// Search
-document.getElementById("searchInput").addEventListener("input", renderCards);
-
-// Stats
-function updateStats(){
-  const total = participantsData.length;
-  const pending = participantsData.filter(p=>p.status==="Pending").length;
-  const approved = participantsData.filter(p=>p.status==="Approved").length;
-  document.getElementById("totalCount").innerText=total;
-  document.getElementById("pendingCount").innerText=pending;
-  document.getElementById("approvedCount").innerText=approved;
-}
-
-// Security
-document.addEventListener("contextmenu", e=>{ e.preventDefault(); });
-document.addEventListener("keydown", e=>{ if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ e.preventDefault(); } });
-
-// Initial Load
 loadParticipants();
 </script>
 </body>
