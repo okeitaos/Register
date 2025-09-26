@@ -5,139 +5,133 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin - Approve Registrations</title>
 <style>
-:root {
-  --primary: #3b82f6;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --bg: #111827;         /* พื้นหลังหลัก */
-  --card-bg: #1f2937;    /* พื้นหลัง card */
-  --text: #f9fafb;       /* ตัวหนังสือ */
-  --muted: #9ca3af;      /* สีรอง */
-}
-
 body {
-  font-family: "Segoe UI", Tahoma, sans-serif;
-  background: var(--bg);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #121212;
   margin: 0;
-  padding: 15px;
-  color: var(--text);
+  padding: 20px;
+  color: #eee;
 }
-
 h1 {
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  color: var(--text);
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 2rem;
 }
 
-/* ---------- Controls (Search + Filter) ---------- */
-.controls {
-  max-width: 900px;
-  margin: 0 auto 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-.search-box input {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-  font-size: 1rem;
-  outline: none;
-  background: #111;
-  color: var(--text);
-}
-.search-box input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
-}
+/* ---------- Filters ---------- */
 .filters {
   display: flex;
-  gap: 8px;
-}
-.filters button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  background: #374151;
-  color: var(--text);
-  transition: 0.2s;
-}
-.filters button.active {
-  background: var(--primary);
-}
-.filters button:hover { background: #4b5563; }
-
-/* ---------- Container ---------- */
-.container {
-  display: grid;
-  gap: 15px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* ---------- Card ---------- */
-.card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 10px;
+  margin-bottom: 20px;
+}
+.filter-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+.filter-btn.active {
+  background: #007bff;
+}
+.filter-btn:hover {
+  background: #555;
 }
 
-.card-header {
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--text);
+/* ---------- Search ---------- */
+#searchInput {
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
 }
 
-.card-detail {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: var(--muted);
+/* ---------- Table ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e1e1e;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  border-radius: 8px;
+  overflow: hidden;
 }
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+  font-size: 0.95rem;
+}
+th {
+  background: #007bff;
+  color: #fff;
+  font-weight: 600;
+}
+tr:hover { background: #2a2a2a; transition: 0.3s; }
 
-.card img.slip {
-  max-width: 100px;
+img.slip {
+  max-width: 60px;
   border-radius: 6px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
-.card img.slip:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-
-.card-footer {
-  display: flex;
-  justify-content: flex-end;
+img.slip:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-/* ---------- Button ---------- */
 button {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: 0.2s;
+  font-size: 13px;
+  transition: 0.3s;
 }
 button.approve {
-  background: var(--success);
+  background: #28a745;
   color: #fff;
   font-weight: 500;
 }
 button.approve:hover:not(:disabled) {
-  background: #16a34a;
+  background: #218838;
+  transform: translateY(-2px);
 }
 button:disabled {
   background: #555;
   cursor: not-allowed;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+.pagination button {
+  background: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.pagination button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+.pagination button:hover:not(:disabled) {
+  background: #007bff;
 }
 
 /* ---------- Modal ---------- */
@@ -145,167 +139,225 @@ button:disabled {
   display: none;
   position: fixed;
   z-index: 1000;
-  inset: 0;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0,0,0,0.9);
+  overflow: auto;
+}
+.modal-content {
+  display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
   padding: 10px;
 }
-.modal img {
+.modal-content img {
   max-width: 95vw;
   max-height: 90vh;
   border-radius: 8px;
   object-fit: contain;
 }
-.modal .close {
+.close {
   position: fixed;
+  right: 15px;
   top: 15px;
-  right: 20px;
   font-size: 30px;
+  font-weight: bold;
   color: #fff;
   cursor: pointer;
-  font-weight: bold;
 }
-.modal .close:hover { color: var(--danger); }
+.close:hover { color: #ff4d4d; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  body { padding: 10px; }
+  th, td { padding: 8px; font-size: 0.8rem; }
+  h1 { font-size: 1.5rem; }
+}
 </style>
 </head>
 <body>
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<div class="controls">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 ค้นหาชื่อ, อีเมล หรือหมวดหมู่...">
-  </div>
-  <div class="filters">
-    <button class="filter-btn active" data-status="all">All</button>
-    <button class="filter-btn" data-status="Pending">Pending</button>
-    <button class="filter-btn" data-status="Approved">Approved</button>
-  </div>
+<div class="filters">
+  <button class="filter-btn active" data-status="all">All</button>
+  <button class="filter-btn" data-status="pending">Pending</button>
+  <button class="filter-btn" data-status="approved">Approved</button>
 </div>
 
-<div class="container" id="participantsList"></div>
+<input type="text" id="searchInput" placeholder="🔍 ค้นหา...">
+
+<table id="participantsTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Full Name</th>
+<th>Email</th>
+<th>Category</th>
+<th>Slip</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<div class="pagination">
+  <button id="prevPage">⬅ Prev</button>
+  <span id="pageInfo" style="align-self:center;"></span>
+  <button id="nextPage">Next ➡</button>
+</div>
 
 <!-- Modal -->
-<div id="slipModal" class="modal" onclick="closeModal()">
-  <span class="close" onclick="closeModal()">&times;</span>
-  <img id="slipImage" src="" alt="Slip Image"/>
+<div id="slipModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img id="slipImage" src="" alt="Slip Image"/>
+  </div>
 </div>
 
-<!-- Libs -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
 <script>
 // ---------- Supabase Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA"; // 👈 ใส่ key จริง
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ---------- EmailJS Init ----------
-emailjs.init("xyPTiaVqlFqMrd_3U"); // 👈 ใส่ key จริง
+emailjs.init("xyPTiaVqlFqMrd_3U"); 
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
+// ---------- Data ----------
 let participantsData = [];
 let currentFilter = "all";
+let currentPage = 1;
+const itemsPerPage = 10;
 
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); return; }
+  if(error){ console.error(error); return;}
   participantsData = data || [];
   applyFilters();
 }
 
-// ---------- Render ----------
-function renderParticipants(data){
-  const list = document.getElementById("participantsList");
-  if(data.length === 0){ 
-    list.innerHTML = "<p>📭 No applicants found</p>"; 
+// ---------- Render Participants ----------
+function renderParticipants(list) {
+  const tbody = document.querySelector("#participantsTable tbody");
+  if (!list || list.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7'>No data</td></tr>";
     return;
   }
-  list.innerHTML="";
-  data.forEach(p=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="card-header">#${p.id} - ${p.first_name} ${p.last_name}</div>
-      <div class="card-detail">
-        <b>Email:</b> ${p.email || "-"}<br/>
-        <b>Category:</b> ${p.category || "-"}<br/>
-        <b>Status:</b> ${p.status || "Pending"}
-      </div>
-      <div>
-        ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}
-      </div>
-      <div class="card-footer">
-        <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
-      </div>
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageItems = list.slice(start, end);
+
+  tbody.innerHTML = "";
+  pageItems.forEach(p=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML=`
+      <td>${p.id}</td>
+      <td>${p.first_name} ${p.last_name}</td>
+      <td>${p.email || "-"}</td>
+      <td>${p.category || "-"}</td>
+      <td>${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</td>
+      <td>${p.status || "Pending"}</td>
+      <td>
+        <button class="approve" ${p.status?.toLowerCase()==="approved"?"disabled":""}>Approve</button>
+      </td>
     `;
-    list.appendChild(card);
-    card.querySelector(".approve").addEventListener("click",()=>approve(p));
+    tbody.appendChild(tr);
+
+    const btnApprove = tr.querySelector(".approve");
+    btnApprove.addEventListener("click",()=>approve(p));
   });
+
+  // Update pagination info
+  document.getElementById("pageInfo").innerText = `Page ${currentPage} of ${Math.ceil(list.length / itemsPerPage)}`;
+  document.getElementById("prevPage").disabled = currentPage === 1;
+  document.getElementById("nextPage").disabled = end >= list.length;
 }
 
 // ---------- Approve ----------
 async function approve(participant){
-  if(!confirm(`✅ Approve ${participant.first_name} ${participant.last_name}?`)) return;
-  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("❌ Failed to update"); return; }
+  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
 
-  const params = {
+  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
+  if(error){ alert("Failed to update status!"); return;}
+
+  const templateParams = {
     to_email: participant.email,
     to_name: `${participant.first_name} ${participant.last_name}`,
     category: participant.category || "-"
   };
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
     .then(()=>{
-      alert(`✅ Approved & email sent to ${participant.email}`);
+      alert(`Approved & email sent to ${participant.email}`);
       loadParticipants();
     })
     .catch(()=>{
-      alert(`✅ Approved but email failed to ${participant.email}`);
+      alert(`Approved but email failed to send`);
       loadParticipants();
     });
 }
 
-// ---------- Modal ----------
-function openModal(url){ 
-  document.getElementById("slipImage").src = url; 
-  document.getElementById("slipModal").style.display = "flex"; 
-}
-function closeModal(){ 
-  document.getElementById("slipModal").style.display="none"; 
-}
-
-// ---------- Search + Filter ----------
-function applyFilters(){
-  const keyword = document.getElementById("searchInput").value.toLowerCase();
-  let filtered = participantsData.filter(p=>
-    `${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword) ||
-    (p.email || "").toLowerCase().includes(keyword) ||
-    (p.category || "").toLowerCase().includes(keyword)
-  );
-  if(currentFilter !== "all"){
-    filtered = filtered.filter(p=>(p.status || "Pending") === currentFilter);
-  }
-  renderParticipants(filtered);
-}
-
-document.getElementById("searchInput").addEventListener("input", applyFilters);
-
+// ---------- Filters ----------
 document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
+  btn.addEventListener("click",()=>{
     document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    currentFilter = btn.dataset.status;
+    currentFilter = btn.getAttribute("data-status");
+    currentPage = 1;
     applyFilters();
   });
 });
 
-// ---------- Init ----------
+document.getElementById("searchInput").addEventListener("input", ()=>{
+  currentPage = 1;
+  applyFilters();
+});
+
+function applyFilters() {
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  let filtered = participantsData.filter(p =>
+    `${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword) ||
+    (p.email || "").toLowerCase().includes(keyword) ||
+    (p.category || "").toLowerCase().includes(keyword)
+  );
+
+  if (currentFilter !== "all") {
+    filtered = filtered.filter(p => (p.status || "pending").toLowerCase() === currentFilter);
+  }
+
+  renderParticipants(filtered);
+}
+
+// ---------- Pagination ----------
+document.getElementById("prevPage").addEventListener("click", ()=>{
+  if (currentPage > 1) {
+    currentPage--;
+    applyFilters();
+  }
+});
+document.getElementById("nextPage").addEventListener("click", ()=>{
+  currentPage++;
+  applyFilters();
+});
+
+// ---------- Modal ----------
+function openModal(url){ 
+  const img = document.getElementById("slipImage");
+  img.src = url; 
+  document.getElementById("slipModal").style.display = "block"; 
+}
+function closeModal(){ document.getElementById("slipModal").style.display="none"; }
+
+// ---------- Start ----------
 loadParticipants();
 </script>
 </body>
