@@ -28,14 +28,8 @@ h1 {
   background: #1e1e1e;
   padding: 10px 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  text-align: center;
-}
-.stats div span {
-  display: block;
-  font-size: 1.2rem;
   font-weight: bold;
-  color: #28a745;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 .controls {
   display: flex;
@@ -60,7 +54,8 @@ h1 {
   color: #fff;
   transition: 0.3s;
 }
-.controls .filters button.active, .controls .filters button:hover {
+.controls .filters button.active, 
+.controls .filters button:hover {
   background: #28a745;
 }
 
@@ -133,8 +128,8 @@ h1 {
   display: block;
   width: auto;
   height: auto;
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 80vw;
+  max-height: 80vh;
   border-radius: 8px;
   object-fit: contain;
 }
@@ -147,8 +142,12 @@ h1 {
   color: #fff;
   cursor: pointer;
   z-index: 1001;
+  padding: 5px 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #000;
 }
-.close:hover { color: #ff4d4d; }
+.close:hover { color: #ff4d4d; border-color: #ff4d4d; }
 
 @media (max-width: 600px) {
   .controls { flex-direction: column; gap: 10px; }
@@ -162,8 +161,8 @@ h1 {
 <h1>Admin Panel - Approve Registrations</h1>
 
 <div class="stats">
-  <div>Total Applicants: <span id="totalCount">0</span></div>
-  <div>Pending: <span id="pendingCount">0</span></div>
+  <div>Total: <span id="totalCount">0</span></div>
+  <div>pending: <span id="pendingCount">0</span></div>
   <div>Approved: <span id="approvedCount">0</span></div>
 </div>
 
@@ -171,7 +170,7 @@ h1 {
   <input type="text" id="searchInput" placeholder="ค้นหา ชื่อ/นามสกุล/อีเมล">
   <div class="filters">
     <button data-status="All" class="active">All</button>
-    <button data-status="Pending">Pending</button>
+    <button data-status="pending">pending</button>
     <button data-status="Approved">Approved</button>
   </div>
 </div>
@@ -211,7 +210,7 @@ async function loadParticipants() {
 
 function updateStats(){
   const total = participantsData.length;
-  const pending = participantsData.filter(p=>!p.status || p.status==="Pending").length;
+  const pending = participantsData.filter(p=>!p.status || p.status==="pending").length;
   const approved = participantsData.filter(p=>p.status==="Approved").length;
   document.getElementById("totalCount").textContent = total;
   document.getElementById("pendingCount").textContent = pending;
@@ -223,8 +222,8 @@ function renderCards(){
   const keyword = searchInput.value.trim().toLowerCase();
 
   const filtered = participantsData.filter(p=>{
-    const status = (p.status || "Pending").toLowerCase();
-    const matchStatus = currentStatusFilter === "All" || status === currentStatusFilter.toLowerCase();
+    let status = (!p.status || p.status==="pending") ? "pending" : "Approved";
+    const matchStatus = currentStatusFilter === "All" || status === currentStatusFilter;
     const matchSearch = (`${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword)) ||
                         (p.email||"").toLowerCase().includes(keyword);
     return matchStatus && matchSearch;
@@ -239,7 +238,7 @@ function renderCards(){
   filtered.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
-    const statusText = p.status || "Pending";
+    const statusText = (!p.status || p.status==="pending") ? "pending" : "Approved";
     card.innerHTML = `
       ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
       <p><b>${p.first_name} ${p.last_name}</b></p>
