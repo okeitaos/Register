@@ -62,12 +62,25 @@ h1 {
   background: #1e1e1e;
   border-radius: 10px;
   padding: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   transition: transform 0.2s;
+  position: relative;
 }
 .card:hover { transform: scale(1.02); }
 .card h3 { margin: 0 0 8px; color: #fff; font-size: 1rem; }
 .card p { margin: 4px 0; font-size: 0.85rem; color: #ccc; }
+
+/* ---------- Status Indicator ---------- */
+.status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+.status.Pending { background: #ff9800; } /* สีส้ม */
+.status.Approved { background: #4caf50; } /* สีเขียว */
 
 img.slip {
   max-width: 100%;
@@ -216,7 +229,9 @@ function renderParticipants(){
   filtered.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
+    const statusClass = p.status || "Pending";
     card.innerHTML=`
+      <span class="status ${statusClass}"></span>
       <h3>${p.first_name} ${p.last_name}</h3>
       <p><b>Email:</b> ${p.email || "-"}</p>
       <p><b>Category:</b> ${p.category || "-"}</p>
