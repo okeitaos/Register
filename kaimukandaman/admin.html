@@ -7,96 +7,74 @@
 <style>
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
+  background: #111;
   margin: 0;
   padding: 20px;
-  color: #ddd;
+  color: #fff;
 }
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #fff;
+  color: #FFD700;
 }
-
-/* ---------- Stats ---------- */
 .stats {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
   margin-bottom: 20px;
-  gap: 15px;
 }
 .stats div {
-  padding: 12px 20px;
-  background: #1f1f1f;
-  border-radius: 8px;
-  text-align: center;
-  min-width: 120px;
-  box-shadow: 0 2px 8px rgba(255,255,255,0.1);
-}
-.stats div span {
-  display: block;
-  font-size: 1.5rem;
+  margin: 10px;
+  font-size: 1rem;
   font-weight: bold;
-  color: #FFD700;
+  color: #00E5FF;
 }
-
-/* ---------- Search ---------- */
 #searchInput {
   width: 100%;
   max-width: 400px;
-  padding: 8px 12px;
-  margin: 0 auto 20px;
+  padding: 10px;
+  margin: 0 auto 20px auto;
   display: block;
   border-radius: 6px;
-  border: 1px solid #555;
-  background: #1f1f1f;
-  color: #fff;
+  border: none;
+  font-size: 1rem;
 }
-
-/* ---------- Card Style ---------- */
-#participantsContainer {
+.cards {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
 }
 .card {
-  background: #1f1f1f;
+  background: #222;
   padding: 15px;
-  border-radius: 8px;
-  width: 220px;
-  box-shadow: 0 2px 10px rgba(255,255,255,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: transform 0.2s;
 }
-.card img.slip {
+.card:hover { transform: translateY(-3px); }
+.card img {
   width: 100%;
   border-radius: 6px;
   cursor: pointer;
+  margin-bottom: 10px;
 }
-.card button {
+.card .approveBtn {
+  width: 100%;
   padding: 8px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.card button.approve {
   background: #28a745;
   color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
-.card button.approve:hover:not(:disabled) {
-  background: #218838;
-}
-.card button:disabled {
+.card .approveBtn:disabled {
   background: #555;
   cursor: not-allowed;
 }
 
-/* ---------- Modal ---------- */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -109,8 +87,9 @@ h1 {
 }
 .modal-content {
   position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 600px;
+  max-height: 80vh;
+  padding: 10px;
 }
 .modal-content img {
   width: auto;
@@ -132,11 +111,10 @@ h1 {
   cursor: pointer;
   z-index: 1001;
 }
-
-/* ---------- Responsive ---------- */
-@media (max-width: 600px) {
-  .stats { flex-direction: column; align-items: center; }
+@media (max-width: 768px) {
+  .modal-content { max-width: 95vw; max-height: 85vh; }
   .card { width: 90%; }
+  .stats { flex-direction: column; align-items: center; }
 }
 </style>
 </head>
@@ -150,9 +128,9 @@ h1 {
   <div>Approved: <span id="approvedCount">0</span></div>
 </div>
 
-<input type="text" id="searchInput" placeholder="ค้นหาด้วยชื่อ, นามสกุล, อีเมล">
+<input type="text" id="searchInput" placeholder="ค้นหาชื่อ, นามสกุล, อีเมล">
 
-<div id="participantsContainer"></div>
+<div class="cards" id="cardsContainer"></div>
 
 <!-- Modal -->
 <div id="slipModal" class="modal">
@@ -165,95 +143,91 @@ h1 {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-// ---------- Supabase Config ----------
+// ---------- Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ---------- EmailJS ----------
 emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
-let participants = [];
+let participantsData = [];
 
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); document.getElementById("participantsContainer").innerHTML="Error loading data"; return;}
-  participants = data || [];
-  renderParticipants(participants);
-  updateCounts();
+  if(error){ console.error(error); return; }
+  participantsData = data || [];
+  updateStats();
+  displayCards(participantsData);
 }
 
-function renderParticipants(list){
-  const container = document.getElementById("participantsContainer");
+// ---------- Display Cards ----------
+function displayCards(list) {
+  const container = document.getElementById("cardsContainer");
   container.innerHTML = "";
-  if(list.length===0){ container.innerHTML="<p>ไม่พบผู้สมัคร</p>"; return; }
+  if(list.length===0){
+    container.innerHTML = "<p style='color:#fff'>No participants found</p>";
+    return;
+  }
   list.forEach(p=>{
     const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-      <div><strong>${p.first_name} ${p.last_name}</strong></div>
-      <div>${p.email || "-"}</div>
-      <div>${p.category || "-"}</div>
-      <div>${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</div>
-      <div>Status: ${p.status || "Pending"}</div>
-      <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${p.slip_url || 'https://via.placeholder.com/250x150?text=No+Slip'}" onclick="openModal('${p.slip_url}')">
+      <div><b>${p.first_name} ${p.last_name}</b></div>
+      <div>${p.email || '-'}</div>
+      <div>${p.category || '-'}</div>
+      <div>Status: ${p.status || 'Pending'}</div>
+      <button class="approveBtn" ${p.status==="Approved"?"disabled":""}>Approve</button>
     `;
     container.appendChild(card);
-
-    const btn = card.querySelector(".approve");
+    const btn = card.querySelector(".approveBtn");
     btn.addEventListener("click",()=>approve(p));
   });
 }
 
-function updateCounts(){
-  const total = participants.length;
-  const pending = participants.filter(p=>p.status!=="Approved").length;
-  const approved = participants.filter(p=>p.status==="Approved").length;
-  document.getElementById("totalCount").textContent = total;
-  document.getElementById("pendingCount").textContent = pending;
-  document.getElementById("approvedCount").textContent = approved;
+// ---------- Approve ----------
+async function approve(participant){
+  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
+  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
+  if(error){ alert("Failed!"); return; }
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email: participant.email,
+    to_name: `${participant.first_name} ${participant.last_name}`,
+    category: participant.category || "-"
+  }).finally(()=> loadParticipants());
 }
 
-// ---------- Approve ----------
-async function approve(p){
-  if(!confirm(`Approve ${p.first_name} ${p.last_name}?`)) return;
-  const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",p.id);
-  if(error){ alert("Failed"); return; }
-  // Email
-  const params = { to_email:p.email, to_name:`${p.first_name} ${p.last_name}`, category:p.category||"-" };
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params).then(res=>{
-    alert(`Approved & email sent to ${p.email}`);
-    loadParticipants();
-  }).catch(err=>{
-    alert(`Approved but email failed`);
-    loadParticipants();
-  });
+// ---------- Stats ----------
+function updateStats(){
+  const total = participantsData.length;
+  const pending = participantsData.filter(p=>!p.status || p.status==='Pending').length;
+  const approved = participantsData.filter(p=>p.status==='Approved').length;
+  document.getElementById("totalCount").innerText = total;
+  document.getElementById("pendingCount").innerText = pending;
+  document.getElementById("approvedCount").innerText = approved;
 }
 
 // ---------- Search ----------
-document.getElementById("searchInput").addEventListener("input", (e)=>{
-  const term = e.target.value.toLowerCase();
-  const filtered = participants.filter(p=>{
-    return (p.first_name+p.last_name+p.email).toLowerCase().includes(term);
+document.getElementById("searchInput").addEventListener("input", function(){
+  const keyword = this.value.toLowerCase();
+  const filtered = participantsData.filter(p=>{
+    return (p.first_name+p.last_name+p.email).toLowerCase().includes(keyword);
   });
-  renderParticipants(filtered);
+  displayCards(filtered);
 });
 
 // ---------- Modal ----------
 function openModal(url){
-  const img = document.getElementById("slipImage");
-  img.src=url;
-  document.getElementById("slipModal").style.display="flex";
+  if(!url) return;
+  document.getElementById("slipImage").src = url;
+  document.getElementById("slipModal").style.display = "flex";
 }
-function closeModal(){
-  document.getElementById("slipModal").style.display="none";
-  document.getElementById("slipImage").src="";
-}
+function closeModal(){ document.getElementById("slipModal").style.display = "none"; }
 
-// ---------- Load ----------
+// ---------- Load Data ----------
 loadParticipants();
 </script>
 </body>
