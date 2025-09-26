@@ -227,6 +227,16 @@ function openModal(url){
 function closeModal(){ document.getElementById("slipModal").style.display = "none"; }
 
 loadParticipants();
+
+  function updateStats(){
+  const total = participantsData.length;
+  const pending = participantsData.filter(p => !p.status || p.status==='Pending').length;
+  const approved = participantsData.filter(p => p.status==='Approved').length;
+  document.getElementById("totalCount").innerText = total;
+  document.getElementById("pendingCount").innerText = pending;
+  document.getElementById("approvedCount").innerText = approved;
+}
+
 </script>
 </body>
 </html>
