@@ -16,7 +16,7 @@ h1 {
   text-align: center;
   margin-bottom: 20px;
   font-size: 2rem;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
 }
 .container {
   max-width: 1000px;
@@ -24,41 +24,43 @@ h1 {
   padding: 20px;
   border-radius: 16px;
   background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: all 0.3s;
 }
 .controls {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   align-items: center;
+  justify-content: center;
 }
-input, select, button {
-  padding: 8px 12px;
-  border-radius: 8px;
+input, select {
+  padding: 10px 14px;
+  border-radius: 12px;
   border: none;
   font-weight: 600;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 input {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
   color: #fff;
 }
 input::placeholder { color: #ddd; }
-input:hover, select:hover, button:hover { cursor:pointer; }
-select { background: rgba(255,255,255,0.2); color: #fff; }
-button { background: linear-gradient(90deg, #ff7e5f, #feb47b); color: #fff; }
+input:hover, select:hover { cursor:pointer; }
+select { background: rgba(255,255,255,0.15); color: #fff; }
+
 table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255,255,255,0.1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 }
 th, td {
-  padding: 12px;
+  padding: 14px;
   text-align: center;
 }
 th {
@@ -66,33 +68,38 @@ th {
   color: #fff;
   font-weight: 700;
   letter-spacing: 1px;
+  text-transform: uppercase;
 }
 tr:nth-child(even) {background: rgba(255,255,255,0.05);}
-tr:hover {background: rgba(255,255,255,0.15);}
+tr:hover {background: rgba(255,255,255,0.18); transition: 0.3s;}
+td { font-weight: 500; }
+
 .pagination {
-  margin-top: 15px;
+  margin-top: 20px;
   text-align: center;
 }
 .pagination button {
-  padding: 6px 12px;
-  margin: 0 3px;
+  padding: 8px 14px;
+  margin: 0 4px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
   color: #fff;
   font-weight: 600;
-  transition: 0.3s;
+  transition: all 0.3s;
 }
-.pagination button:hover { background: rgba(255,255,255,0.4); }
+.pagination button:hover { background: rgba(255,255,255,0.35); }
 .pagination button.active {
   background: linear-gradient(90deg, #ff7e5f, #feb47b);
   color: #fff;
 }
+
 @media(max-width:768px){
+  .controls { flex-direction: column; gap: 12px; }
   table, thead, tbody, th, td, tr {display: block;}
   th {display:none;}
-  td {display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid rgba(255,255,255,0.2);}
+  td {display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid rgba(255,255,255,0.2);}
   td::before {font-weight:bold; content: attr(data-label); color:#ffd;}
 }
 </style>
@@ -105,7 +112,6 @@ tr:hover {background: rgba(255,255,255,0.15);}
     <select id="filterCategory">
       <option value="">All Categories</option>
     </select>
-    <button id="exportCSV">Export CSV</button>
   </div>
 
   <table id="participantsTable">
@@ -132,7 +138,6 @@ let allParticipants = [];
 let currentPage = 1;
 const itemsPerPage = 10;
 
-// โหลดข้อมูล
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman")
     .select("first_name,last_name,category")
@@ -144,7 +149,6 @@ async function loadParticipants(){
   displayParticipants();
 }
 
-// สร้าง Filter
 function populateFilter(){
   const select = document.getElementById("filterCategory");
   const categories = [...new Set(allParticipants.map(p=>p.category).filter(c=>c))];
@@ -152,7 +156,6 @@ function populateFilter(){
   select.onchange = () => { currentPage=1; displayParticipants(); };
 }
 
-// แสดงข้อมูล
 function displayParticipants(){
   const tbody = document.querySelector("#participantsTable tbody");
   const filter = document.getElementById("filterCategory").value;
@@ -194,28 +197,10 @@ function displayParticipants(){
 
 document.getElementById("searchInput").addEventListener("input", () => { currentPage=1; displayParticipants(); });
 
-// Export CSV
-document.getElementById("exportCSV").addEventListener("click", () => {
-  const filter = document.getElementById("filterCategory").value;
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const filtered = allParticipants.filter(p=>{
-    const fullName = `${p.first_name} ${p.last_name}`.toLowerCase();
-    return (fullName.includes(search)) && (filter ? p.category===filter : true);
-  });
-  let csv = "No,Full Name,Category\n";
-  filtered.forEach((p,i)=> csv += `${i+1},"${p.first_name} ${p.last_name}","${p.category || ''}"\n`);
-  const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "participants.csv";
-  link.click();
-});
-
 loadParticipants();
 setInterval(loadParticipants,5000);
 
-  // ป้องกันการคลิกขวา
+// ป้องกันการคลิกขวา
 document.addEventListener("contextmenu", function(e) {
   e.preventDefault();
   alert("❌ ไม่อนุญาตให้คลิกขวา");
