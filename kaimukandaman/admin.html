@@ -29,15 +29,15 @@ h1 {
 }
 .search-box input {
   width: 100%;
-  max-width: 300px;
-  padding: 10px;
+  max-width: 250px;
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid #555;
   background: #1e1e1e;
   color: #fff;
 }
 .filter-btn {
-  padding: 10px 15px;
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -45,6 +45,7 @@ h1 {
   background: #333;
   color: #fff;
   transition: 0.3s;
+  font-size: 0.9rem;
 }
 .filter-btn.active, .filter-btn:hover {
   background: #28a745;
@@ -54,25 +55,25 @@ h1 {
 /* ---------- Card Layout ---------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
 }
 .card {
   background: #1e1e1e;
   border-radius: 10px;
-  padding: 15px;
+  padding: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.4);
   transition: transform 0.2s;
 }
 .card:hover { transform: scale(1.02); }
-.card h3 { margin: 0 0 10px; color: #fff; }
-.card p { margin: 5px 0; font-size: 0.9rem; color: #ccc; }
+.card h3 { margin: 0 0 8px; color: #fff; font-size: 1rem; }
+.card p { margin: 4px 0; font-size: 0.85rem; color: #ccc; }
 
 img.slip {
   max-width: 100%;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 8px;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 img.slip:hover {
@@ -81,13 +82,13 @@ img.slip:hover {
 }
 
 button.approve {
-  margin-top: 10px;
+  margin-top: 8px;
   width: 100%;
-  padding: 10px;
+  padding: 8px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   background: #28a745;
   color: #fff;
   font-weight: 500;
@@ -131,7 +132,7 @@ button:disabled {
   position: fixed;
   right: 15px;
   top: 15px;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
@@ -142,6 +143,10 @@ button:disabled {
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .search-box input { max-width: 100%; }
+  .grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .card h3 { font-size: 0.95rem; }
+  .card p { font-size: 0.8rem; }
+  button.approve { font-size: 12px; padding: 6px; }
 }
 </style>
 </head>
