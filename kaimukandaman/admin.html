@@ -7,131 +7,72 @@
 <style>
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
+  background: #f4f6f9;
   margin: 0;
   padding: 20px;
-  color: #eee;
+  color: #333;
 }
 h1 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #fff;
+  margin-bottom: 30px;
+  color: #222;
   font-size: 2rem;
-}
-
-/* ---------- Filters ---------- */
-.filters {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.filter-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  background: #333;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-}
-.filter-btn.active {
-  background: #007bff;
-}
-.filter-btn:hover {
-  background: #555;
-}
-
-/* ---------- Search ---------- */
-#searchInput {
-  display: block;
-  margin: 0 auto 20px auto;
-  padding: 10px;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 6px;
-  border: none;
-  font-size: 14px;
 }
 
 /* ---------- Table ---------- */
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #1e1e1e;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
 }
 th, td {
-  padding: 12px;
-  border-bottom: 1px solid #333;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
   text-align: center;
   font-size: 0.95rem;
 }
 th {
-  background: #007bff;
+  background: #222;
   color: #fff;
   font-weight: 600;
 }
-tr:hover { background: #2a2a2a; transition: 0.3s; }
+tr:hover { background: #f1f1f1; transition: 0.3s; }
 
 img.slip {
-  max-width: 60px;
+  max-width: 80px;
   border-radius: 6px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 img.slip:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 button {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   transition: 0.3s;
 }
 button.approve {
   background: #28a745;
   color: #fff;
   font-weight: 500;
+  box-shadow: 0 3px 8px rgba(40,167,69,0.4);
 }
 button.approve:hover:not(:disabled) {
   background: #218838;
   transform: translateY(-2px);
 }
 button:disabled {
-  background: #555;
+  background: #ccc;
   cursor: not-allowed;
-}
-
-/* ---------- Pagination ---------- */
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-  gap: 10px;
-}
-.pagination button {
-  background: #333;
-  color: #fff;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.pagination button:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
-.pagination button:hover:not(:disabled) {
-  background: #007bff;
 }
 
 /* ---------- Modal ---------- */
@@ -142,20 +83,31 @@ button:disabled {
   left: 0; top: 0;
   width: 100%; height: 100%;
   background-color: rgba(0,0,0,0.9);
-  overflow: auto;
+  overflow: auto; /* scroll ถ้าภาพใหญ่เกินหน้าจอ */
 }
 .modal-content {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  position: relative;
   padding: 10px;
 }
 .modal-content img {
-  max-width: 95vw;
-  max-height: 90vh;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 80vw;   /* ไม่เกิน 80% ของหน้าจอ */
+  max-height: 80vh;  /* ไม่เกิน 80% ของความสูง */
   border-radius: 8px;
-  object-fit: contain;
+  object-fit: contain; /* รักษาสัดส่วน ไม่เพี้ยน */
+}
+
+@media (max-width: 768px) {
+  .modal-content img {
+    max-width: 95vw;  /* มือถือใช้เกือบเต็ม */
+    max-height: 85vh;
+  }
 }
 .close {
   position: fixed;
@@ -165,28 +117,27 @@ button:disabled {
   font-weight: bold;
   color: #fff;
   cursor: pointer;
+  z-index: 1001;
+  transition: color 0.2s;
 }
 .close:hover { color: #ff4d4d; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   body { padding: 10px; }
-  th, td { padding: 8px; font-size: 0.8rem; }
+  img.slip { max-width: 60px; }
+  th, td { padding: 10px; font-size: 0.85rem; }
   h1 { font-size: 1.5rem; }
+  .modal-content img {
+    max-width: 100vw; 
+    max-height: 90vh;
+  }
 }
 </style>
 </head>
 <body>
 
 <h1>Admin Panel - Approve Registrations</h1>
-
-<div class="filters">
-  <button class="filter-btn active" data-status="all">All</button>
-  <button class="filter-btn" data-status="pending">Pending</button>
-  <button class="filter-btn" data-status="approved">Approved</button>
-</div>
-
-<input type="text" id="searchInput" placeholder="🔍 ค้นหา...ชื่อ นามสกุล อีกเมล">
 
 <table id="participantsTable">
 <thead>
@@ -202,12 +153,6 @@ button:disabled {
 </thead>
 <tbody></tbody>
 </table>
-
-<div class="pagination">
-  <button id="prevPage">⬅ Prev</button>
-  <span id="pageInfo" style="align-self:center;"></span>
-  <button id="nextPage">Next ➡</button>
-</div>
 
 <!-- Modal -->
 <div id="slipModal" class="modal">
@@ -230,34 +175,15 @@ emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
-// ---------- Data ----------
-let participantsData = [];
-let currentFilter = "all";
-let currentPage = 1;
-const itemsPerPage = 10;
-
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); return;}
-  participantsData = data || [];
-  applyFilters();
-}
-
-// ---------- Render Participants ----------
-function renderParticipants(list) {
   const tbody = document.querySelector("#participantsTable tbody");
-  if (!list || list.length === 0) {
-    tbody.innerHTML = "<tr><td colspan='7'>No data</td></tr>";
-    return;
-  }
+  if(error){ console.error(error); tbody.innerHTML="<tr><td colspan='7'>Error loading data</td></tr>"; return;}
+  if(!data || data.length===0){ tbody.innerHTML="<tr><td colspan='7'>No applicants</td></tr>"; return;}
 
-  const start = (currentPage - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const pageItems = list.slice(start, end);
-
-  tbody.innerHTML = "";
-  pageItems.forEach(p=>{
+  tbody.innerHTML="";
+  data.forEach(p=>{
     const tr = document.createElement("tr");
     tr.innerHTML=`
       <td>${p.id}</td>
@@ -267,7 +193,7 @@ function renderParticipants(list) {
       <td>${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</td>
       <td>${p.status || "Pending"}</td>
       <td>
-        <button class="approve" ${p.status?.toLowerCase()==="approved"?"disabled":""}>Approve</button>
+        <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -275,19 +201,14 @@ function renderParticipants(list) {
     const btnApprove = tr.querySelector(".approve");
     btnApprove.addEventListener("click",()=>approve(p));
   });
-
-  // Update pagination info
-  document.getElementById("pageInfo").innerText = `Page ${currentPage} of ${Math.ceil(list.length / itemsPerPage)}`;
-  document.getElementById("prevPage").disabled = currentPage === 1;
-  document.getElementById("nextPage").disabled = end >= list.length;
 }
 
-// ---------- Approve ----------
+// ---------- Approve Participant ----------
 async function approve(participant){
   if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
 
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("Failed to update status!"); return;}
+  if(error){ alert("Failed to update status!"); console.error(error); return;}
 
   const templateParams = {
     to_email: participant.email,
@@ -296,58 +217,17 @@ async function approve(participant){
   };
 
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(()=>{
+    .then(res=>{
+      console.log("Email sent:", res);
       alert(`Approved & email sent to ${participant.email}`);
       loadParticipants();
     })
-    .catch(()=>{
-      alert(`Approved but email failed to send`);
+    .catch(err=>{
+      console.error("Email failed:", err);
+      alert(`Approved but email failed to send to ${participant.email}`);
       loadParticipants();
     });
 }
-
-// ---------- Filters ----------
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.getAttribute("data-status");
-    currentPage = 1;
-    applyFilters();
-  });
-});
-
-document.getElementById("searchInput").addEventListener("input", ()=>{
-  currentPage = 1;
-  applyFilters();
-});
-
-function applyFilters() {
-  const keyword = document.getElementById("searchInput").value.toLowerCase();
-  let filtered = participantsData.filter(p =>
-    `${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword) ||
-    (p.email || "").toLowerCase().includes(keyword) ||
-    (p.category || "").toLowerCase().includes(keyword)
-  );
-
-  if (currentFilter !== "all") {
-    filtered = filtered.filter(p => (p.status || "pending").toLowerCase() === currentFilter);
-  }
-
-  renderParticipants(filtered);
-}
-
-// ---------- Pagination ----------
-document.getElementById("prevPage").addEventListener("click", ()=>{
-  if (currentPage > 1) {
-    currentPage--;
-    applyFilters();
-  }
-});
-document.getElementById("nextPage").addEventListener("click", ()=>{
-  currentPage++;
-  applyFilters();
-});
 
 // ---------- Modal ----------
 function openModal(url){ 
@@ -357,8 +237,16 @@ function openModal(url){
 }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// ---------- Start ----------
+// ---------- Load Data ----------
 loadParticipants();
+
+// ---------- Security ----------
+document.addEventListener("contextmenu", e=>{ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
+document.addEventListener("keydown", e=>{ 
+  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ 
+    e.preventDefault(); alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด"); 
+  }
+});
 </script>
 </body>
 </html>
