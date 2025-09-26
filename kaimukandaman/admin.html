@@ -7,71 +7,98 @@
 <style>
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f9;
+  background: #121212;
+  color: #eee;
   margin: 0;
   padding: 20px;
-  color: #333;
 }
 h1 {
   text-align: center;
-  margin-bottom: 30px;
-  color: #222;
+  margin-bottom: 15px;
   font-size: 2rem;
-}
-
-/* ---------- Table ---------- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  border-radius: 8px;
-  overflow: hidden;
-}
-th, td {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  text-align: center;
-  font-size: 0.95rem;
-}
-th {
-  background: #222;
   color: #fff;
-  font-weight: 600;
 }
-tr:hover { background: #f1f1f1; transition: 0.3s; }
 
-img.slip {
-  max-width: 80px;
+/* ---------- Search & Filter ---------- */
+.search-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.search-box input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #1e1e1e;
+  color: #fff;
+}
+.filter-btn {
+  padding: 10px 15px;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  background: #333;
+  color: #fff;
+  transition: 0.3s;
+}
+.filter-btn.active, .filter-btn:hover {
+  background: #28a745;
+  color: #fff;
+}
+
+/* ---------- Card Layout ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+.card {
+  background: #1e1e1e;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: transform 0.2s;
+}
+.card:hover { transform: scale(1.02); }
+.card h3 { margin: 0 0 10px; color: #fff; }
+.card p { margin: 5px 0; font-size: 0.9rem; color: #ccc; }
+
+img.slip {
+  max-width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 img.slip:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-button {
-  padding: 8px 16px;
+button.approve {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.3s;
-}
-button.approve {
   background: #28a745;
   color: #fff;
   font-weight: 500;
-  box-shadow: 0 3px 8px rgba(40,167,69,0.4);
+  transition: 0.3s;
 }
 button.approve:hover:not(:disabled) {
   background: #218838;
   transform: translateY(-2px);
 }
 button:disabled {
-  background: #ccc;
+  background: #555;
   cursor: not-allowed;
 }
 
@@ -82,8 +109,8 @@ button:disabled {
   z-index: 1000;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.9);
-  overflow: auto; /* scroll ถ้าภาพใหญ่เกินหน้าจอ */
+  background-color: rgba(0,0,0,0.95);
+  overflow: auto;
 }
 .modal-content {
   display: flex;
@@ -95,19 +122,10 @@ button:disabled {
 }
 .modal-content img {
   display: block;
-  width: auto;
-  height: auto;
-  max-width: 80vw;   /* ไม่เกิน 80% ของหน้าจอ */
-  max-height: 80vh;  /* ไม่เกิน 80% ของความสูง */
+  max-width: 90vw;
+  max-height: 85vh;
   border-radius: 8px;
-  object-fit: contain; /* รักษาสัดส่วน ไม่เพี้ยน */
-}
-
-@media (max-width: 768px) {
-  .modal-content img {
-    max-width: 95vw;  /* มือถือใช้เกือบเต็ม */
-    max-height: 85vh;
-  }
+  object-fit: contain;
 }
 .close {
   position: fixed;
@@ -118,20 +136,12 @@ button:disabled {
   color: #fff;
   cursor: pointer;
   z-index: 1001;
-  transition: color 0.2s;
 }
 .close:hover { color: #ff4d4d; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
-  body { padding: 10px; }
-  img.slip { max-width: 60px; }
-  th, td { padding: 10px; font-size: 0.85rem; }
-  h1 { font-size: 1.5rem; }
-  .modal-content img {
-    max-width: 100vw; 
-    max-height: 90vh;
-  }
+  .search-box input { max-width: 100%; }
 }
 </style>
 </head>
@@ -139,20 +149,14 @@ button:disabled {
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<table id="participantsTable">
-<thead>
-<tr>
-<th>ID</th>
-<th>Full Name</th>
-<th>Email</th>
-<th>Category</th>
-<th>Slip</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="🔍 ค้นหาด้วยชื่อ นามสกุล หรืออีเมล">
+  <button class="filter-btn active" data-status="All">All</button>
+  <button class="filter-btn" data-status="Pending">Pending</button>
+  <button class="filter-btn" data-status="Approved">Approved</button>
+</div>
+
+<div class="grid" id="participantsGrid"></div>
 
 <!-- Modal -->
 <div id="slipModal" class="modal">
@@ -175,78 +179,91 @@ emailjs.init("xyPTiaVqlFqMrd_3U");
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
+let participantsData = [];
+let currentStatusFilter = "All";
+
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  const tbody = document.querySelector("#participantsTable tbody");
-  if(error){ console.error(error); tbody.innerHTML="<tr><td colspan='7'>Error loading data</td></tr>"; return;}
-  if(!data || data.length===0){ tbody.innerHTML="<tr><td colspan='7'>No applicants</td></tr>"; return;}
+  if(error){ console.error(error); return; }
+  participantsData = data || [];
+  renderParticipants();
+}
 
-  tbody.innerHTML="";
-  data.forEach(p=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML=`
-      <td>${p.id}</td>
-      <td>${p.first_name} ${p.last_name}</td>
-      <td>${p.email || "-"}</td>
-      <td>${p.category || "-"}</td>
-      <td>${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</td>
-      <td>${p.status || "Pending"}</td>
-      <td>
-        <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
-      </td>
+// ---------- Render Cards ----------
+function renderParticipants(){
+  const grid = document.getElementById("participantsGrid");
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  grid.innerHTML = "";
+
+  const filtered = participantsData.filter(p=>{
+    const matchStatus = (currentStatusFilter === "All") || (p.status === currentStatusFilter);
+    const matchSearch = (`${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword)) ||
+                        (p.email || "").toLowerCase().includes(keyword);
+    return matchStatus && matchSearch;
+  });
+
+  if(!filtered.length){
+    grid.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#aaa;'>ไม่มีข้อมูลผู้สมัคร</p>";
+    return;
+  }
+
+  filtered.forEach(p=>{
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML=`
+      <h3>${p.first_name} ${p.last_name}</h3>
+      <p><b>Email:</b> ${p.email || "-"}</p>
+      <p><b>Category:</b> ${p.category || "-"}</p>
+      <p><b>Status:</b> ${p.status || "Pending"}</p>
+      ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
+      <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
     `;
-    tbody.appendChild(tr);
+    grid.appendChild(card);
 
-    const btnApprove = tr.querySelector(".approve");
-    btnApprove.addEventListener("click",()=>approve(p));
+    const btn = card.querySelector(".approve");
+    btn.addEventListener("click",()=>approve(p));
   });
 }
 
-// ---------- Approve Participant ----------
+// ---------- Approve ----------
 async function approve(participant){
   if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
-
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("Failed to update status!"); console.error(error); return;}
+  if(error){ alert("❌ Failed to update"); return; }
 
   const templateParams = {
     to_email: participant.email,
     to_name: `${participant.first_name} ${participant.last_name}`,
     category: participant.category || "-"
   };
-
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(res=>{
-      console.log("Email sent:", res);
-      alert(`Approved & email sent to ${participant.email}`);
-      loadParticipants();
-    })
-    .catch(err=>{
-      console.error("Email failed:", err);
-      alert(`Approved but email failed to send to ${participant.email}`);
-      loadParticipants();
-    });
+    .then(()=>{ alert(`✅ Approved & Email sent to ${participant.email}`); renderParticipants(); })
+    .catch(()=>{ alert(`⚠️ Approved but email failed`); renderParticipants(); });
 }
 
 // ---------- Modal ----------
 function openModal(url){ 
-  const img = document.getElementById("slipImage");
-  img.src = url; 
+  document.getElementById("slipImage").src = url; 
   document.getElementById("slipModal").style.display = "block"; 
 }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// ---------- Load Data ----------
-loadParticipants();
+// ---------- Search ----------
+document.getElementById("searchInput").addEventListener("input", renderParticipants);
 
-// ---------- Security ----------
-document.addEventListener("contextmenu", e=>{ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
-document.addEventListener("keydown", e=>{ 
-  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ 
-    e.preventDefault(); alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด"); 
-  }
+// ---------- Filter Buttons ----------
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentStatusFilter = btn.getAttribute("data-status");
+    renderParticipants();
+  });
 });
+
+// ---------- Load ----------
+loadParticipants();
 </script>
 </body>
 </html>
