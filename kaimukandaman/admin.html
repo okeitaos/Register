@@ -14,107 +14,82 @@ body {
 }
 h1 {
   text-align: center;
-  margin-bottom: 15px;
-  font-size: 2rem;
+  margin-bottom: 20px;
   color: #fff;
 }
-
-/* ---------- Search & Filter ---------- */
-.search-box {
+.controls {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
-.search-box input {
+.controls input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
   width: 100%;
   max-width: 250px;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #555;
-  background: #1e1e1e;
-  color: #fff;
 }
-.filter-btn {
-  padding: 8px 12px;
+.controls .filters button {
+  padding: 8px 16px;
+  margin-left: 5px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
-  background: #333;
+  background: #444;
   color: #fff;
   transition: 0.3s;
-  font-size: 0.9rem;
 }
-.filter-btn.active, .filter-btn:hover {
+.controls .filters button.active, .controls .filters button:hover {
   background: #28a745;
-  color: #fff;
 }
 
-/* ---------- Card Layout ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+#cardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
 }
+
 .card {
   background: #1e1e1e;
   border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   transition: transform 0.2s;
-  position: relative;
 }
-.card:hover { transform: scale(1.02); }
-.card h3 { margin: 0 0 8px; color: #fff; font-size: 1rem; }
-.card p { margin: 4px 0; font-size: 0.85rem; color: #ccc; }
+.card:hover { transform: translateY(-5px); }
 
-/* ---------- Status Indicator ---------- */
-.status {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-}
-.status.Pending { background: #ff9800; } /* สีส้ม */
-.status.Approved { background: #4caf50; } /* สีเขียว */
-
-img.slip {
-  max-width: 100%;
+.card img.slip {
+  max-width: 100px;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 8px;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-img.slip:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  margin-bottom: 10px;
 }
 
-button.approve {
-  margin-top: 8px;
-  width: 100%;
-  padding: 8px;
+.card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+.card button.approve {
+  padding: 6px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 0.85rem;
   background: #28a745;
   color: #fff;
-  font-weight: 500;
+  margin-top: 8px;
+  width: 100%;
   transition: 0.3s;
 }
-button.approve:hover:not(:disabled) {
-  background: #218838;
-  transform: translateY(-2px);
-}
-button:disabled {
-  background: #555;
-  cursor: not-allowed;
-}
+.card button.approve:hover:not(:disabled) { background: #218838; }
+.card button:disabled { background: #555; cursor: not-allowed; }
 
 /* ---------- Modal ---------- */
 .modal {
@@ -123,7 +98,7 @@ button:disabled {
   z-index: 1000;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.95);
+  background-color: rgba(0,0,0,0.9);
   overflow: auto;
 }
 .modal-content {
@@ -136,8 +111,10 @@ button:disabled {
 }
 .modal-content img {
   display: block;
+  width: auto;
+  height: auto;
   max-width: 90vw;
-  max-height: 85vh;
+  max-height: 90vh;
   border-radius: 8px;
   object-fit: contain;
 }
@@ -145,7 +122,7 @@ button:disabled {
   position: fixed;
   right: 15px;
   top: 15px;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
@@ -153,13 +130,9 @@ button:disabled {
 }
 .close:hover { color: #ff4d4d; }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-  .search-box input { max-width: 100%; }
-  .grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-  .card h3 { font-size: 0.95rem; }
-  .card p { font-size: 0.8rem; }
-  button.approve { font-size: 12px; padding: 6px; }
+@media (max-width: 600px) {
+  .controls { flex-direction: column; gap: 10px; }
+  .card { width: 90%; }
 }
 </style>
 </head>
@@ -167,14 +140,16 @@ button:disabled {
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="🔍 ค้นหาด้วยชื่อ นามสกุล หรืออีเมล">
-  <button class="filter-btn active" data-status="All">All</button>
-  <button class="filter-btn" data-status="Pending">Pending</button>
-  <button class="filter-btn" data-status="Approved">Approved</button>
+<div class="controls">
+  <input type="text" id="searchInput" placeholder="ค้นหา ชื่อ/นามสกุล/อีเมล">
+  <div class="filters">
+    <button data-status="All" class="active">All</button>
+    <button data-status="Pending">Pending</button>
+    <button data-status="Approved">Approved</button>
+  </div>
 </div>
 
-<div class="grid" id="participantsGrid"></div>
+<div id="cardsContainer"></div>
 
 <!-- Modal -->
 <div id="slipModal" class="modal">
@@ -187,70 +162,66 @@ button:disabled {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-// ---------- Supabase Config ----------
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ---------- EmailJS Init ----------
 emailjs.init("xyPTiaVqlFqMrd_3U"); 
 const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
 let participantsData = [];
 let currentStatusFilter = "All";
+const searchInput = document.getElementById("searchInput");
 
-// ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
-  if(error){ console.error(error); return; }
+  if(error){ console.error(error); alert("Error loading data"); return;}
   participantsData = data || [];
-  renderParticipants();
+  renderCards();
 }
 
-// ---------- Render Cards ----------
-function renderParticipants(){
-  const grid = document.getElementById("participantsGrid");
-  const keyword = document.getElementById("searchInput").value.toLowerCase();
-  grid.innerHTML = "";
+function renderCards(){
+  const container = document.getElementById("cardsContainer");
+  const keyword = searchInput.value.trim().toLowerCase();
 
   const filtered = participantsData.filter(p=>{
-    const matchStatus = (currentStatusFilter === "All") || (p.status === currentStatusFilter);
+    const status = (p.status || "Pending").toLowerCase();
+    const matchStatus = currentStatusFilter === "All" || status === currentStatusFilter.toLowerCase();
     const matchSearch = (`${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword)) ||
-                        (p.email || "").toLowerCase().includes(keyword);
+                        (p.email||"").toLowerCase().includes(keyword);
     return matchStatus && matchSearch;
   });
 
-  if(!filtered.length){
-    grid.innerHTML = "<p style='grid-column:1/-1;text-align:center;color:#aaa;'>ไม่มีข้อมูลผู้สมัคร</p>";
+  container.innerHTML = "";
+  if(filtered.length === 0){
+    container.innerHTML = "<p style='color:#aaa;text-align:center;width:100%;'>No applicants found</p>";
     return;
   }
 
   filtered.forEach(p=>{
     const card = document.createElement("div");
     card.className = "card";
-    const statusClass = p.status || "Pending";
-    card.innerHTML=`
-      <span class="status ${statusClass}"></span>
-      <h3>${p.first_name} ${p.last_name}</h3>
-      <p><b>Email:</b> ${p.email || "-"}</p>
-      <p><b>Category:</b> ${p.category || "-"}</p>
-      <p><b>Status:</b> ${p.status || "Pending"}</p>
+    const statusText = p.status || "Pending";
+    card.innerHTML = `
       ${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : ""}
-      <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
+      <p><b>${p.first_name} ${p.last_name}</b></p>
+      <p>${p.email || "-"}</p>
+      <p>Category: ${p.category || "-"}</p>
+      <p>Status: ${statusText}</p>
+      <button class="approve" ${statusText==="Approved"?"disabled":""}>Approve</button>
     `;
-    grid.appendChild(card);
+    container.appendChild(card);
 
     const btn = card.querySelector(".approve");
     btn.addEventListener("click",()=>approve(p));
   });
 }
 
-// ---------- Approve ----------
 async function approve(participant){
   if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
-  if(error){ alert("❌ Failed to update"); return; }
+  if(error){ alert("Failed!"); console.error(error); return;}
 
   const templateParams = {
     to_email: participant.email,
@@ -258,32 +229,34 @@ async function approve(participant){
     category: participant.category || "-"
   };
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(()=>{ alert(`✅ Approved & Email sent to ${participant.email}`); renderParticipants(); })
-    .catch(()=>{ alert(`⚠️ Approved but email failed`); renderParticipants(); });
+    .then(()=>{ loadParticipants(); })
+    .catch(()=>{ loadParticipants(); });
 }
 
-// ---------- Modal ----------
-function openModal(url){ 
-  document.getElementById("slipImage").src = url; 
-  document.getElementById("slipModal").style.display = "block"; 
-}
+// Modal
+function openModal(url){ document.getElementById("slipImage").src=url; document.getElementById("slipModal").style.display="block"; }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// ---------- Search ----------
-document.getElementById("searchInput").addEventListener("input", renderParticipants);
-
-// ---------- Filter Buttons ----------
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+// Filter buttons
+document.querySelectorAll(".filters button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    currentStatusFilter = btn.getAttribute("data-status");
-    renderParticipants();
+    currentStatusFilter = btn.dataset.status;
+    renderCards();
   });
 });
 
-// ---------- Load ----------
+// Search input
+searchInput.addEventListener("input", renderCards);
+
 loadParticipants();
+
+// Security
+document.addEventListener("contextmenu", e=>{ e.preventDefault(); });
+document.addEventListener("keydown", e=>{ 
+  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")) e.preventDefault();
+});
 </script>
 </body>
 </html>
