@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin - Approve Registrations</title>
 <style>
+/* ---------- Global ---------- */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f9;
+  background: linear-gradient(135deg, #e3f2fd, #f9f9f9);
   margin: 0;
   padding: 20px;
   color: #333;
@@ -15,8 +16,10 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #222;
+  color: #1e3c72;
   font-size: 2rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 /* ---------- Table ---------- */
@@ -24,22 +27,24 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 th, td {
   padding: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #f0f0f0;
   text-align: center;
   font-size: 0.95rem;
 }
 th {
-  background: #222;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
   color: #fff;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-tr:hover { background: #f1f1f1; transition: 0.3s; }
+tr:hover { background: #f9fbff; transition: 0.3s; }
 
 img.slip {
   max-width: 80px;
@@ -49,30 +54,32 @@ img.slip {
 }
 img.slip:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
 
+/* ---------- Buttons ---------- */
 button {
-  padding: 8px 16px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.3s;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 button.approve {
-  background: #28a745;
+  background: linear-gradient(135deg, #28a745, #34d058);
   color: #fff;
-  font-weight: 500;
-  box-shadow: 0 3px 8px rgba(40,167,69,0.4);
+  box-shadow: 0 4px 12px rgba(40,167,69,0.4);
 }
 button.approve:hover:not(:disabled) {
-  background: #218838;
+  background: linear-gradient(135deg, #218838, #2ecc71);
   transform: translateY(-2px);
 }
 button:disabled {
   background: #ccc;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ---------- Modal ---------- */
@@ -82,56 +89,74 @@ button:disabled {
   z-index: 1000;
   left: 0; top: 0;
   width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.9);
-  overflow: auto; /* scroll ถ้าภาพใหญ่เกินหน้าจอ */
-}
-.modal-content {
+  background: rgba(0,0,0,0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  padding: 15px;
+}
+.modal-content {
   position: relative;
-  padding: 10px;
+  max-width: 90vw;
+  max-height: 90vh;
 }
 .modal-content img {
-  display: block;
   width: auto;
   height: auto;
-  max-width: 80vw;   /* ไม่เกิน 80% ของหน้าจอ */
-  max-height: 80vh;  /* ไม่เกิน 80% ของความสูง */
-  border-radius: 8px;
-  object-fit: contain; /* รักษาสัดส่วน ไม่เพี้ยน */
-}
-
-@media (max-width: 768px) {
-  .modal-content img {
-    max-width: 95vw;  /* มือถือใช้เกือบเต็ม */
-    max-height: 85vh;
-  }
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 .close {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  font-size: 30px;
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  font-size: 32px;
   font-weight: bold;
   color: #fff;
   cursor: pointer;
-  z-index: 1001;
-  transition: color 0.2s;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  padding: 5px 12px;
+  transition: 0.3s;
 }
-.close:hover { color: #ff4d4d; }
+.close:hover { background: rgba(255,0,0,0.8); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   body { padding: 10px; }
-  img.slip { max-width: 60px; }
-  th, td { padding: 10px; font-size: 0.85rem; }
   h1 { font-size: 1.5rem; }
-  .modal-content img {
-    max-width: 100vw; 
-    max-height: 90vh;
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
   }
+  thead { display: none; }
+
+  tr {
+    margin-bottom: 12px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 12px;
+  }
+  td {
+    border: none;
+    text-align: left;
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #1e3c72;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  img.slip { max-width: 100px; }
+  button { width: 100%; margin-top: 5px; }
 }
 </style>
 </head>
@@ -179,20 +204,20 @@ const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
   const tbody = document.querySelector("#participantsTable tbody");
-  if(error){ console.error(error); tbody.innerHTML="<tr><td colspan='7'>Error loading data</td></tr>"; return;}
+  if(error){ console.error(error); tbody.innerHTML="<tr><td colspan='7'>❌ Error loading data</td></tr>"; return;}
   if(!data || data.length===0){ tbody.innerHTML="<tr><td colspan='7'>No applicants</td></tr>"; return;}
 
   tbody.innerHTML="";
   data.forEach(p=>{
     const tr = document.createElement("tr");
     tr.innerHTML=`
-      <td>${p.id}</td>
-      <td>${p.first_name} ${p.last_name}</td>
-      <td>${p.email || "-"}</td>
-      <td>${p.category || "-"}</td>
-      <td>${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</td>
-      <td>${p.status || "Pending"}</td>
-      <td>
+      <td data-label="ID">${p.id}</td>
+      <td data-label="Full Name">${p.first_name} ${p.last_name}</td>
+      <td data-label="Email">${p.email || "-"}</td>
+      <td data-label="Category">${p.category || "-"}</td>
+      <td data-label="Slip">${p.slip_url ? `<img src="${p.slip_url}" class="slip" onclick="openModal('${p.slip_url}')"/>` : "-"}</td>
+      <td data-label="Status">${p.status || "Pending"}</td>
+      <td data-label="Action">
         <button class="approve" ${p.status==="Approved"?"disabled":""}>Approve</button>
       </td>
     `;
@@ -203,9 +228,9 @@ async function loadParticipants() {
   });
 }
 
-// ---------- Approve Participant ----------
+// ---------- Approve ----------
 async function approve(participant){
-  if(!confirm(`Approve ${participant.first_name} ${participant.last_name}?`)) return;
+  if(!confirm(`✅ Approve ${participant.first_name} ${participant.last_name}?`)) return;
 
   const { error } = await client.from("kaimukandaman").update({status:"Approved"}).eq("id",participant.id);
   if(error){ alert("Failed to update status!"); console.error(error); return;}
@@ -217,36 +242,25 @@ async function approve(participant){
   };
 
   emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(res=>{
-      console.log("Email sent:", res);
-      alert(`Approved & email sent to ${participant.email}`);
+    .then(()=>{
+      alert(`✅ Approved & Email sent to ${participant.email}`);
       loadParticipants();
     })
-    .catch(err=>{
-      console.error("Email failed:", err);
-      alert(`Approved but email failed to send to ${participant.email}`);
+    .catch(()=>{
+      alert(`Approved but email failed ❌`);
       loadParticipants();
     });
 }
 
 // ---------- Modal ----------
 function openModal(url){ 
-  const img = document.getElementById("slipImage");
-  img.src = url; 
-  document.getElementById("slipModal").style.display = "block"; 
+  document.getElementById("slipImage").src = url; 
+  document.getElementById("slipModal").style.display = "flex"; 
 }
 function closeModal(){ document.getElementById("slipModal").style.display="none"; }
 
-// ---------- Load Data ----------
+// ---------- Load ----------
 loadParticipants();
-
-// ---------- Security ----------
-document.addEventListener("contextmenu", e=>{ e.preventDefault(); alert("❌ ไม่อนุญาตให้คลิกขวา"); });
-document.addEventListener("keydown", e=>{ 
-  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){ 
-    e.preventDefault(); alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด"); 
-  }
-});
 </script>
 </body>
 </html>
