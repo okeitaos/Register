@@ -105,21 +105,23 @@ td { font-weight: 500; }
 </style>
 </head>
 <body>
-<h1>Approved Participants</h1>
+<h1 id="title">Approved Participants</h1>
 <div class="container">
   <div class="controls">
     <input type="text" id="searchInput" placeholder="Search by name...">
-    <select id="filterCategory">
-      <option value="">All Categories</option>
+    <select id="filterCategory"></select>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="th">ไทย</option>
     </select>
   </div>
 
   <table id="participantsTable">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Full Name</th>
-        <th>Category</th>
+        <th id="thNumber">#</th>
+        <th id="thName">Full Name</th>
+        <th id="thCategory">Category</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -137,6 +139,39 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let allParticipants = [];
 let currentPage = 1;
 const itemsPerPage = 10;
+let currentLang = "en";
+
+const i18n = {
+  en: {
+    title: "Approved Participants",
+    search: "Search by name...",
+    allCategories: "All Categories",
+    number: "#",
+    name: "Full Name",
+    category: "Category",
+    noData: "No participants found"
+  },
+  th: {
+    title: "รายชื่อผู้เข้าร่วมที่อนุมัติแล้ว",
+    search: "ค้นหาชื่อ...",
+    allCategories: "ทุกหมวดหมู่",
+    number: "ลำดับ",
+    name: "ชื่อ-นามสกุล",
+    category: "หมวดหมู่",
+    noData: "ไม่พบข้อมูล"
+  }
+};
+
+function applyLanguage(){
+  const t = i18n[currentLang];
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("searchInput").placeholder = t.search;
+  document.getElementById("thNumber").textContent = t.number;
+  document.getElementById("thName").textContent = t.name;
+  document.getElementById("thCategory").textContent = t.category;
+  populateFilter();
+  displayParticipants();
+}
 
 async function loadParticipants(){
   const { data, error } = await client.from("kaimukandaman")
@@ -152,7 +187,7 @@ async function loadParticipants(){
 function populateFilter(){
   const select = document.getElementById("filterCategory");
   const categories = [...new Set(allParticipants.map(p=>p.category).filter(c=>c))];
-  select.innerHTML = `<option value="">All Categories</option>` + categories.map(c=>`<option value="${c}">${c}</option>`).join("");
+  select.innerHTML = `<option value="">${i18n[currentLang].allCategories}</option>` + categories.map(c=>`<option value="${c}">${c}</option>`).join("");
   select.onchange = () => { currentPage=1; displayParticipants(); };
 }
 
@@ -173,15 +208,15 @@ function displayParticipants(){
   pageItems.forEach((p,i)=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td data-label="#">${start + i + 1}</td>
-      <td data-label="Full Name">${p.first_name} ${p.last_name}</td>
-      <td data-label="Category">${p.category || "-"}</td>
+      <td data-label="${i18n[currentLang].number}">${start + i + 1}</td>
+      <td data-label="${i18n[currentLang].name}">${p.first_name} ${p.last_name}</td>
+      <td data-label="${i18n[currentLang].category}">${p.category || "-"}</td>
     `;
     tbody.appendChild(tr);
   });
 
   if(filtered.length===0){
-    tbody.innerHTML = `<tr><td colspan="3">No participants found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="3">${i18n[currentLang].noData}</td></tr>`;
   }
 
   const paginationDiv = document.getElementById("pagination");
@@ -195,26 +230,16 @@ function displayParticipants(){
   }
 }
 
+// Search input
 document.getElementById("searchInput").addEventListener("input", () => { currentPage=1; displayParticipants(); });
+// Language select
+document.getElementById("languageSelect").addEventListener("change", (e)=>{
+  currentLang = e.target.value;
+  applyLanguage();
+});
 
-loadParticipants();
+loadParticipants().then(applyLanguage);
 setInterval(loadParticipants,5000);
-
-// ป้องกันการคลิกขวา
-document.addEventListener("contextmenu", function(e) {
-  e.preventDefault();
-  alert("❌ ไม่อนุญาตให้คลิกขวา");
-});
-
-// ป้องกันการกดปุ่ม F12, Ctrl+Shift+I, Ctrl+U
-document.addEventListener("keydown", function(e) {
-  if (e.key === "F12" || 
-      (e.ctrlKey && e.shiftKey && e.key === "I") || 
-      (e.ctrlKey && e.key === "u")) {
-    e.preventDefault();
-    alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด");
-  }
-});
 </script>
 </body>
 </html>
