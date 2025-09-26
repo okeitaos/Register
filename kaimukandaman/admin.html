@@ -6,11 +6,13 @@
 <title>Admin - Approve Registrations</title>
 <style>
 :root {
-  --primary: #2563eb;
-  --success: #16a34a;
-  --danger: #dc2626;
-  --bg: #f9fafb;
-  --card-bg: #fff;
+  --primary: #3b82f6;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --bg: #111827;         /* พื้นหลังหลัก */
+  --card-bg: #1f2937;    /* พื้นหลัง card */
+  --text: #f9fafb;       /* ตัวหนังสือ */
+  --muted: #9ca3af;      /* สีรอง */
 }
 
 body {
@@ -18,35 +20,56 @@ body {
   background: var(--bg);
   margin: 0;
   padding: 15px;
-  color: #333;
+  color: var(--text);
 }
 
 h1 {
   text-align: center;
   font-size: 1.8rem;
-  margin-bottom: 10px;
-  color: #111;
+  margin-bottom: 15px;
+  color: var(--text);
 }
 
-/* ---------- Search ---------- */
-.search-box {
+/* ---------- Controls (Search + Filter) ---------- */
+.controls {
   max-width: 900px;
   margin: 0 auto 20px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
 }
 .search-box input {
-  width: 100%;
   padding: 10px 14px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #374151;
   font-size: 1rem;
   outline: none;
+  background: #111;
+  color: var(--text);
 }
 .search-box input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
 }
+.filters {
+  display: flex;
+  gap: 8px;
+}
+.filters button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: #374151;
+  color: var(--text);
+  transition: 0.2s;
+}
+.filters button.active {
+  background: var(--primary);
+}
+.filters button:hover { background: #4b5563; }
 
 /* ---------- Container ---------- */
 .container {
@@ -61,7 +84,7 @@ h1 {
   background: var(--card-bg);
   border-radius: 12px;
   padding: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -70,13 +93,13 @@ h1 {
 .card-header {
   font-weight: bold;
   font-size: 1rem;
-  color: #111;
+  color: var(--text);
 }
 
 .card-detail {
   font-size: 0.9rem;
   line-height: 1.4;
-  color: #444;
+  color: var(--muted);
 }
 
 .card img.slip {
@@ -87,7 +110,7 @@ h1 {
 }
 .card img.slip:hover {
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .card-footer {
@@ -110,10 +133,10 @@ button.approve {
   font-weight: 500;
 }
 button.approve:hover:not(:disabled) {
-  background: #15803d;
+  background: #16a34a;
 }
 button:disabled {
-  background: #ccc;
+  background: #555;
   cursor: not-allowed;
 }
 
@@ -143,15 +166,22 @@ button:disabled {
   cursor: pointer;
   font-weight: bold;
 }
-.modal .close:hover { color: #f87171; }
+.modal .close:hover { color: var(--danger); }
 </style>
 </head>
 <body>
 
 <h1>Admin Panel - Approve Registrations</h1>
 
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="🔍 ค้นหาชื่อ, อีเมล หรือหมวดหมู่...">
+<div class="controls">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 ค้นหาชื่อ, อีเมล หรือหมวดหมู่...">
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" data-status="all">All</button>
+    <button class="filter-btn" data-status="Pending">Pending</button>
+    <button class="filter-btn" data-status="Approved">Approved</button>
+  </div>
 </div>
 
 <div class="container" id="participantsList"></div>
@@ -178,13 +208,14 @@ const EMAILJS_SERVICE_ID = "service_w51dn0v";
 const EMAILJS_TEMPLATE_ID = "template_ghijgse";
 
 let participantsData = [];
+let currentFilter = "all";
 
 // ---------- Load Participants ----------
 async function loadParticipants() {
   const { data, error } = await client.from("kaimukandaman").select("*").order("id",{ascending:true});
   if(error){ console.error(error); return; }
   participantsData = data || [];
-  renderParticipants(participantsData);
+  applyFilters();
 }
 
 // ---------- Render ----------
@@ -249,15 +280,29 @@ function closeModal(){
   document.getElementById("slipModal").style.display="none"; 
 }
 
-// ---------- Search ----------
-document.getElementById("searchInput").addEventListener("input", (e)=>{
-  const keyword = e.target.value.toLowerCase();
-  const filtered = participantsData.filter(p=>
+// ---------- Search + Filter ----------
+function applyFilters(){
+  const keyword = document.getElementById("searchInput").value.toLowerCase();
+  let filtered = participantsData.filter(p=>
     `${p.first_name} ${p.last_name}`.toLowerCase().includes(keyword) ||
     (p.email || "").toLowerCase().includes(keyword) ||
     (p.category || "").toLowerCase().includes(keyword)
   );
+  if(currentFilter !== "all"){
+    filtered = filtered.filter(p=>(p.status || "Pending") === currentFilter);
+  }
   renderParticipants(filtered);
+}
+
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.status;
+    applyFilters();
+  });
 });
 
 // ---------- Init ----------
