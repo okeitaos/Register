@@ -80,8 +80,8 @@
   <label id="labelLastName">นามสกุล</label>
   <input type="text" id="lastName" required>
 
-  <label id="labelNationalId">เลขบัตรประชาชน</label>
-  <input type="text" id="nationalId" maxlength="13" required>
+  <label id="labelNationalId">เลขบัตรประชาชน / Passport</label>
+  <input type="text" id="nationalId" required>
 
   <label id="labelPhone">เบอร์โทรศัพท์</label>
   <input type="tel" id="phone" maxlength="10" required>
@@ -176,7 +176,7 @@ function toggleLang(){
     document.getElementById("formSubtitle").innerText="Fill in the form to join the event";
     document.getElementById("labelFirstName").innerText="First Name";
     document.getElementById("labelLastName").innerText="Last Name";
-    document.getElementById("labelNationalId").innerText="National ID (13 digits)";
+    document.getElementById("labelNationalId").innerText="National ID / Passport";
     document.getElementById("labelPhone").innerText="Phone Number";
     document.getElementById("labelEmail").innerText="Email";
     document.getElementById("labelAge").innerText="Age";
@@ -193,7 +193,7 @@ function toggleLang(){
     document.getElementById("formSubtitle").innerText="Running Registration Form";
     document.getElementById("labelFirstName").innerText="ชื่อ";
     document.getElementById("labelLastName").innerText="นามสกุล";
-    document.getElementById("labelNationalId").innerText="เลขบัตรประชาชน";
+    document.getElementById("labelNationalId").innerText="เลขบัตรประชาชน / Passport";
     document.getElementById("labelPhone").innerText="เบอร์โทรศัพท์";
     document.getElementById("labelEmail").innerText="Email";
     document.getElementById("labelAge").innerText="อายุ";
@@ -209,23 +209,30 @@ function toggleLang(){
   renderCategories();
 }
 
+// ✅ ฟังก์ชันตรวจสอบบัตร/Passport
+function isValidNationalIdOrPassport(value) {
+  const thaiIdRegex = /^\d{13}$/; // บัตรประชาชน 13 หลัก
+  const passportRegex = /^[A-Za-z0-9]{6,15}$/; // Passport
+  return thaiIdRegex.test(value) || passportRegex.test(value);
+}
+
 // Submit form
 document.getElementById("registerForm").addEventListener("submit", async(e)=>{
   e.preventDefault();
   document.getElementById("loading").style.display="block";
 
-  const firstName = document.getElementById("firstName").value;
-  const lastName = document.getElementById("lastName").value;
-  const nationalId = document.getElementById("nationalId").value;
-  const phone = document.getElementById("phone").value;
-  const email = document.getElementById("email").value;
-  const age = document.getElementById("age").value;
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const nationalId = document.getElementById("nationalId").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const age = document.getElementById("age").value.trim();
   const shirtSize = document.getElementById("shirtSize").value;
   const category = document.getElementById("category").value;
   const slipFile = document.getElementById("slip").files[0];
 
-  if(nationalId.length !== 13 || !/^\d+$/.test(nationalId)){
-    alert("เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก");
+  if(!isValidNationalIdOrPassport(nationalId)){
+    alert("กรุณากรอกเลขบัตรประชาชน (13 หลัก) หรือ Passport (6-15 ตัวอักษร/ตัวเลข)");
     document.getElementById("loading").style.display="none";
     return;
   }
@@ -233,7 +240,7 @@ document.getElementById("registerForm").addEventListener("submit", async(e)=>{
   const { data: existing } = await supabaseClient.from("kaimukandaman")
     .select("national_id").eq("national_id",nationalId);
   if(existing && existing.length>0){
-    alert("เลขบัตรประชาชนนี้ลงทะเบียนแล้ว ❌");
+    alert("เลขบัตร/Passport นี้ลงทะเบียนแล้ว ❌");
     document.getElementById("loading").style.display="none";
     return;
   }
@@ -267,23 +274,6 @@ document.getElementById("registerForm").addEventListener("submit", async(e)=>{
   document.getElementById("resultModal").style.display="flex";
 
   document.getElementById("registerForm").reset();
-});
-
-
-  // ป้องกันการคลิกขวา
-document.addEventListener("contextmenu", function(e) {
-  e.preventDefault();
-  alert("❌ ไม่อนุญาตให้คลิกขวา");
-});
-
-// ป้องกันการกดปุ่ม F12, Ctrl+Shift+I, Ctrl+U
-document.addEventListener("keydown", function(e) {
-  if (e.key === "F12" || 
-      (e.ctrlKey && e.shiftKey && e.key === "I") || 
-      (e.ctrlKey && e.key === "u")) {
-    e.preventDefault();
-    alert("❌ ไม่อนุญาตให้ตรวจสอบโค้ด");
-  }
 });
 </script>
 </body>
