@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ลงทะเบียนวิ่ง | Running Registration</title>
 <style>
   body { 
@@ -12,62 +12,60 @@
     display:flex; justify-content:center; align-items:center;
   }
   form.container {
-    position: relative; width:100%; max-width:500px;
-    background: rgba(255,255,255,0.05); border-radius:25px; padding:35px 25px 50px 25px;
-    backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    border:1px solid rgba(255,255,255,0.15); text-align:left;
+    position: relative; width:100%; max-width:540px;
+    background: rgba(255,255,255,0.05); border-radius:20px; padding:28px;
+    backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.08); text-align:left;
   }
-  .logo { display:block; margin:0 auto 15px auto; width:80px; height:80px; }
-  h1 { text-align:center; font-size:1.9rem; color:#facc15; margin-bottom:5px; text-shadow: 0 0 15px rgba(250, 204, 21,0.7); }
-  h2 { text-align:center; font-size:1rem; color:#cbd5e1; margin-bottom:20px; }
-  label { display:block; font-weight:500; margin-bottom:6px; margin-top:12px; }
+  .logo { display:block; margin:0 auto 12px auto; width:66px; height:66px; }
+  h1 { text-align:center; font-size:1.6rem; color:#facc15; margin-bottom:4px;}
+  h2 { text-align:center; font-size:0.95rem; color:#cbd5e1; margin-bottom:14px; }
+  label { display:block; font-weight:600; margin-bottom:6px; margin-top:12px; font-size:0.95rem; }
+  .row { display:flex; gap:10px; align-items:center; }
   input, select {
-    width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1); color:#fff; font-size:1rem; outline:none;
-    transition: all 0.3s ease; box-sizing:border-box;
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06); color:#fff; font-size:0.96rem; outline:none;
+    transition: all 0.18s ease; box-sizing:border-box;
   }
-  input:focus, select:focus { border-color:#facc15; box-shadow:0 0 10px #facc15; }
+  input:focus, select:focus { border-color:#facc15; box-shadow:0 3px 12px rgba(250,204,21,0.12); }
+  .small { width:130px; }
+  .inline { display:flex; gap:8px; }
+  .hint { font-size:0.85rem; color:#ffd; margin-top:6px; }
+  .error { font-size:0.85rem; color:#ff7b7b; margin-top:6px; white-space:pre-line; }
   button#submitBtn {
-    display:block; width:100%; padding:14px; margin-top:20px;
-    background: linear-gradient(90deg,#facc15,#f59e0b); border:none; border-radius:14px;
-    cursor:pointer; font-size:1.1rem; font-weight:bold; transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display:block; width:100%; padding:12px; margin-top:18px;
+    background: linear-gradient(90deg,#facc15,#f59e0b); border:none; border-radius:12px;
+    cursor:pointer; font-size:1rem; font-weight:700; color:#111;
   }
-  button#submitBtn:hover { transform: translateY(-2px); box-shadow:0 6px 20px rgba(250,204,21,0.5); }
-  #loading { display:none; text-align:center; margin-top:12px; font-style:italic; }
+  button#submitBtn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+  #loading { display:none; text-align:center; margin-top:8px; font-style:italic; color:#cbd5e1; }
 
   .lang-switch {
-    position:absolute; top:15px; right:15px; background:#facc15; color:#000;
-    border:none; padding:5px 12px; border-radius:25px; cursor:pointer; font-weight:bold;
-    font-size:0.8rem; line-height:1.2; display:flex; align-items:center; gap:5px;
-    box-shadow:0 3px 8px rgba(0,0,0,0.3); transition: background 0.3s, transform 0.2s;
+    position:absolute; top:12px; right:12px; background:#facc15; color:#000;
+    border:none; padding:6px 12px; border-radius:20px; cursor:pointer; font-weight:700;
+    font-size:0.85rem; display:flex; align-items:center; gap:6px;
   }
-  .lang-switch:hover { background:#eab308; transform:scale(1.05); }
-  .lang-flag { font-size:1rem; }
+  .lang-switch:hover { transform:scale(1.02); }
 
   #resultModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-                background: rgba(0,0,0,0.75); justify-content:center; align-items:center;
-                z-index:999; overflow-y:auto; }
-  .modal-content { background: rgba(255,255,255,0.95); color:#000; padding:25px 20px;
-                   border-radius:20px; width:90%; max-width:400px; text-align:center;
-                   position:relative; box-shadow:0 8px 25px rgba(0,0,0,0.5);
-                   animation: fadeIn 0.3s ease-in-out; }
-  .modal-content h2 { color:#16a34a; margin-bottom:12px; font-size:1.4rem;
-                      font-weight:bold; text-shadow: 0 0 10px rgba(22,163,74,0.5); }
-  .modal-content img { max-width:200px; max-height:200px; margin-top:10px; border-radius:10px;
-                       box-shadow:0 4px 15px rgba(0,0,0,0.3); }
-  .close-btn { position:absolute; top:10px; right:10px; background:#ef4444; color:#fff;
-               border:none; border-radius:50%; width:32px; height:32px; cursor:pointer;
-               font-weight:bold; }
+                background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:999; }
+  .modal-content { background:#fff; color:#000; padding:20px; border-radius:14px; width:92%; max-width:420px; text-align:center; }
+  .close-btn { position:absolute; top:8px; right:8px; background:#ef4444; color:#fff; border:none; border-radius:50%; width:34px; height:34px; cursor:pointer; font-weight:bold; }
   .close-btn:hover { background:#dc2626; }
-  @keyframes fadeIn { from { opacity:0; transform:scale(0.9);} to { opacity:1; transform:scale(1);} }
+
+  @media (max-width:520px){
+    form.container { padding:18px; }
+    .small { width:110px; }
+  }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-<form class="container" id="registerForm">
-  <button type="button" class="lang-switch" onclick="toggleLang()">
-    <span id="langFlag" class="lang-flag">🇬🇧</span>
-    <span id="langText">EN</span>
+
+<form class="container" id="registerForm" novalidate>
+  <button type="button" class="lang-switch" id="langToggleBtn" onclick="toggleLang()">
+    <span id="langFlag">🇹🇭</span> <span id="langText">TH</span>
   </button>
 
   <img src="https://cdn-icons-png.flaticon.com/512/1041/1041883.png" class="logo" alt="Logo">
@@ -80,8 +78,23 @@
   <label id="labelLastName">นามสกุล</label>
   <input type="text" id="lastName" required>
 
-  <label id="labelNationalId">เลขบัตรประชาชน / Passport</label>
-  <input type="text" id="nationalId" required>
+  <!-- ID type + input -->
+  <div class="row" style="align-items:flex-end; margin-top:10px;">
+    <div style="flex:1 1 180px;">
+      <label id="labelIdType">ประเภทเอกสาร</label>
+      <select id="idType">
+        <option value="auto">Auto-detect</option>
+        <option value="thaiid">บัตรประชาชน</option>
+        <option value="passport">Passport</option>
+      </select>
+    </div>
+    <div style="flex:2 1 auto;">
+      <label id="labelNationalId">เลขบัตรประชาชน / Passport</label>
+      <input type="text" id="nationalId" autocomplete="off" inputmode="text" />
+      <div id="idHint" class="hint"></div>
+      <div id="idError" class="error" style="display:none"></div>
+    </div>
+  </div>
 
   <label id="labelPhone">เบอร์โทรศัพท์</label>
   <input type="tel" id="phone" maxlength="10" required>
@@ -117,113 +130,253 @@
   <div id="loading">⏳ กำลังบันทึก...</div>
 </form>
 
-<!-- Modal -->
+<!-- Result Modal -->
 <div id="resultModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal()">×</button>
     <h2 id="modalTitle">การลงทะเบียนสำเร็จ! ✅</h2>
-    <p id="resultText"></p>
-    <img id="slipPreview" src="" alt="slip">
-    <br><br>
-    <button onclick="closeModal()" style="background:#3b82f6;color:#fff;padding:10px 16px;border-radius:8px;">ปิด</button>
+    <p id="resultText" style="white-space:pre-line; text-align:left;"></p>
+    <img id="slipPreview" src="" alt="slip" style="max-width:220px; border-radius:8px; margin-top:8px;">
+    <div style="margin-top:12px;"><button onclick="closeModal()" style="background:#3b82f6;color:#fff;padding:8px 14px;border-radius:8px;border:none;">ปิด</button></div>
   </div>
 </div>
 
 <script>
+/* ====== Supabase config - ใช้คีย์จากโค้ดเดิมของคุณ (ถ้าต้องการให้ทำงานจริง ให้ตรวจสอบคีย์) ====== */
 const SUPABASE_URL = "https://mdbcfmbvqfyqluzgkowu.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kYmNmbWJ2cWZ5cWx1emdrb3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MzU2NDksImV4cCI6MjA3NDIxMTY0OX0.5PM8_3ps5brZJLK2oA_VDGbR9dVt-nr-MCo1ZEhuqeA";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* ====== State ====== */
 let categoriesData = [];
+let currentLang = "TH"; // TH or EN
 
+/* ====== Utility: Thai ID checksum ====== */
+function isValidThaiId(id){
+  if(!/^\d{13}$/.test(id)) return false;
+  let sum = 0;
+  for(let i=0;i<12;i++){
+    sum += parseInt(id.charAt(i),10) * (13 - i);
+  }
+  const check = (11 - (sum % 11)) % 10;
+  return check === parseInt(id.charAt(12),10);
+}
+function isPassportFormat(val){
+  // passport: allow alphanumeric 6-15, must include at least one letter
+  return /^(?=.*[A-Za-z])[A-Za-z0-9]{6,15}$/.test(val);
+}
+
+/* detect type by value */
+function detectIdTypeByValue(val){
+  if(isValidThaiId(val)) return "thaiid";
+  if(isPassportFormat(val)) return "passport";
+  return null;
+}
+
+/* ====== Language / Texts ====== */
+const TEXT = {
+  TH: {
+    formTitle: "ลงทะเบียนวิ่ง",
+    formSubtitle: "Running Registration Form",
+    labelFirstName: "ชื่อ",
+    labelLastName: "นามสกุล",
+    labelIdType: "ประเภทเอกสาร",
+    labelNationalId: "เลขบัตรประชาชน / Passport",
+    idHintThai: "บัตรประชาชน: ตัวเลข 13 หลัก",
+    idHintPassport: "Passport: ตัวอักษร/ตัวเลข 6–15 ตัว (ต้องมีตัวอักษรอย่างน้อย 1 ตัว)",
+    idErrorThai: "❌ กรุณากรอกเลขบัตรประชาชน 13 หลักให้ถูกต้อง",
+    idErrorPassport: "❌ กรุณากรอกหมายเลข Passport ให้ถูกต้อง (6–15 ตัว อักษร/ตัวเลข)",
+    idErrorGeneric: "❌ รูปแบบไม่ถูกต้อง",
+    labelPhone: "เบอร์โทรศัพท์",
+    labelEmail: "Email",
+    labelAge: "อายุ",
+    labelShirtSize: "ไซส์เสื้อ",
+    labelCategory: "รุ่นอายุ/เพศ",
+    labelSlip: "แนบสลิปโอนเงิน",
+    submitBtn: "ลงทะเบียน",
+    modalTitle: "การลงทะเบียนสำเร็จ! ✅",
+    duplicateMsg: "เลขบัตร/Passport นี้ลงทะเบียนแล้ว ❌",
+    uploadError: "อัพโหลดสลิปไม่สำเร็จ ❌",
+    saveError: "บันทึกไม่สำเร็จ ❌",
+    fillFields: "กรุณากรอกข้อมูลให้ครบถ้วน"
+  },
+  EN: {
+    formTitle: "Running Registration",
+    formSubtitle: "Fill in the form to join the event",
+    labelFirstName: "First Name",
+    labelLastName: "Last Name",
+    labelIdType: "Document Type",
+    labelNationalId: "National ID / Passport",
+    idHintThai: "Thai ID: 13 digits",
+    idHintPassport: "Passport: 6–15 alphanumeric (must include a letter)",
+    idErrorThai: "❌ Please enter a valid 13-digit Thai national ID",
+    idErrorPassport: "❌ Please enter a valid passport number (6–15 alphanumeric)",
+    idErrorGeneric: "❌ Invalid format",
+    labelPhone: "Phone Number",
+    labelEmail: "Email",
+    labelAge: "Age",
+    labelShirtSize: "Shirt Size",
+    labelCategory: "Category (Age / Gender)",
+    labelSlip: "Upload Payment Slip",
+    submitBtn: "Register",
+    modalTitle: "Registration Completed Successfully! ✅",
+    duplicateMsg: "This National ID / Passport is already registered ❌",
+    uploadError: "Upload slip failed ❌",
+    saveError: "Save failed ❌",
+    fillFields: "Please fill all required fields"
+  }
+};
+
+function applyLanguageUI(){
+  const t = TEXT[currentLang];
+  document.getElementById("formTitle").innerText = t.formTitle;
+  document.getElementById("formSubtitle").innerText = t.formSubtitle;
+  document.getElementById("labelFirstName").innerText = t.labelFirstName;
+  document.getElementById("labelLastName").innerText = t.labelLastName;
+  document.getElementById("labelIdType").innerText = t.labelIdType;
+  document.getElementById("labelNationalId").innerText = t.labelNationalId;
+  document.getElementById("labelPhone").innerText = t.labelPhone;
+  document.getElementById("labelEmail").innerText = t.labelEmail;
+  document.getElementById("labelAge").innerText = t.labelAge;
+  document.getElementById("labelShirtSize").innerText = t.labelShirtSize;
+  document.getElementById("labelCategory").innerText = t.labelCategory;
+  document.getElementById("labelSlip").innerText = t.labelSlip;
+  document.getElementById("submitBtn").innerText = t.submitBtn;
+  document.getElementById("modalTitle").innerText = t.modalTitle;
+  document.getElementById("langText").innerText = currentLang;
+  document.getElementById("langFlag").innerText = currentLang === "TH" ? "🇹🇭" : "🇬🇧";
+  // update category options (renderCategories uses currentLang)
+  renderCategories();
+  updateIdHint(); // update hint text
+}
+
+/* toggle language */
+function toggleLang(){
+  currentLang = currentLang === "TH" ? "EN" : "TH";
+  applyLanguageUI();
+}
+
+/* ====== Categories load and rendering ====== */
 async function loadCategories(){
-  const { data, error } = await supabaseClient.from("categories")
-    .select("*")
-    .eq("is_open",true)
-    .order("id",{ascending:true});
-  if(!error){
-    categoriesData = data;
-    renderCategories();
+  try{
+    const { data, error } = await supabaseClient.from("categories")
+      .select("*")
+      .eq("is_open",true)
+      .order("id",{ascending:true});
+    if(!error && data){
+      categoriesData = data;
+      renderCategories();
+    }
+  }catch(err){
+    console.error("loadCategories:", err);
   }
 }
 
 function renderCategories(){
   const select = document.getElementById("category");
-  select.innerHTML = '<option value="">-- เลือกรุ่นการแข่งขัน --</option>';
+  const t = TEXT[currentLang];
+  select.innerHTML = `<option value="">-- ${t.labelCategory} --</option>`;
   categoriesData.forEach(cat => {
     const opt = document.createElement("option");
-    if(currentLang === "TH") {
-      opt.value = cat.value;
-      opt.textContent = cat.name_th;
-      opt.title = cat.name_en;
-    } else {
-      opt.value = cat.value;
-      opt.textContent = cat.name_en;
-      opt.title = cat.name_th;
-    }
+    opt.value = cat.value || cat.id;
+    opt.textContent = currentLang === "TH" ? (cat.name_th || cat.name_en) : (cat.name_en || cat.name_th);
     select.appendChild(opt);
   });
 }
 
-document.addEventListener("DOMContentLoaded", loadCategories);
+/* ====== ID validation & UI helpers ====== */
+const idTypeSelect = document.getElementById("idType");
+const nationalIdInput = document.getElementById("nationalId");
+const idHintElem = document.getElementById("idHint");
+const idErrorElem = document.getElementById("idError");
+const submitBtn = document.getElementById("submitBtn");
+const loadingElem = document.getElementById("loading");
 
-function closeModal(){ document.getElementById("resultModal").style.display="none"; }
-
-let currentLang="TH";
-function toggleLang(){
-  if(currentLang==="TH"){
-    document.getElementById("formTitle").innerText="Running Registration";
-    document.getElementById("formSubtitle").innerText="Fill in the form to join the event";
-    document.getElementById("labelFirstName").innerText="First Name";
-    document.getElementById("labelLastName").innerText="Last Name";
-    document.getElementById("labelNationalId").innerText="National ID / Passport";
-    document.getElementById("labelPhone").innerText="Phone Number";
-    document.getElementById("labelEmail").innerText="Email";
-    document.getElementById("labelAge").innerText="Age";
-    document.getElementById("labelShirtSize").innerText="Shirt Size";
-    document.getElementById("labelCategory").innerText="Category (Age / Gender)";
-    document.getElementById("labelSlip").innerText="Upload Payment Slip";
-    document.getElementById("submitBtn").innerText="Register";
-    document.getElementById("modalTitle").innerText="Registration Completed Successfully! ✅";
-    document.getElementById("langText").innerText="TH";
-    document.getElementById("langFlag").innerText="🇹🇭";
-    currentLang="EN";
+function updateIdHint(){
+  const t = TEXT[currentLang];
+  const selected = idTypeSelect.value;
+  if(selected === "thaiid"){
+    idHintElem.innerText = t.idHintThai;
+  } else if(selected === "passport"){
+    idHintElem.innerText = t.idHintPassport;
   } else {
-    document.getElementById("formTitle").innerText="ลงทะเบียนวิ่ง";
-    document.getElementById("formSubtitle").innerText="Running Registration Form";
-    document.getElementById("labelFirstName").innerText="ชื่อ";
-    document.getElementById("labelLastName").innerText="นามสกุล";
-    document.getElementById("labelNationalId").innerText="เลขบัตรประชาชน / Passport";
-    document.getElementById("labelPhone").innerText="เบอร์โทรศัพท์";
-    document.getElementById("labelEmail").innerText="Email";
-    document.getElementById("labelAge").innerText="อายุ";
-    document.getElementById("labelShirtSize").innerText="ไซส์เสื้อ";
-    document.getElementById("labelCategory").innerText="รุ่นอายุ/เพศ";
-    document.getElementById("labelSlip").innerText="แนบสลิปโอนเงิน";
-    document.getElementById("submitBtn").innerText="ลงทะเบียน";
-    document.getElementById("modalTitle").innerText="การลงทะเบียนสำเร็จ! ✅";
-    document.getElementById("langText").innerText="EN";
-    document.getElementById("langFlag").innerText="🇬🇧";
-    currentLang="TH";
+    idHintElem.innerText = t.idHintThai + " / " + t.idHintPassport;
   }
-  renderCategories();
 }
 
-// ✅ ฟังก์ชันตรวจสอบบัตร/Passport
-function isValidNationalIdOrPassport(value) {
-  const thaiIdRegex = /^\d{13}$/; // บัตรประชาชน 13 หลัก
-  const passportRegex = /^[A-Za-z0-9]{6,15}$/; // Passport
-  return thaiIdRegex.test(value) || passportRegex.test(value);
+function showIdError(msg){
+  idErrorElem.style.display = "block";
+  idErrorElem.innerText = msg;
+  nationalIdInput.style.border = "2px solid #ff7b7b";
+  submitBtn.disabled = true;
+}
+function clearIdError(){
+  idErrorElem.style.display = "none";
+  idErrorElem.innerText = "";
+  nationalIdInput.style.border = "";
+  submitBtn.disabled = false;
 }
 
-// Submit form
-document.getElementById("registerForm").addEventListener("submit", async(e)=>{
+/* real-time validation */
+nationalIdInput.addEventListener("input", () => {
+  const raw = nationalIdInput.value.trim();
+  const sel = idTypeSelect.value;
+  const t = TEXT[currentLang];
+
+  if(raw === ""){
+    clearIdError();
+    updateIdHint();
+    return;
+  }
+
+  if(sel === "auto"){
+    const detected = detectIdTypeByValue(raw);
+    if(detected === "thaiid"){
+      clearIdError();
+      idHintElem.innerText = t.idHintThai;
+    } else if(detected === "passport"){
+      clearIdError();
+      idHintElem.innerText = t.idHintPassport;
+    } else {
+      showIdError(t.idErrorGeneric);
+    }
+  } else if(sel === "thaiid"){
+    if(!isValidThaiId(raw)){
+      showIdError(t.idErrorThai);
+    } else clearIdError();
+  } else if(sel === "passport"){
+    if(!isPassportFormat(raw)){
+      showIdError(t.idErrorPassport);
+    } else clearIdError();
+  }
+});
+
+/* when user changes idType select, update hint & validate again */
+idTypeSelect.addEventListener("change", () => {
+  updateIdHint();
+  // trigger validation
+  const ev = new Event('input');
+  nationalIdInput.dispatchEvent(ev);
+});
+
+/* auto-detect: if idType is auto and typed value clearly matches one type, optionally show that */
+nationalIdInput.addEventListener("blur", () => {
+  if(idTypeSelect.value === "auto"){
+    const detected = detectIdTypeByValue(nationalIdInput.value.trim());
+    if(detected){
+      // do nothing or optionally set placeholder; we keep selection as auto but show hint
+      // (we don't force-select, to avoid surprising user)
+    }
+  }
+});
+
+/* ====== Submit handler ====== */
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  document.getElementById("loading").style.display="block";
-
+  // basic required checks
   const firstName = document.getElementById("firstName").value.trim();
   const lastName = document.getElementById("lastName").value.trim();
-  const nationalId = document.getElementById("nationalId").value.trim();
+  const rawId = nationalIdInput.value.trim();
   const phone = document.getElementById("phone").value.trim();
   const email = document.getElementById("email").value.trim();
   const age = document.getElementById("age").value.trim();
@@ -231,49 +384,125 @@ document.getElementById("registerForm").addEventListener("submit", async(e)=>{
   const category = document.getElementById("category").value;
   const slipFile = document.getElementById("slip").files[0];
 
-  if(!isValidNationalIdOrPassport(nationalId)){
-    alert("กรุณากรอกเลขบัตรประชาชน (13 หลัก) หรือ Passport (6-15 ตัวอักษร/ตัวเลข)");
-    document.getElementById("loading").style.display="none";
+  const t = TEXT[currentLang];
+
+  if(!firstName || !lastName || !rawId || !phone || !email || !age || !shirtSize || !category || !slipFile){
+    alert(t.fillFields);
     return;
   }
 
-  const { data: existing } = await supabaseClient.from("kaimukandaman")
-    .select("national_id").eq("national_id",nationalId);
-  if(existing && existing.length>0){
-    alert("เลขบัตร/Passport นี้ลงทะเบียนแล้ว ❌");
-    document.getElementById("loading").style.display="none";
+  // validate according to selection / auto-detect
+  const sel = idTypeSelect.value;
+  let isValid = false;
+  if(sel === "auto"){
+    if(isValidThaiId(rawId) || isPassportFormat(rawId)) isValid = true;
+  } else if(sel === "thaiid"){
+    if(isValidThaiId(rawId)) isValid = true;
+  } else if(sel === "passport"){
+    if(isPassportFormat(rawId)) isValid = true;
+  }
+
+  if(!isValid){
+    alert(t.idErrorGeneric);
     return;
   }
 
-  const fileName = `slip_${Date.now()}_${slipFile.name}`;
-  const { error: uploadError } = await supabaseClient.storage.from("slips").upload(fileName, slipFile);
-  if(uploadError){
-    alert("อัพโหลดสลิปไม่สำเร็จ ❌");
-    console.error(uploadError);
-    document.getElementById("loading").style.display="none";
-    return;
+  // disable submit + show loading
+  submitBtn.disabled = true;
+  loadingElem.style.display = "block";
+
+  try {
+    // duplicate check using national_id field (assumes that DB column exists)
+    const { data: existing, error: exErr } = await supabaseClient.from("kaimukandaman")
+      .select("national_id")
+      .eq("national_id", rawId);
+
+    if(exErr){
+      console.error("duplicate check error:", exErr);
+    }
+    if(existing && existing.length > 0){
+      alert(t.duplicateMsg);
+      submitBtn.disabled = false;
+      loadingElem.style.display = "none";
+      return;
+    }
+
+    // upload slip to storage
+    const fileName = `slip_${Date.now()}_${(slipFile.name || "").replace(/\s+/g,'_')}`;
+    const { error: uploadError } = await supabaseClient.storage.from("slips").upload(fileName, slipFile);
+
+    if(uploadError){
+      console.error("uploadError:", uploadError);
+      alert(t.uploadError);
+      submitBtn.disabled = false;
+      loadingElem.style.display = "none";
+      return;
+    }
+
+    // build public url (alternative: use supabaseClient.storage.from('slips').getPublicUrl)
+    const slipUrl = `${SUPABASE_URL}/storage/v1/object/public/slips/${encodeURIComponent(fileName)}`;
+
+    // insert record
+    const { error: insertError } = await supabaseClient.from("kaimukandaman").insert([{
+      first_name: firstName,
+      last_name: lastName,
+      national_id: rawId,
+      phone,
+      email,
+      age,
+      shirt_size: shirtSize,
+      category,
+      slip_url: slipUrl,
+      status: "pending"
+    }]);
+
+    loadingElem.style.display = "none";
+    submitBtn.disabled = false;
+
+    if(insertError){
+      console.error("insertError:", insertError);
+      alert(t.saveError);
+      return;
+    }
+
+    // show modal with details
+    document.getElementById("resultText").innerText =
+      `${TEXT[currentLang].labelFirstName}: ${firstName} ${lastName}\n${TEXT[currentLang].labelAge}: ${age}\n${TEXT[currentLang].labelShirtSize}: ${shirtSize}\n${TEXT[currentLang].labelCategory}: ${category}\n${TEXT[currentLang].labelPhone}: ${phone}\nEmail: ${email}`;
+    document.getElementById("slipPreview").src = slipUrl;
+    document.getElementById("resultModal").style.display = "flex";
+
+    // reset form
+    document.getElementById("registerForm").reset();
+    updateIdHint();
+  } catch(err){
+    console.error("submit error:", err);
+    alert(TEXT[currentLang].saveError);
+    submitBtn.disabled = false;
+    loadingElem.style.display = "none";
   }
-  const slipUrl = `${SUPABASE_URL}/storage/v1/object/public/slips/${fileName}`;
+});
 
-  const { error } = await supabaseClient.from("kaimukandaman").insert([{
-    first_name:firstName,last_name:lastName,national_id:nationalId,
-    phone,email,age,shirt_size:shirtSize,category,slip_url:slipUrl,status:"pending"
-  }]);
+/* ====== Modal close ====== */
+function closeModal(){
+  document.getElementById("resultModal").style.display = "none";
+}
 
-  document.getElementById("loading").style.display="none";
+/* ====== Init ====== */
+document.addEventListener("DOMContentLoaded", async () => {
+  // set initial language UI
+  applyLanguageUI();
+  // load categories
+  await loadCategories();
+  // update hint
+  updateIdHint();
+});
 
-  if(error){
-    alert("บันทึกไม่สำเร็จ ❌");
-    console.error(error);
-    return;
+/* ====== small protections like before (optional) ====== */
+document.addEventListener("contextmenu", e => { /* e.preventDefault(); */ }); // keep but not blocking UX
+document.addEventListener("keydown", e=>{ 
+  if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I") || (e.ctrlKey && e.key==="u")){
+    e.preventDefault();
   }
-
-  document.getElementById("resultText").innerText=
-    `ชื่อ: ${firstName} ${lastName}\nอายุ: ${age}\nไซส์เสื้อ: ${shirtSize}\nรุ่น: ${category}\nเบอร์: ${phone}\nEmail: ${email}`;
-  document.getElementById("slipPreview").src = slipUrl;
-  document.getElementById("resultModal").style.display="flex";
-
-  document.getElementById("registerForm").reset();
 });
 </script>
 </body>
