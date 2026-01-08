@@ -5,6 +5,7 @@
   <title>PromptPay Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
@@ -22,6 +23,7 @@
       border-radius: 10px;
       background: #16a34a;
       color: white;
+      cursor: pointer;
     }
     img {
       width: 100%;
@@ -37,23 +39,36 @@
 
 <h2>ชำระเงินด้วย PromptPay</h2>
 
-<button id="payBtn">จ่าย 150 บาท</button>
+<button id="payBtn">จ่าย 15 บาท</button>
 
 <div id="qr"></div>
 <div id="status" class="status"></div>
 
 <script>
+  // ==============================
+  // CONFIG
+  // ==============================
   const SUPABASE_URL = "https://ysaqxwbtsnognltjmpht.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXF4d2J0c25vZ25sdGptcGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzczNjMsImV4cCI6MjA4MzQ1MzM2M30.__fhwZfmDHT2-M3BoETV7OeL1fIWMfDeGD16j6uBMs0";
 
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+  // ==============================
+  // ✅ FIX: สร้าง Supabase client แค่ครั้งเดียว (singleton)
+  // ==============================
+  const supabase =
+    window._supabase ??
+    (window._supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    ));
 
+  // ==============================
+  // PAY BUTTON
+  // ==============================
   document.getElementById("payBtn").onclick = async () => {
     document.getElementById("status").innerText = "กำลังสร้าง QR...";
+    document.getElementById("qr").innerHTML = "";
 
+    // เรียก Edge Function เพื่อสร้าง PromptPay QR
     const res = await fetch(
       SUPABASE_URL + "/functions/v1/create-promptpay",
       {
@@ -62,25 +77,36 @@
           "Content-Type": "application/json",
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         },
-        body: JSON.stringify({ amount: 15 })
+        body: JSON.stringify({ amount: 15 }) // บาท
       }
     );
 
+    if (!res.ok) {
+      document.getElementById("status").innerText =
+        "❌ สร้าง QR ไม่สำเร็จ";
+      return;
+    }
+
     const data = await res.json();
 
+    // แสดง QR
     document.getElementById("qr").innerHTML = `
-      <img src="${data.qr}">
+      <img src="${data.qr}" alt="PromptPay QR">
       <p>สแกน QR PromptPay ภายใน 5 นาที</p>
     `;
 
+    // ตั้งเวลาหมดอายุ QR (5 นาที)
     setTimeout(() => {
       document.getElementById("status").innerText =
         "❌ QR หมดอายุ กรุณาสร้างใหม่";
       document.getElementById("qr").innerHTML = "";
     }, 5 * 60 * 1000);
 
+    // ==============================
+    // Realtime: ฟังสถานะการจ่ายเงิน
+    // ==============================
     supabase
-      .channel("orders")
+      .channel("orders-status")
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "orders" },
