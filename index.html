@@ -52,14 +52,16 @@
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXF4d2J0c25vZ25sdGptcGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzczNjMsImV4cCI6MjA4MzQ1MzM2M30.__fhwZfmDHT2-M3BoETV7OeL1fIWMfDeGD16j6uBMs0";
 
   // ==============================
-  // ✅ FIX: สร้าง Supabase client แค่ครั้งเดียว (singleton)
+  // ✅ FIX ถาวร: ใช้ var + singleton
   // ==============================
-  const supabase =
-    window._supabase ??
-    (window._supabase = window.supabase.createClient(
+  var supabase = window._supabase;
+  if (!supabase) {
+    supabase = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_ANON_KEY
-    ));
+    );
+    window._supabase = supabase;
+  }
 
   // ==============================
   // PAY BUTTON
@@ -68,7 +70,6 @@
     document.getElementById("status").innerText = "กำลังสร้าง QR...";
     document.getElementById("qr").innerHTML = "";
 
-    // เรียก Edge Function เพื่อสร้าง PromptPay QR
     const res = await fetch(
       SUPABASE_URL + "/functions/v1/create-promptpay",
       {
@@ -89,13 +90,12 @@
 
     const data = await res.json();
 
-    // แสดง QR
     document.getElementById("qr").innerHTML = `
       <img src="${data.qr}" alt="PromptPay QR">
       <p>สแกน QR PromptPay ภายใน 5 นาที</p>
     `;
 
-    // ตั้งเวลาหมดอายุ QR (5 นาที)
+    // QR หมดอายุ 5 นาที
     setTimeout(() => {
       document.getElementById("status").innerText =
         "❌ QR หมดอายุ กรุณาสร้างใหม่";
@@ -103,7 +103,7 @@
     }, 5 * 60 * 1000);
 
     // ==============================
-    // Realtime: ฟังสถานะการจ่ายเงิน
+    // Realtime: ฟังสถานะการจ่าย
     // ==============================
     supabase
       .channel("orders-status")
