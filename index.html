@@ -5,7 +5,7 @@
   <title>PromptPay Payment</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Supabase JS -->
+  <!-- โหลด Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
@@ -45,14 +45,25 @@
 <div id="status" class="status"></div>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+
   // ==============================
   // CONFIG
   // ==============================
   const SUPABASE_URL = "https://ysaqxwbtsnognltjmpht.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXF4d2J0c25vZ25sdGptcGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzczNjMsImV4cCI6MjA4MzQ1MzM2M30.__fhwZfmDHT2-M3BoETV7OeL1fIWMfDeGD16j6uBMs0";
+  const SUPABASE_ANON_KEY = "PUT_PUBLIC_ANON_KEY_HERE";
 
   // ==============================
-  // ✅ FIX ถาวร: ใช้ var + singleton
+  // 🔒 รอ Supabase JS ให้พร้อมก่อน
+  // ==============================
+  if (!window.supabase || !window.supabase.createClient) {
+    document.getElementById("status").innerText =
+      "❌ Supabase JS โหลดไม่สำเร็จ";
+    return;
+  }
+
+  // ==============================
+  // ✅ FIX ถาวร: singleton + var
   // ==============================
   var supabase = window._supabase;
   if (!supabase) {
@@ -78,7 +89,7 @@
           "Content-Type": "application/json",
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         },
-        body: JSON.stringify({ amount: 15 }) // บาท
+        body: JSON.stringify({ amount: 15 })
       }
     );
 
@@ -103,7 +114,7 @@
     }, 5 * 60 * 1000);
 
     // ==============================
-    // Realtime: ฟังสถานะการจ่าย
+    // Realtime: ฟังสถานะการจ่ายเงิน
     // ==============================
     supabase
       .channel("orders-status")
@@ -122,6 +133,8 @@
       )
       .subscribe();
   };
+
+});
 </script>
 
 </body>
