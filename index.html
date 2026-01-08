@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>PromptPay Payment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
       font-family: system-ui, sans-serif;
-      padding: 24px;
       max-width: 420px;
       margin: auto;
+      padding: 24px;
     }
     button {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       font-size: 18px;
-      background: #0ea5e9;
-      color: white;
       border: none;
       border-radius: 10px;
-      cursor: pointer;
+      background: #16a34a;
+      color: white;
     }
     img {
-      margin-top: 16px;
       width: 100%;
+      margin-top: 16px;
     }
     .status {
       margin-top: 12px;
@@ -71,19 +69,26 @@
     const data = await res.json();
 
     document.getElementById("qr").innerHTML = `
-      <img src="${data.qr}" />
-      <p>กรุณาสแกน QR PromptPay</p>
+      <img src="${data.qr}">
+      <p>สแกน QR PromptPay ภายใน 5 นาที</p>
     `;
 
-    // 🔴 ฟังสถานะ order แบบ realtime
+    setTimeout(() => {
+      document.getElementById("status").innerText =
+        "❌ QR หมดอายุ กรุณาสร้างใหม่";
+      document.getElementById("qr").innerHTML = "";
+    }, 5 * 60 * 1000);
+
     supabase
       .channel("orders")
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "orders" },
         payload => {
-          if (payload.new.charge_id === data.charge_id &&
-              payload.new.status === "successful") {
+          if (
+            payload.new.charge_id === data.charge_id &&
+            payload.new.status === "successful"
+          ) {
             document.getElementById("status").innerText =
               "✅ ชำระเงินสำเร็จ";
           }
