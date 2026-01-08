@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptPay Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 24px;
+      max-width: 420px;
+      margin: auto;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    img {
+      margin-top: 16px;
+      width: 100%;
+    }
+    .status {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>ชำระเงินด้วย PromptPay</h2>
+
+<button id="payBtn">จ่าย 150 บาท</button>
+
+<div id="qr"></div>
+<div id="status" class="status"></div>
+
+<script>
+  const SUPABASE_URL = "https://ysaqxwbtsnognltjmpht.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXF4d2J0c25vZ25sdGptcGh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzczNjMsImV4cCI6MjA4MzQ1MzM2M30.__fhwZfmDHT2-M3BoETV7OeL1fIWMfDeGD16j6uBMs0";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  document.getElementById("payBtn").onclick = async () => {
+    document.getElementById("status").innerText = "กำลังสร้าง QR...";
+
+    const res = await fetch(
+      SUPABASE_URL + "/functions/v1/create-promptpay",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ amount: 150 })
+      }
+    );
+
+    const data = await res.json();
+
+    document.getElementById("qr").innerHTML = `
+      <img src="${data.qr}" />
+      <p>กรุณาสแกน QR PromptPay</p>
+    `;
+
+    // 🔴 ฟังสถานะ order แบบ realtime
+    supabase
+      .channel("orders")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "orders" },
+        payload => {
+          if (payload.new.charge_id === data.charge_id &&
+              payload.new.status === "successful") {
+            document.getElementById("status").innerText =
+              "✅ ชำระเงินสำเร็จ";
+          }
+        }
+      )
+      .subscribe();
+  };
+</script>
+
+</body>
+</html>
